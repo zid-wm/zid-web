@@ -45,7 +45,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'zid_home.urls'
+ROOT_URLCONF = 'zid-web.urls'
 
 TEMPLATES = [
     {
@@ -63,7 +63,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'zid_home.wsgi.application'
+WSGI_APPLICATION = 'zid-web.wsgi.application'
 
 
 # Database
