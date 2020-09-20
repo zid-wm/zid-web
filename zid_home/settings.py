@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from config.ConfigManager import ConfigManager
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
