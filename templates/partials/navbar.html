@@ -1,0 +1,36 @@
+{% load static %}
+
+<header id="header" class="fixed-top">
+    <div class="container d-flex">
+        
+        <div class="logo mr-auto">
+            {% comment %} <h1 class="text-light"><a href="/">Indianapolis ARTCC</a></h1> {% endcomment %}
+            <a href="/"><img src="{% static "img/indy_ext.png" %}" alt="" class="img-fluid"></a>
+        </div>
+
+        <nav class="nav-menu d-none d-lg-block">
+            <ul>
+                <li class="drop-down"><a href="#">Pilots</a>
+                    <ul>
+                        <li><a href="#">Pilot Briefing</a></li>
+                        <li><a href="#">Preferred Routes</a></li>
+                        <li><a href="#">Request Event Staffing</a></li>
+                    </ul>
+                </li>
+
+                <li class="drop-down"><a href="#">Controllers</a>
+                    <ul>
+                        <li><a href="#">Roster</a></li>
+                        <li><a href="#">Staff</a></li>
+                        <li><a href="#">Files</a></li>
+                        <li><a href="#">Controller Statistics</a></li>
+                        <li><a href="#">Events</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#">Feedback</a></li>
+                <li class="get-started"><a href="#">Log In</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
