@@ -1,4 +1,5 @@
 {% load static %}
+{% load extras %}
 
 <!DOCTYPE HTML>
 <html lang="en">
@@ -15,6 +16,194 @@
                     <h2>Pilots, start your engines!</h2>
                 </div>
             </section>
+
+            <main id="main">
+
+            <section id="about" class="about">
+                <div class="container" data-aos="fade-up">
+                    <div class="row justify-content-end">
+                        <div class="col-lg-11">
+                            <div class="row justify-content-end">
+                                <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
+                                    <div class="count-box py-5">
+                                        <i class="icofont-headphone-alt"></i>
+                                        <span data-toggle="counter-up">{{ online_controllers_count }}</span>
+                                        <p>Controllers Online</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
+                                    <div class="count-box py-5">
+                                        <i class="icofont-users-alt-3"></i>
+                                        <span data-toggle="counter-up">{{ total_home_controllers }}</span>
+                                        <p>Active Controllers</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
+                                    <div class="count-box py-5">
+                                        <i class="icofont-clock-time"></i>
+                                        <span data-toggle="counter-up">{{ month_control_time }}</span>
+                                        <p>Control Time This Month</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
+                                    <div class="count-box py-5">
+                                        <i class="icofont-airplane-alt"></i>
+                                        <span data-toggle="counter-up">{{ pilots_in_airspace }}</span>
+                                        <p>Pilots in Airspace</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 align-self-baseline">
+                            <h3>Online Controllers</h3>
+                            <table width="100%">
+                                <tr>
+                                    <th>Position</th>
+                                    <th>Name</th>
+                                    <th>Frequency</th>
+                                    <th>Duration</th>
+                                </tr>
+                                {% for cont in online_controllers %}
+                                <tr>
+                                    <td>{{ cont.callsign }}</td>
+                                    <td>{{ cont.user.full_name }}</td>
+                                    <td>{{ cont.frequency }}</td>
+                                    <td>{{ cont.duration|format_duration }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td style="text-align:center" colspan="4">No controllers online!</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+
+                        <div class="col-lg-6 pt-3 pt-lg-0 content">
+                            <h3>Pilots in ZID Airspace</h3>
+                            <table width="100%">
+                                <tr>
+                                    <th>Callsign</th>
+                                    <th>Departure</th>
+                                    <th>Arrival</th>
+                                </tr>
+                                {% for pilot in pilots %}
+                                <tr>
+                                    <td>{{ pilot.callsign }}</td>
+                                    <td>{{ pilot.dep }}</td>
+                                    <td>{{ pilot.arr }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td style="text-align:center" colspan="3">No pilots in ZID airspace!</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="services" class="services section-bg">
+                <div class="container">
+                    <div class="section-title pt-5" data-aos="fade-up">
+                        <h2>Leaderboards</h2>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="icon-box" data-aos="fade-up">
+                                <h4 class="title" style="text-align:center">Total This Month</h4>
+                                <table width="100%">
+                                    {% for cont in total_this_month %}
+                                    <tr>
+                                        <td>{{ cont.user__first_name }} {{ cont.user__last_name }}</td>
+                                        <td style="text-align:right">{{ cont.duration|format_duration }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="icon-box" data-aos="fade-up">
+                                <h4 class="title" style="text-align:center">Total Last Month</h4>
+                                <table width="100%">
+                                    {% for cont in total_last_month %}
+                                    <tr>
+                                        <td>{{ cont.user__first_name }} {{ cont.user__last_name }}</td>
+                                        <td style="text-align:right">{{ cont.duration|format_duration }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="icon-box" data-aos="fade-up">
+                                <h4 class="title" style="text-align:center">Center This Month</h4>
+                                <table width="100%">
+                                    {% for cont in ctr_this_month %}
+                                    <tr>
+                                        <td>{{ cont.user__first_name }} {{ cont.user__last_name }}</td>
+                                        <td style="text-align:right">{{ cont.duration|format_duration }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="icon-box" data-aos="fade-up">
+                                <h4 class="title" style="text-align:center">TRACON This Month</h4>
+                                <table width="100%">
+                                    {% for cont in app_this_month %}
+                                    <tr>
+                                        <td>{{ cont.user__first_name }} {{ cont.user__last_name }}</td>
+                                        <td style="text-align:right">{{ cont.duration|format_duration }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="icon-box" data-aos="fade-up">
+                                <h4 class="title" style="text-align:center">Local This Month</h4>
+                                <table width="100%">
+                                    {% for cont in twr_this_month %}
+                                    <tr>
+                                        <td>{{ cont.user__first_name }} {{ cont.user__last_name }}</td>
+                                        <td style="text-align:right">{{ cont.duration|format_duration }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="icon-box" data-aos="fade-up">
+                                <h4 class="title" style="text-align:center">Ground/Delivery This Month</h4>
+                                <table width="100%">
+                                    {% for cont in gnd_this_month %}
+                                    <tr>
+                                        <td>{{ cont.user__first_name }} {{ cont.user__last_name }}</td>
+                                        <td style="text-align:right">{{ cont.duration|format_duration }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            </main>
 
             {% include 'partials/footer.html' %}
     </body>

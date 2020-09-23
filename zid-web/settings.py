@@ -19,7 +19,8 @@ DEBUG = bool(os.getenv('DEV_ENV'))
 
 ALLOWED_HOSTS = [
     '.amazonaws.com',
-    'zidartcc.org'
+    'zidartcc.org',
+    'localhost'
 ]
 
 
@@ -62,6 +63,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'extras': 'views.templatetags.extras'
+            }
         },
     },
 ]
