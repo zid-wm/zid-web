@@ -43,6 +43,12 @@ def update_roster():
                 rating=details['rating_short'],
                 main_role='HC'
             )
+            for role in details['roles']:
+                if role['facility'] == 'ZID':
+                    if role['role'] == 'INS' or role['role'] == 'MTR':
+                        new_user.training_role = role['role']
+                    else:
+                        new_user.staff_role = role['role']
             new_user.save()
             new_user.assign_initial_certs()
             ActionLog(
@@ -52,6 +58,13 @@ def update_roster():
         else:
             edit_user = User.objects.get(cid=details['cid'])
             edit_user.rating = details['rating_short']
+
+            for role in details['roles']:
+                if role['facility'] == 'ZID':
+                    if role['role'] == 'INS' or role['role'] == 'MTR':
+                        edit_user.training_role = role['role']
+                    else:
+                        edit_user.staff_role = role['role']
 
             # If user is rejoining the ARTCC after being marked as inactive
             if edit_user.status == 2:
