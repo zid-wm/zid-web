@@ -3,6 +3,7 @@ import hmac
 import requests
 
 from base64 import urlsafe_b64encode, urlsafe_b64decode
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from user.models import User
 
@@ -29,6 +30,8 @@ def login(request):
 
             request.session['vatsim_data'] = data
             request.session['cid'] = data['cid']
+        else:
+            return HttpResponse('Something was wrong with the token we got from VATUSA!', status=500)
 
     return redirect('/')
 

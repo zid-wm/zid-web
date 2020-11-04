@@ -20,7 +20,9 @@ DEBUG = bool(os.getenv('DEV_ENV'))
 ALLOWED_HOSTS = [
     '.amazonaws.com',
     'zidartcc.org',
-    'localhost'
+    'localhost',
+    'zidbase-dev.name',
+    'zidbase-dev.alpha'
 ]
 
 
@@ -61,7 +63,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages'
             ],
             'libraries': {
                 'extras': 'views.templatetags.extras'

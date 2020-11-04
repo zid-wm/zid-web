@@ -46,3 +46,21 @@ def view_roster(request):
         'visit_roster': visit_roster,
         'mavp_roster': mavp_roster
     })
+
+def view_staff(request):
+    atm = User.objects.filter(staff_role='ATM', main_role='HC').first()
+    datm = User.objects.filter(staff_role='DATM', main_role='HC').first()
+    ta = User.objects.filter(staff_role='TA', main_role='HC').first()
+    ec = User.objects.filter(staff_role='EC', main_role='HC').first()
+    fe = User.objects.filter(staff_role='FE', main_role='HC').first()
+    wm = User.objects.filter(staff_role='WM', main_role='HC').first()
+
+    return render(request, 'staff.html', {
+        'page_title': 'Staff',
+        'atm': atm,
+        'datm': datm,
+        'ta': ta,
+        'ec': ec,
+        'fe': fe,
+        'wm': wm
+    })

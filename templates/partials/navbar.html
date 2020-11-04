@@ -21,7 +21,7 @@
                 <li class="drop-down"><a href="#">Controllers</a>
                     <ul>
                         <li><a href="/roster">Roster</a></li>
-                        <li><a href="#">Staff</a></li>
+                        <li><a href="/staff">Staff</a></li>
                         <li><a href="#">Files</a></li>
                         <li><a href="#">Controller Statistics</a></li>
                         <li><a href="#">Events</a></li>
@@ -29,7 +29,15 @@
                 </li>
 
                 <li><a href="#">Feedback</a></li>
-                <li class="get-started"><a href="#">Log In</a></li>
+                {% if request.session.vatsim_data %}
+                    <li class="drop-down"><a href="#">{{ request.session.vatsim_data.firstname }} {{ request.session.vatsim_data.lastname }}</a>
+                        <ul>
+                            <li><a href="#">Profile</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                <li class="get-started"><a href="https://login.vatusa.net/uls/v2/login?fac=ZID&url=5">Log In</a></li>
+                {% endif %}
             </ul>
         </nav>
     </div>

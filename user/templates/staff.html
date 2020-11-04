@@ -1,0 +1,55 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>Staff</li>
+{% endblock %}
+
+{% block body %}
+<section id="about" class="about">
+    <div class="container">
+        <div class="row m-3 pt-3">
+            <h1>Indianapolis Center Staff</h1>
+        </div>
+        <!-- This is kind of a brute-force way of formatting this, a more elegant
+             method would be appreciated. -->
+        {% if atm %}
+        <div class="row m-3">
+            <h3>{{ atm.first_name }} {{ atm.last_name }}, Air Traffic Manager</h3>
+            <p>{{ atm.biography }}</p>
+        </div>
+        {% endif %}
+        {% if datm %}
+        <div class="row m-3">
+            <h3>{{ datm.first_name }} {{ datm.last_name }}, Deputy Air Traffic Manager</h3>
+            <p>{{ datm.biography }}</p>
+        </div>
+        {% endif %}
+        {% if ta %}
+        <div class="row m-3">
+            <h3>{{ ta.first_name }} {{ ta.last_name }}, Training Administrator</h3>
+            <p>{{ ta.biography }}</p>
+        </div>
+        {% endif %}
+        {% if ec %}
+        <div class="row m-3">
+            <h3>{{ ec.first_name }} {{ ec.last_name }}, Events Coordinator</h3>
+            <p>{{ ec.biography }}</p>
+        </div>
+        {% endif %}
+        {% if fe %}
+        <div class="row m-3">
+            <h3>{{ fe.first_name }} {{ fe.last_name }}, Facilities Engineer</h3>
+            <p>{{ fe.biography }}</p>
+        </div>
+        {% endif %}
+        {% if wm %}
+        <div class="row m-3">
+            <h3>{{ wm.first_name }} {{ wm.last_name }}, Webmaster</h3>
+            <p>{{ wm.biography }}</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
