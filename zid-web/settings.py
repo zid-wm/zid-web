@@ -15,9 +15,15 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.getenv('DEV_ENV'))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '.amazonaws.com',
+    'zidartcc.org',
+    'localhost',
+    'zidbase-dev.name',
+    'zidbase-dev.alpha'
+]
 
 
 # Application definition
@@ -30,9 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'administration',
-    'api.apps.ApiConfig',
+    'api',
+    'pilots',
     'uls',
-    'user.apps.UserConfig'
+    'user'
 ]
 
 MIDDLEWARE = [
@@ -57,8 +64,11 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages'
             ],
+            'libraries': {
+                'extras': 'views.templatetags.extras'
+            }
         },
     },
 ]

@@ -1,0 +1,234 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>Roster</li>
+{% endblock %}
+
+{% block body %}
+<section id="about" class="about">
+  <div class="container">
+    <div class="row m-3 pt-3">
+      <h3>Home Controllers</h3>
+    </div>
+
+    <div class="row m-3">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th scope="col" style="width:5%"></th>
+            <th scope="col">Name</th>
+            <th scope="col" style="width:10%">Rating</th>
+            <th scope="col" style="width:10%">DEL</th>
+            <th scope="col" style="width:10%">GND</th>
+            <th scope="col" style="width:10%">TWR</th>
+            <th scope="col" style="width:10%">APP</th>
+            <th scope="col" style="width:10%">CTR</th>
+          </tr>
+          {% for cont in home_roster %}
+          <tr>
+            <td>{{ cont.oper_init }}</td>
+            <td>
+              {{ cont.first_name }} {{ cont.last_name }}
+              {% if cont.staff_role %}
+                &nbsp;<span class="badge badge-primary badge-pill">{{ cont.staff_role }}</span>
+              {% endif %}
+              {% if cont.training_role %}
+                &nbsp;<span class="badge badge-secondary badge-pill">{{ cont.training_role }}</span>
+              {% endif %}
+            </td>
+            <td>{{ cont.rating }}</td>
+            <td>
+              <!--DEL-->
+              {% if cont.del_cert == 3 %}Solo
+              {% elif cont.del_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.del_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--GND-->
+              {% if cont.gnd_cert == 3 %}Solo
+              {% elif cont.gnd_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.gnd_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--TWR-->
+              {% if cont.twr_cert == 3 %}Solo
+              {% elif cont.twr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.twr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--APP-->
+              {% if cont.app_cert == 3 %}Solo
+              {% elif cont.app_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.app_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--CTR-->
+              {% if cont.ctr_cert == 3 %}Solo
+              {% elif cont.ctr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.ctr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </thead>
+      </table>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row m-3 pt-3">
+      <h3>Visiting Controllers</h3>
+    </div>
+
+    <div class="row m-3">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th scope="col" style="width:5%"></th>
+            <th scope="col">Name</th>
+            <th scope="col" style="width:10%">Home Facility</th>
+            <th scope="col" style="width:10%">Rating</th>
+            <th scope="col" style="width:10%">DEL</th>
+            <th scope="col" style="width:10%">GND</th>
+            <th scope="col" style="width:10%">TWR</th>
+            <th scope="col" style="width:10%">APP</th>
+            <th scope="col" style="width:10%">CTR</th>
+          </tr>
+          {% for cont in visit_roster %}
+          <tr>
+            <td>{{ cont.oper_init }}</td>
+            <td>
+              {{ cont.first_name }} {{ cont.last_name }}
+              {% if cont.staff_role %}
+                &nbsp;<span class="badge badge-primary badge-pill">{{ cont.staff_role }}</span>
+              {% endif %}
+              {% if cont.training_role %}
+                &nbsp;<span class="badge badge-secondary badge-pill">{{ cont.training_role }}</span>
+              {% endif %}
+            </td>
+            <td>{{ cont.home_facility }}</td>
+            <td>{{ cont.rating }}</td>
+            <td>
+              <!--DEL-->
+              {% if cont.del_cert == 3 %}Solo
+              {% elif cont.del_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.del_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--GND-->
+              {% if cont.gnd_cert == 3 %}Solo
+              {% elif cont.gnd_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.gnd_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--TWR-->
+              {% if cont.twr_cert == 3 %}Solo
+              {% elif cont.twr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.twr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--APP-->
+              {% if cont.app_cert == 3 %}Solo
+              {% elif cont.app_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.app_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--CTR-->
+              {% if cont.ctr_cert == 3 %}Solo
+              {% elif cont.ctr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.ctr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </thead>
+      </table>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row m-3 pt-3">
+      <h3>Mutual Automatic Visiting Controllers</h3>
+    </div>
+
+    <div class="row m-3">
+      <table class="table table-sm table-striped">
+        <thead>
+          <tr>
+            <th scope="col" style="width:5%"></th>
+            <th scope="col">Name</th>
+            <th scope="col" style="width:10%">Home Facility</th>
+            <th scope="col" style="width:10%">Rating</th>
+            <th scope="col" style="width:10%">DEL</th>
+            <th scope="col" style="width:10%">GND</th>
+            <th scope="col" style="width:10%">TWR</th>
+            <th scope="col" style="width:10%">APP</th>
+            <th scope="col" style="width:10%">CTR</th>
+          </tr>
+          {% for cont in mavp_roster %}
+          <tr>
+            <td>{{ cont.oper_init }}</td>
+            <td>
+              {{ cont.first_name }} {{ cont.last_name }}
+              {% if cont.staff_role %}
+                &nbsp;<span class="badge badge-primary badge-pill">{{ cont.staff_role }}</span>
+              {% endif %}
+              {% if cont.training_role %}
+                &nbsp;<span class="badge badge-secondary badge-pill">{{ cont.training_role }}</span>
+              {% endif %}
+            </td>
+            <td>{{ cont.home_facility }}</td>
+            <td>{{ cont.rating }}</td>
+            <td>
+              <!--DEL-->
+              {% if cont.del_cert == 3 %}Solo
+              {% elif cont.del_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.del_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--GND-->
+              {% if cont.gnd_cert == 3 %}Solo
+              {% elif cont.gnd_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.gnd_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--TWR-->
+              {% if cont.twr_cert == 3 %}Solo
+              {% elif cont.twr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.twr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--APP-->
+              {% if cont.app_cert == 3 %}Solo
+              {% elif cont.app_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.app_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+            <td>
+              <!--CTR-->
+              {% if cont.ctr_cert == 3 %}Solo
+              {% elif cont.ctr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
+              {% elif cont.ctr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
+              {% else %}<i class="icofont-close" style="color:red">{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </thead>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

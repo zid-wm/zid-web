@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        {% include 'partials/head.html' %}
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <div class="page-wrapper">
+            {% include 'partials/navbar.html' %}
+
+            <main id="main">
+
+                <!-- Breadcrumbs -->
+                <section id="breadcrumbs" class="breadcrumbs">
+                    <div class="container">
+                        <ol>
+                        {% block breadcrumbs %}{% endblock %}
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- Page Content -->
+                {% block body %}{% endblock %}
+
+            </main>
+
+            {% include 'partials/footer.html' %}
+        </div>
+
+        {% block scripts %}{% endblock %}
+    </body>
