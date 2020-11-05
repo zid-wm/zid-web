@@ -1,0 +1,177 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>Files</li>
+{% endblock %}
+
+{% block body %}
+<section id="about" class="about">
+    <div class="container">
+        <div class="row m-3 pt-3">
+            <h3>Files</h3>
+        </div>
+
+        <div class="row m-3">
+            <h5>VRC</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                    </tr>
+                    {% for file in vrc_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>vSTARS</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                    </tr>
+                    {% for file in vstars_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>vERAM</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                    </tr>
+                    {% for file in veram_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>vATIS</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                    </tr>
+                    {% for file in vatis_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>SOPs</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                    </tr>
+                    {% for file in sop_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>LOAs</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                    </tr>
+                    {% for file in loa_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>MAVP Agreements</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                    </tr>
+                    {% for file in mavp_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>Miscellaneous Files</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                    </tr>
+                    {% for file in misc_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

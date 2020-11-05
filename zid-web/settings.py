@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'administration',
     'api',
     'pilots',
+    'resources',
     'uls',
     'user'
 ]
