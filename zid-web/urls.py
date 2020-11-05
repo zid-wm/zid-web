@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from pilots import views as pilots
 from uls import views as uls
 from user import views as user
 from views import views as views
@@ -23,6 +24,11 @@ from views import views as views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.view_home, name='home'),
+
+    # Pilots
+    path('pilot-briefing/', pilots.view_pilot_briefing, name='briefing'),
+    path('routes/', pilots.view_preferred_routes, name='routes'),
+    path('request-event-staffing/', pilots.view_staffing_request, name='request-event-staffing'),
 
     # ULS (Auth)
     path('login/', uls.login, name='login'),
