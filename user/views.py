@@ -1,4 +1,10 @@
+import calendar
+
+from datetime import date
 from django.shortcuts import render
+from django.db.models import Sum
+
+from api.models import ControllerSession
 from user.models import User
 
 def view_roster(request):
@@ -63,4 +69,31 @@ def view_staff(request):
         'ec': ec,
         'fe': fe,
         'wm': wm
+    })
+
+
+def view_statistics(request):
+    now = date.today()
+
+    month = now.month
+    year = now.year
+
+    stats = ControllerSession.objects.filter(
+        user__main_role='HC',
+        start__year=year,
+        start__month=month
+    ).values(
+        'user',
+        'user__first_name',
+        'user__last_name',
+        'user__rating'
+    ).annotate(
+        duration=Sum('duration')
+    ).order_by('user__last_name')
+
+    return render(request, 'statistics.html', {
+        'page_title': 'Statistics',
+        'stats': stats,
+        'month': calendar.month_name[month],
+        'year': year
     })

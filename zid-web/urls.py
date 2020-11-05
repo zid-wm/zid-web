@@ -41,4 +41,5 @@ urlpatterns = [
     # User
     path('roster/', user.view_roster, name='roster'),
     path('staff/', user.view_staff, name='staff'),
+    path('statistics/', user.view_statistics, name='statistics')
 ]
