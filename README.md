@@ -1,4 +1,6 @@
 # zid-web
+*These instructions are based on Unix/Linux systems (including MacOS). Certain commands will need to be altered (especially file paths) if running on Windows.*
+
 ## Prerequisites
 To run the development server, you must have the following installed:
 - Python (version 3.7 or higher)
