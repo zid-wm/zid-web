@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from event import views as event
 from pilots import views as pilots
 from resources import views as resources
 from uls import views as uls
@@ -26,10 +27,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.view_home, name='home'),
 
+    # Events
+    path('events/', event.view_events, name='events'),
+    path('new-event/', event.view_new_event, name='new-event'),
+
     # Pilots
     path('pilot-briefing/', pilots.view_pilot_briefing, name='briefing'),
     path('routes/', pilots.view_preferred_routes, name='routes'),
-    path('request-event-staffing/', pilots.view_staffing_request, name='request-event-staffing'),
+    path('request-event-staffing/', pilots.view_staffing_request,
+         name='request-event-staffing'),
 
     # Resources
     path('files/', resources.view_files, name='files'),

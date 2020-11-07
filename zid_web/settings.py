@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'administration',
     'api',
+    'event',
     'pilots',
     'resources',
     'uls',
@@ -53,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'zid-web.urls'
+ROOT_URLCONF = 'zid_web.urls'
 
 TEMPLATES = [
     {
@@ -74,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'zid-web.wsgi.application'
+WSGI_APPLICATION = 'zid_web.wsgi.application'
 
 
 # Database
