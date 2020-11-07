@@ -15,7 +15,6 @@ def view_preferred_routes(request):
     routes = None
     if request.method == 'POST':
         form = RoutesForm(request.POST)
-        post = request.POST.dict()
         routes = requests.get(
             'https://api.aviationapi.com/v1/preferred-routes/search',
             params={
@@ -25,7 +24,7 @@ def view_preferred_routes(request):
         ).json()
     else:
         form = RoutesForm()
-    
+
     return render(request, 'routes.html', {
         'page_title': 'IFR Routes',
         'form': form,
