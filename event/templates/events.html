@@ -1,0 +1,45 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>{{ heading }}</li>
+{% endblock %}
+
+{% block body %}
+<section id="portfolio" class="portfolio">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h3>{{ heading }}</h3>
+            </div>
+            {% if request.user_obj.is_staff %}
+            <div class="col">
+                <h3 style="text-align:right">
+                    <a href="/events/new"><i class="icofont-plus"></i> Add Event</a>
+                </h3>
+            </div>
+            {% endif %}
+        </div>
+
+        {% for e in events %}
+        <div class="row portfolio-container">
+            <div class="col-12 portfolio-item filter-app">
+                <div class="portfolio-wrap">
+                    <img src="{{ e.banner }}" class="img-fluid" alt="" />
+                    <div class="portfolio-info">
+                        <h4><a style="color:white" href="/events/{{ e.id }}">{{ e.name }}</a></h4>
+                        <div class="portfolio-links">
+                            <a href="/events/{{ e.id }}" title="See Details"><i class="icofont-info-circle"></i></a>
+                            {% if request.user_obj.is_staff %}
+                            <a href="#" title="Edit Event"><i class="icofont-edit"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
