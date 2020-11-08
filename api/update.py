@@ -4,7 +4,6 @@ import requests
 import pytz
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from background_task import background
 
 from datetime import datetime
 
