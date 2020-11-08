@@ -4,6 +4,7 @@ import os
 from datetime import date
 from django.shortcuts import render
 from django.db.models import Sum, Q
+
 from api.models import Controller, ControllerSession
 from user.models import User
 
@@ -36,7 +37,12 @@ def view_home(request):
     total_home_controllers = User.objects.filter(main_role='HC').count()
     month_control_time = str(ControllerSession.objects.aggregate(
         Sum('duration'))['duration__sum']).split('.')[0]
-    pilots = requests.get('https://api.denartcc.org/live/ZID').json()
+
+    try:
+        # The timeout is set to slightly longer than a standard TCP packet retransmission window.
+        pilots = requests.get('https://api.denartcc.org/live/ZID', timeout=3.05).json()
+    except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
+        pilots = []
 
     online_controllers = Controller.objects.all()
 
