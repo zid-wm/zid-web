@@ -29,7 +29,11 @@ urlpatterns = [
 
     # Events
     path('events/', event.view_events, name='events'),
-    path('new-event/', event.view_new_event, name='new-event'),
+    path('events/new/', event.view_new_event, name='new-event'),
+    path('events/archived/', event.view_archived_events, name='archived-events'),
+    path('events/<int:event_id>', event.view_event_details, name='event-details'),
+    path('events/<int:event_id>/delete-position/<int:position_id>',
+         event.delete_position, name='delete-position'),
 
     # Pilots
     path('pilot-briefing/', pilots.view_pilot_briefing, name='briefing'),
