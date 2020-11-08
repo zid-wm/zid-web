@@ -1,4 +1,5 @@
 {% load static %}
+{% load extras %}
 
 <header id="header" class="fixed-top">
     <div class="container d-flex">
@@ -45,7 +46,7 @@
                         </ul>
                     </li>
                 {% else %}
-                <li class="get-started"><a href="https://login.vatusa.net/uls/v2/login?fac=ZID&url=5">Log In</a></li>
+                <li class="get-started"><a href="https://login.vatusa.net/uls/v2/login?fac=ZID&url={% uls_redirect_url %}">Log In</a></li>
                 {% endif %}
             </ul>
         </nav>
