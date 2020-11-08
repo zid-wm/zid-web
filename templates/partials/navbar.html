@@ -24,7 +24,15 @@
                         <li><a href="/staff">Staff</a></li>
                         <li><a href="/files">Files</a></li>
                         <li><a href="/statistics">Controller Statistics</a></li>
-                        <li><a href="#">Events</a></li>
+                        <li {% if request.user_obj.is_staff %} class="drop-down" {% endif %}>
+                            <a href="/events">Events</a>
+                            {% if request.user_obj.is_staff %}
+                            <ul>
+                                <li><a href="/events/new">New Event</a></li>
+                                <li><a href="/events/archived">Archived Events</a></li>
+                            </ul>
+                            {% endif %}
+                        </li>
                     </ul>
                 </li>
 
@@ -33,6 +41,7 @@
                     <li class="drop-down"><a href="#">{{ request.session.vatsim_data.firstname }} {{ request.session.vatsim_data.lastname }}</a>
                         <ul>
                             <li><a href="#">Profile</a></li>
+                            <li><a href="/logout">Log Out</a></li>
                         </ul>
                     </li>
                 {% else %}

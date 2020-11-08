@@ -8,6 +8,7 @@
     </head>
     <body>
         <div class="home-wrapper">
+        
             {% include 'partials/navbar.html' %}
 
             <section id="hero">
@@ -21,6 +22,13 @@
 
             <section id="about" class="about">
                 <div class="container" data-aos="fade-up">
+                    {% if dev_env %}
+                    <div class="row">
+                        <div class="alert alert-danger" style="width:100%" role="alert">
+                            <i class="icofont-exclamation-tringle"></i> Heads up! You are viewing this website in a development environment. For the production ZID website, please visit zidartcc.org.
+                        </div>
+                    </div>
+                    {% endif %}
                     <div class="row justify-content-end">
                         <div class="col-lg-11">
                             <div class="row justify-content-end">
