@@ -8,9 +8,6 @@ from django.utils import timezone
 
 
 def start():
-    update_roster()
-    update_loa()
-
     scheduler = BackgroundScheduler()
     scheduler.add_job(update_roster, 'interval', minutes=30)
     scheduler.add_job(update_loa, 'cron', hour=0)
