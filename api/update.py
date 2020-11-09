@@ -26,6 +26,7 @@ def pull_controllers():
     atc_clients = {client[0]: client for client in data
                    if len(client) == 42 and client[3] == 'ATC'}
 
+    # TODO: Need to update controller callsign every update as well
     for controller in Controller.objects.all():
         if controller.callsign in atc_clients:
             controller.last_update = timezone.now()

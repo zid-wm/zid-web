@@ -1,11 +1,15 @@
 import calendar
 
 from datetime import date
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Sum
 
+from administration.models import MAVP
 from api.models import ControllerSession
+from .forms import AddMavpForm
 from user.models import User
+from zid_web.decorators import require_staff
+
 
 def view_roster(request):
     home_roster = User.objects.filter(
@@ -53,6 +57,7 @@ def view_roster(request):
         'mavp_roster': mavp_roster
     })
 
+
 def view_staff(request):
     atm = User.objects.filter(staff_role='ATM', main_role='HC').first()
     datm = User.objects.filter(staff_role='DATM', main_role='HC').first()
@@ -97,3 +102,45 @@ def view_statistics(request):
         'month': calendar.month_name[month],
         'year': year
     })
+
+
+@require_staff
+def view_mavp(request):
+    mavps = MAVP.objects.all()
+    form = AddMavpForm()
+
+    if request.method == 'POST':
+        MAVP(
+            facility_short=request.POST['facility_short'],
+            facility_long=request.POST['facility_long']
+        ).save()
+
+    return render(request, 'mavp.html', {
+        'page_title': 'MAVP Management',
+        'mavps': mavps,
+        'form': form
+    })
+
+
+@require_staff
+def view_remove_mavp(request, facility):
+    if request.method == 'POST':
+        MAVP.objects.filter(
+            facility_short=facility
+        ).delete()
+
+        User.objects.filter(
+            main_role='MC',
+            home_facility=facility
+        ).delete()
+
+        return redirect('/mavp')
+    else:
+        facility = MAVP.objects.get(
+            facility_short=facility
+        )
+
+        return render(request, 'mavp-remove.html', {
+            'page_title': 'Remove MAVP',
+            'facility': facility
+        })

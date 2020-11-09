@@ -49,6 +49,8 @@ urlpatterns = [
     path('logout/', uls.logout, name='logout'),
 
     # User
+    path('mavp/', user.view_mavp, name='mavp'),
+    path('mavp/remove/<str:facility>', user.view_remove_mavp, name='remove-mavp'),
     path('roster/', user.view_roster, name='roster'),
     path('staff/', user.view_staff, name='staff'),
     path('statistics/', user.view_statistics, name='statistics')

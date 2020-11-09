@@ -1,0 +1,55 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>MAVPs</li>
+{% endblock %}
+
+{% block body %}
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="row m-3 pt-3">
+                <h3>Manage MAVP Agreements</h3>
+            </div>
+
+            <div class="row m-3 pt-3" style="width:100%">
+                <form action="/mavp/" method="post" role="form" class="php-email-form">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="col-3 form-group">
+                            {{ form.facility_short }}
+                            <div class="validate">{{ form.facility_short.errors }}</div>
+                        </div>
+                        <div class="col-6 form-group">
+                            {{ form.facility_long }}
+                            <div class="validate">{{ form.facility_long.errors }}</div>
+                        </div>
+                        <div class="col-3 form-group text-center">
+                            <button type="submit" value="Add MAVP">Add MAVP</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row m-3">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:20%">ARTCC</th>
+                            <th scope="col">Facility Name</th>
+                            <th scope="col" style="width:20%"></th>
+                        </tr>
+                    {% for mavp in mavps %}
+                        <tr>
+                        <td>{{ mavp.facility_short }}</td>
+                        <td>{{ mavp.facility_long }}</td>
+                        <td><a href="/mavp/remove/{{ mavp.facility_short }}">Cancel MAVP</a></td>
+                        </tr>
+                    {% endfor %}
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}
