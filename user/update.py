@@ -202,3 +202,26 @@ def assign_operating_initials(f_init, l_init, user=None):
     if len(oi) < 2:
         oi = 'A' + oi
     return oi
+
+
+def add_visitor(cid):
+    user_data = requests.get(
+        f'https://api.vatusa.net/v2/user/{cid}',
+        params={'apikey': os.getenv('API_KEY')}
+    ).json()
+
+    new_user = User(
+        first_name=user_data['fname'],
+        last_name=user_data['lname'],
+        cid=cid,
+        email=user_data['email'],
+        oper_init=assign_operating_initials(
+            user_data['fname'][0],
+            user_data['lname'][0],
+        ),
+        home_facility=user_data['facility'],
+        rating=user_data['rating_short'],
+        main_role='VC'
+    )
+    new_user.save()
+    new_user.assign_initial_certs()

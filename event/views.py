@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 
 from event.models import Event, EventPosition
-from .forms import NewEventForm, AddPositionForm
+from .forms import NewEventForm, AddPositionForm, EditEventForm
 from zid_web.decorators import require_staff
 
 
@@ -102,6 +102,59 @@ def view_new_event(request):
 
 
 @require_staff
+def edit_event(request, event_id):
+    if request.method == 'POST':
+        event = Event.objects.get(
+            id=event_id
+        )
+
+        event.name = request.POST['name']
+        event.start = request.POST['start']
+        event.end = request.POST['end']
+        event.host = request.POST['host']
+        event.description = request.POST['description']
+
+        if request.FILES:
+            s3 = boto3.client('s3')
+            s3.upload_fileobj(
+                request.FILES['banner'],
+                'zid-files',
+                f'img/{request.POST["name"]}',
+                ExtraArgs={
+                    'ACL': 'public-read'
+                }
+            )
+            event.banner = f'https://zid-files.s3.us-east-1.amazonaws.com/img/{request.POST["name"]}'
+
+        event.save()
+        return redirect('/events')
+    else:
+        event = Event.objects.get(
+            id=event_id
+        )
+
+        form = EditEventForm(initial={
+            'name': event.name,
+            'start': event.start,
+            'end': event.end,
+            'host': event.host,
+            'description': event.description
+        })
+
+        return render(request, 'edit-event.html', {
+            'page_title': 'Edit Event',
+            'event': event,
+            'form': form
+        })
+
+
+@require_staff
 def delete_position(request, position_id, event_id):
     EventPosition.objects.get(id=position_id).delete()
     return redirect(f'/events/{event_id}')
+
+
+@require_staff
+def delete_event(request, event_id):
+    Event.objects.get(id=event_id).delete()
+    return redirect(f'/events')

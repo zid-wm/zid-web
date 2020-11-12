@@ -14,19 +14,19 @@ RATING_INTS = {
     'ADM': 9
 }
 
+ENDORSEMENTS = (
+    (0, 'No Endorsement'),
+    (1, 'Minor Endorsement'),
+    (2, 'Major Endorsement'),
+    (3, 'Solo Endorsement')
+)
+
 
 class User(models.Model):
     STATUSES = (
         (0, 'Active'),
         (1, 'LOA'),
         (2, 'Inactive')
-    )
-
-    ENDORSEMENTS = (
-        (0, 'No Endorsement'),
-        (1, 'Minor Endorsement'),
-        (2, 'Major Endorsement'),
-        (3, 'Solo Endorsement')
     )
 
     first_name = models.CharField(max_length=64)
@@ -49,7 +49,7 @@ class User(models.Model):
     ctr_cert = models.IntegerField(default=0, choices=ENDORSEMENTS)
     solo_cert = models.CharField(max_length=32, null=True, blank=True)
 
-    profile_picture = models.ImageField(null=True, blank=True)
+    profile_picture = models.URLField(null=True, blank=True)
     biography = models.TextField(null=True, blank=True)
 
     # TODO Does this need to be a separate (many-to-one) relation?
@@ -88,3 +88,15 @@ class User(models.Model):
                 if RATING_INTS[self.rating] > 2:
                     self.app_cert = 1
         self.save()
+
+
+class VisitRequest(models.Model):
+    REQUEST_STATUSES = (
+        (0, 'Pending'),
+        (1, 'Approved'),
+        (2, 'Denied')
+    )
+    cid = models.IntegerField()
+    description = models.TextField()
+    submitted = models.DateTimeField(auto_now_add=True)
+    status = models.IntegerField(default=0, choices=REQUEST_STATUSES)

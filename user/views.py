@@ -1,14 +1,25 @@
+import boto3
 import calendar
+import os
+import requests
 
 from datetime import date
 from django.shortcuts import render, redirect
-from django.db.models import Sum
+from django.db.models import Sum, Q
+from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 from administration.models import MAVP
 from api.models import ControllerSession
-from .forms import AddMavpForm
-from user.models import User
-from zid_web.decorators import require_staff
+from .forms import (
+    AddMavpForm,
+    EditProfileForm,
+    EditEndorsementForm,
+    VisitingRequestForm
+)
+from user.models import User, VisitRequest
+from user.update import add_visitor
+from zid_web.decorators import require_staff, require_member, require_session
 
 
 def view_roster(request):
@@ -17,6 +28,7 @@ def view_roster(request):
     ).values(
         'first_name',
         'last_name',
+        'cid',
         'oper_init',
         'rating',
         'staff_role',
@@ -29,6 +41,7 @@ def view_roster(request):
     ).values(
         'first_name',
         'last_name',
+        'cid',
         'oper_init',
         'home_facility',
         'rating',
@@ -42,6 +55,7 @@ def view_roster(request):
     ).values(
         'first_name',
         'last_name',
+        'cid',
         'oper_init',
         'home_facility',
         'rating',
@@ -144,3 +158,160 @@ def view_remove_mavp(request, facility):
             'page_title': 'Remove MAVP',
             'facility': facility
         })
+
+
+@require_member
+def view_profile(request, cid):
+    user = User.objects.get(
+        cid=cid
+    )
+
+    form = EditEndorsementForm(initial={
+        'delivery': user.del_cert,
+        'ground': user.gnd_cert,
+        'tower': user.twr_cert,
+        'approach': user.app_cert,
+        'center': user.ctr_cert
+    })
+
+    sessions = ControllerSession.objects.filter(user=user)
+    now = timezone.now()
+    stats = sessions.aggregate(
+        month=Sum('duration', filter=Q(start__month=now.month) & Q(start__year=now.year)),
+        year=Sum('duration', filter=Q(start__year=now.year))
+    )
+
+    return render(request, 'profile.html', {
+        'page_title': 'Profile',
+        'user': user,
+        'stats': stats,
+        'form': form
+    })
+
+
+@require_member
+def edit_profile(request, cid):
+    # TODO: Add check to verify user
+    user = User.objects.get(
+        cid=cid
+    )
+    if request.method == 'POST':
+        if request.FILES:
+            s3 = boto3.client('s3')
+            s3.upload_fileobj(
+                request.FILES['profile_pic'],
+                'zid-files',
+                f'profile/{cid}',
+                ExtraArgs={
+                    'ACL': 'public-read'
+                }
+            )
+
+            user.profile_picture = f'https://zid-files.s3.us-east-1.amazonaws.com/profile/{cid}'
+
+        if request.POST['biography']:
+            user.biography = request.POST['biography']
+
+        user.save()
+        return redirect(f'/profile/{cid}')
+
+    else:
+        form = EditProfileForm(initial={
+            'biography': user.biography
+        })
+
+        return render(request, 'edit-profile.html', {
+            'page_title': 'Edit Profile',
+            'form': form
+        })
+
+
+@require_staff
+@require_POST
+def edit_endorsements(request, cid):
+    user = User.objects.get(
+        cid=cid
+    )
+
+    user.del_cert = request.POST['delivery']
+    user.gnd_cert = request.POST['ground']
+    user.twr_cert = request.POST['tower']
+    user.app_cert = request.POST['approach']
+    user.ctr_cert = request.POST['center']
+
+    user.save()
+
+    return redirect(f'/profile/{cid}')
+
+
+@require_session
+def view_visit_request(request):
+    if request.method == 'POST':
+        VisitRequest(
+            cid=request.POST['cid'],
+            description=request.POST['description']
+        ).save()
+
+        return redirect('/')
+    else:
+        form = VisitingRequestForm(initial={
+            'cid': request.session["vatsim_data"]["cid"],
+            'name': f'{request.session["vatsim_data"]["firstname"]} {request.session["vatsim_data"]["lastname"]}',
+            'email': request.session["vatsim_data"]["email"],
+            'rating': request.session["vatsim_data"]["rating"],
+            'facility': request.session['vatsim_data']['facility']['name']
+        })
+
+        return render(request, 'visit-request.html', {
+            'page_title': 'Visit Request',
+            'form': form
+        })
+
+
+@require_staff
+def manage_visit_requests(request):
+    reqs = VisitRequest.objects.all().order_by('-submitted')
+    entries = []
+    for req in reqs:
+        controller_data = requests.get(
+            f'https://api.vatusa.net/v2/user/{req.cid}',
+            params={
+                'apikey': os.getenv('API_KEY')
+            }
+        ).json()
+
+        entries.append({
+            'cid': req.cid,
+            'name': f'{controller_data["fname"]} {controller_data["lname"]}',
+            'email': controller_data["email"],
+            'rating': controller_data["rating_short"],
+            'home': controller_data["facility"],
+            'submitted': req.submitted,
+            'status_code': req.status,
+            'status': VisitRequest.REQUEST_STATUSES[req.status][1]
+        })
+
+    return render(request, 'visit-request-manage.html', {
+        'page_title': 'Manage Visiting Requests',
+        'requests': entries
+    })
+
+
+@require_staff
+def approve_visit_request(request, cid):
+    add_visitor(cid)
+
+    req = VisitRequest.objects.get(cid=cid)
+    req.status = 1
+    req.save()
+    # TODO: Add approval email logic
+    return redirect('/visit-request/manage')
+
+
+@require_staff
+def deny_visit_request(request, cid):
+    req = VisitRequest.objects.get(cid=cid)
+    req.status = 2
+    req.save()
+    # TODO: Add denial email logic
+    return redirect('/visit-request/manage')

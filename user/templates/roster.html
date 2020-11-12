@@ -30,7 +30,11 @@
           <tr>
             <td>{{ cont.oper_init }}</td>
             <td>
-              {{ cont.first_name }} {{ cont.last_name }}
+            {% if request.user_obj.is_staff %}
+            <a href="/profile/{{ cont.cid }}">{{ cont.first_name }} {{ cont.last_name }}</a>
+            {% else %}
+            {{ cont.first_name }} {{ cont.last_name }}
+            {% endif %}
               {% if cont.staff_role %}
                 &nbsp;<span class="badge badge-primary badge-pill">{{ cont.staff_role }}</span>
               {% endif %}
@@ -39,41 +43,57 @@
               {% endif %}
             </td>
             <td>{{ cont.rating }}</td>
-            <td>
-              <!--DEL-->
-              {% if cont.del_cert == 3 %}Solo
-              {% elif cont.del_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.del_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--GND-->
-              {% if cont.gnd_cert == 3 %}Solo
-              {% elif cont.gnd_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.gnd_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--TWR-->
-              {% if cont.twr_cert == 3 %}Solo
-              {% elif cont.twr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.twr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--APP-->
-              {% if cont.app_cert == 3 %}Solo
-              {% elif cont.app_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.app_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--CTR-->
-              {% if cont.ctr_cert == 3 %}Solo
-              {% elif cont.ctr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.ctr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
+          <!--DEL-->
+            {% if cont.del_cert == 3 %}
+                <td bgcolor="#ffff66">Solo</td>
+            {% elif cont.del_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.del_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--GND-->
+            {% if cont.gnd_cert == 3 %}
+                <td bgcolor="#ffff66">Solo</td>
+            {% elif cont.gnd_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.gnd_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--TWR-->
+            {% if cont.twr_cert == 3 %}
+                <td bgcolor="#ffff66">Solo</td>
+            {% elif cont.twr_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.twr_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--APP-->
+            {% if cont.app_cert == 3 %}
+                <td bgcolor="#ffff66">Solo</td>
+            {% elif cont.app_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.app_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--CTR-->
+            {% if cont.ctr_cert == 3 %}
+                <td bgcolor="#ffff66">Solo</td>
+            {% elif cont.ctr_cert == 2 %}
+                <td bgcolor="#00ff7f">Full</td>
+            {% elif cont.ctr_cert == 1 %}
+                <!-- There's no such thing as a minor Center cert! -->
+                <td bgcolor="white">None</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
           </tr>
           {% endfor %}
         </thead>
@@ -104,7 +124,11 @@
           <tr>
             <td>{{ cont.oper_init }}</td>
             <td>
-              {{ cont.first_name }} {{ cont.last_name }}
+            {% if request.user_obj.is_staff %}
+            <a href="/profile/{{ cont.cid }}">{{ cont.first_name }} {{ cont.last_name }}</a>
+            {% else %}
+            {{ cont.first_name }} {{ cont.last_name }}
+            {% endif %}
               {% if cont.staff_role %}
                 &nbsp;<span class="badge badge-primary badge-pill">{{ cont.staff_role }}</span>
               {% endif %}
@@ -114,41 +138,57 @@
             </td>
             <td>{{ cont.home_facility }}</td>
             <td>{{ cont.rating }}</td>
-            <td>
-              <!--DEL-->
-              {% if cont.del_cert == 3 %}Solo
-              {% elif cont.del_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.del_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--GND-->
-              {% if cont.gnd_cert == 3 %}Solo
-              {% elif cont.gnd_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.gnd_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--TWR-->
-              {% if cont.twr_cert == 3 %}Solo
-              {% elif cont.twr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.twr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--APP-->
-              {% if cont.app_cert == 3 %}Solo
-              {% elif cont.app_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.app_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--CTR-->
-              {% if cont.ctr_cert == 3 %}Solo
-              {% elif cont.ctr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.ctr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
+            <!--DEL-->
+            {% if cont.del_cert == 3 %}
+                <td bgcolor="#eee8aa">Solo</td>
+            {% elif cont.del_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.del_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--GND-->
+            {% if cont.gnd_cert == 3 %}
+                <td bgcolor="#eee8aa">Solo</td>
+            {% elif cont.gnd_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.gnd_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--TWR-->
+            {% if cont.twr_cert == 3 %}
+                <td bgcolor="#eee8aa">Solo</td>
+            {% elif cont.twr_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.twr_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--APP-->
+            {% if cont.app_cert == 3 %}
+                <td bgcolor="#eee8aa">Solo</td>
+            {% elif cont.app_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.app_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--CTR-->
+            {% if cont.ctr_cert == 3 %}
+                <td bgcolor="#eee8aa">Solo</td>
+            {% elif cont.ctr_cert == 2 %}
+                <td bgcolor="#00ff7f">Full</td>
+            {% elif cont.ctr_cert == 1 %}
+                <!-- There's no such thing as a minor Center cert! -->
+                <td bgcolor="white">None</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
           </tr>
           {% endfor %}
         </thead>
@@ -184,7 +224,11 @@
           <tr>
             <td>{{ cont.oper_init }}</td>
             <td>
-              {{ cont.first_name }} {{ cont.last_name }}
+            {% if request.user_obj.is_staff %}
+            <a href="/profile/{{ cont.cid }}">{{ cont.first_name }} {{ cont.last_name }}</a>
+            {% else %}
+            {{ cont.first_name }} {{ cont.last_name }}
+            {% endif %}
               {% if cont.staff_role %}
                 &nbsp;<span class="badge badge-primary badge-pill">{{ cont.staff_role }}</span>
               {% endif %}
@@ -194,41 +238,57 @@
             </td>
             <td>{{ cont.home_facility }}</td>
             <td>{{ cont.rating }}</td>
-            <td>
-              <!--DEL-->
-              {% if cont.del_cert == 3 %}Solo
-              {% elif cont.del_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.del_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--GND-->
-              {% if cont.gnd_cert == 3 %}Solo
-              {% elif cont.gnd_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.gnd_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--TWR-->
-              {% if cont.twr_cert == 3 %}Solo
-              {% elif cont.twr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.twr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--APP-->
-              {% if cont.app_cert == 3 %}Solo
-              {% elif cont.app_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.app_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
-            <td>
-              <!--CTR-->
-              {% if cont.ctr_cert == 3 %}Solo
-              {% elif cont.ctr_cert == 2 %}<i class="icofont-check-circled" style="color:green"></i>
-              {% elif cont.ctr_cert == 1 %}<i class="icofont-check" style="color:green"></i>
-              {% else %}<i class="icofont-close" style="color:red">{% endif %}
-            </td>
+            <!--DEL-->
+            {% if cont.del_cert == 3 %}
+                <td bgcolor="#ffff66">Solo</td>
+            {% elif cont.del_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.del_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--GND-->
+            {% if cont.gnd_cert == 3 %}
+                <td bgcolor="#ffff66">Solo</td>
+            {% elif cont.gnd_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.gnd_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--TWR-->
+            {% if cont.twr_cert == 3 %}
+                <td bgcolor="#ffff66">Solo</td>
+            {% elif cont.twr_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.twr_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--APP-->
+            {% if cont.app_cert == 3 %}
+                <td bgcolor="#ffff66">Solo</td>
+            {% elif cont.app_cert == 2 %}
+                <td bgcolor="#00ff7f">Major</td>
+            {% elif cont.app_cert == 1 %}
+                <td bgcolor="#87cefa">Minor</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
+          <!--CTR-->
+            {% if cont.ctr_cert == 3 %}
+                <td bgcolor="#ffff66">Solo</td>
+            {% elif cont.ctr_cert == 2 %}
+                <td bgcolor="#00ff7f">Full</td>
+            {% elif cont.ctr_cert == 1 %}
+                <!-- There's no such thing as a minor Center cert! -->
+                <td bgcolor="white">None</td>
+            {% else %}
+                <td bgcolor="white">None</td>
+            {% endif %}
           </tr>
           {% endfor %}
         </thead>

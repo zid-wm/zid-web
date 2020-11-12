@@ -16,7 +16,7 @@ def require_member(func):
 def require_session(func):
     @wraps(func)
     def inner(request, *args, **kwargs):
-        if request.user_obj and request.session.get('vatsim_data'):
+        if request.session.get('vatsim_data'):
             return func(request, *args, **kwargs)
         else:
             raise PermissionDenied(
@@ -68,3 +68,6 @@ def require_role(role_list):
                     'You lack the necessary role to access this endpoint.')
         return inner
     return decorator
+
+
+

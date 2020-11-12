@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User
+from .models import User, VisitRequest
 
 
 @admin.register(User)
@@ -11,3 +11,8 @@ class UserAdmin(admin.ModelAdmin):
         return obj.status < 2
 
     user_is_active.boolean = True
+
+
+@admin.register(VisitRequest)
+class VisitRequestAdmin(admin.ModelAdmin):
+    list_display = ('cid', 'status')

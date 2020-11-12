@@ -30,6 +30,7 @@ urlpatterns = [
     # Events
     path('events/', event.view_events, name='events'),
     path('events/new/', event.view_new_event, name='new-event'),
+    path('events/edit/<int:event_id>', event.edit_event, name='edit-event'),
     path('events/archived/', event.view_archived_events, name='archived-events'),
     path('events/<int:event_id>', event.view_event_details, name='event-details'),
     path('events/<int:event_id>/delete-position/<int:position_id>',
@@ -51,7 +52,14 @@ urlpatterns = [
     # User
     path('mavp/', user.view_mavp, name='mavp'),
     path('mavp/remove/<str:facility>', user.view_remove_mavp, name='remove-mavp'),
+    path('profile/<int:cid>', user.view_profile, name='profile'),
+    path('profile/edit/<int:cid>', user.edit_profile, name='edit-profile'),
+    path('profile/edit-endorsements/<int:cid>', user.edit_endorsements, name='edit-endorsements'),
     path('roster/', user.view_roster, name='roster'),
     path('staff/', user.view_staff, name='staff'),
-    path('statistics/', user.view_statistics, name='statistics')
+    path('statistics/', user.view_statistics, name='statistics'),
+    path('visit-request/', user.view_visit_request, name='visit-request'),
+    path('visit-request/approve/<int:cid>', user.approve_visit_request, name='approve-visit-request'),
+    path('visit-request/deny/<int:cid>', user.deny_visit_request, name='deny-visit-request'),
+    path('visit-request/manage/', user.manage_visit_requests, name='manage-visit-requests')
 ]

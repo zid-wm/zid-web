@@ -40,11 +40,15 @@ INSTALLED_APPS = [
     'event',
     'pilots',
     'resources',
+    'training',
     'uls',
     'user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
+    # TODO: This module cannot be used until it supports Django 2.0
+    # Pull requests exist to fix the issue but no apparent progress
+    # 'subdomains.middleware.SubdomainURLRoutingMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

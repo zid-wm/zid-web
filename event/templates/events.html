@@ -32,7 +32,7 @@
                         <div class="portfolio-links">
                             <a href="/events/{{ e.id }}" title="See Details"><i class="icofont-info-circle"></i></a>
                             {% if request.user_obj.is_staff %}
-                            <a href="#" title="Edit Event"><i class="icofont-edit"></i></a>
+                            <a href="/events/edit/{{ e.id }}" title="Edit Event"><i class="icofont-edit"></i></a>
                             {% endif %}
                         </div>
                     </div>

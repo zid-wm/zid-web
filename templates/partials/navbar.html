@@ -21,7 +21,15 @@
 
                 <li class="drop-down"><a href="#">Controllers</a>
                     <ul>
-                        <li><a href="/roster">Roster</a></li>
+                        <li {% if request.user_obj.is_staff %} class="drop-down" {% endif %}>
+                            <a href="/roster">Roster</a>
+                            {% if request.user_obj.is_staff %}
+                            <ul>
+                                <li><a href="/mavp">Manage MAVPs</a></li>
+                                <li><a href="/visit-request/manage">Manage Visit Requests</a></li>
+                            </ul>
+                            {% endif %}
+                        </li>
                         <li><a href="/staff">Staff</a></li>
                         <li><a href="/files">Files</a></li>
                         <li><a href="/statistics">Controller Statistics</a></li>
@@ -41,7 +49,11 @@
                 {% if request.session.vatsim_data %}
                     <li class="drop-down"><a href="#">{{ request.session.vatsim_data.firstname }} {{ request.session.vatsim_data.lastname }}</a>
                         <ul>
-                            <li><a href="#">Profile</a></li>
+                            {% if request.user_obj %}
+                            <li><a href="/profile/{{ request.user_obj.cid }}">Profile</a></li>
+                            {% else %}
+                            <li><a href="/visit-request/">Become a Visitor</a></li>
+                            {% endif %}
                             <li><a href="/logout">Log Out</a></li>
                         </ul>
                     </li>

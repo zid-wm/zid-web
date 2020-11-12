@@ -1,0 +1,114 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+{% load extras %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>Profile</li>
+{% endblock %}
+
+{% block body %}
+<section id="team" about="team">
+<div class="container">
+    <div class="row m-3 pt-3">
+        <h1>{{ user.full_name }}</h1>
+    </div>
+    <div class="row m-3 pt-3">
+        <div class="col-4">
+            <div class="member">
+                <div class="member-img">
+                    <img src="{% if user.profile_picture %}{{ user.profile_picture }}{% else %}{% static "img/no-profile.jpg" %}{% endif %}" class="img-fluid" alt="">
+                </div>
+                <div class="member-info">
+                    <p class="pt-3"><strong>Biography</strong><br />
+                    {% if user.biography %}{{ user.biography }}{% else %}No Biography{% endif %}</p>
+                    <a href="/profile/edit/{{ user.cid }}">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <p><strong>CID:</strong> {{ user.cid }}</p>
+            <p><strong>Rating:</strong> {{ user.rating }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <hr />
+            <p><strong>Control Time This Month:</strong> {{ stats.month|format_duration }}</p>
+            <p><strong>Control Time This Year:</strong> {{ stats.year|format_duration }}</p>
+            {% if request.user_obj.is_staff %}
+            <form action="/profile/edit-endorsements/{{ user.cid }}" method="post" role="form" class="php-email-form">
+            {% csrf_token %}
+            <table class="table table-stripped">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Rating</th>
+                </tr>
+                <tr>
+                    <th scope="row">Delivery</th>
+                    <td>
+                        {{ form.delivery }}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Ground</th>
+                    <td>
+                        {{ form.ground }}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Tower</th>
+                    <td>
+                        {{ form.tower }}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Approach/Departure</th>
+                    <td>
+                        {{ form.approach }}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Center</th>
+                    <td>
+                        {{ form.center }}
+                    </td>
+                </tr>
+                </thead>
+            </table>
+            <div class="text-center pt-3">
+                <button type="submit" class="btn btn-success">Save Changes</button>
+            </div>
+            {% else %}
+            <table class="table table-stripped">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Rating</th>
+                </tr>
+                <tr>
+                    <th scope="row">Delivery</th>
+                    <td>{{ user.del_cert|endorsement }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Ground</th>
+                    <td>{{ user.gnd_cert|endorsement }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Tower</th>
+                    <td>{{ user.twr_cert|endorsement }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Approach/Departure</th>
+                    <td>{{ user.app_cert|endorsement }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Center</th>
+                    <td>{{ user.ctr_cert|endorsement }}</td>
+                </tr>
+                </thead>
+            </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</section>
+{% endblock %}
