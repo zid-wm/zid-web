@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'event',
     'pilots',
     'resources',
-    'training',
     'uls',
     'user.apps.UserConfig'
 ]
