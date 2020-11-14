@@ -30,6 +30,7 @@ urlpatterns = [
     # Events
     path('events/', event.view_events, name='events'),
     path('events/new/', event.view_new_event, name='new-event'),
+    path('events/delete/<int:event_id>', event.delete_event, name='delete-event'),
     path('events/edit/<int:event_id>', event.edit_event, name='edit-event'),
     path('events/archived/', event.view_archived_events, name='archived-events'),
     path('events/<int:event_id>', event.view_event_details, name='event-details'),
@@ -44,6 +45,8 @@ urlpatterns = [
 
     # Resources
     path('files/', resources.view_files, name='files'),
+    path('files/add/', resources.add_file, name='add-file'),
+    path('files/delete/<str:file_cat>/<str:file_name>', resources.delete_file, name='delete-file'),
 
     # ULS (Auth)
     path('login/', uls.login, name='login'),
@@ -61,5 +64,6 @@ urlpatterns = [
     path('visit-request/', user.view_visit_request, name='visit-request'),
     path('visit-request/approve/<int:cid>', user.approve_visit_request, name='approve-visit-request'),
     path('visit-request/deny/<int:cid>', user.deny_visit_request, name='deny-visit-request'),
-    path('visit-request/manage/', user.manage_visit_requests, name='manage-visit-requests')
+    path('visit-request/manage/', user.manage_visit_requests, name='manage-visit-requests'),
+    path('visit-request/manual-add/', user.manual_add_visitor, name='manual-add-visitor')
 ]
