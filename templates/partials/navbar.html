@@ -31,7 +31,13 @@
                             {% endif %}
                         </li>
                         <li><a href="/staff">Staff</a></li>
-                        <li><a href="/files">Files</a></li>
+                        {% if request.user_obj %}<li {% if request.user_obj.is_staff %} class="drop-down" {% endif %}><a href="/files">Files</a>
+                            {% if request.user_obj.is_staff %}
+                            <ul>
+                                <li><a href="/files/add">Add File</a></li>
+                            </ul>
+                            {% endif %}
+                        </li>{% endif %}
                         <li><a href="/statistics">Controller Statistics</a></li>
                         <li {% if request.user_obj.is_staff %} class="drop-down" {% endif %}>
                             <a href="/events">Events</a>
