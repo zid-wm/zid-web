@@ -614,6 +614,19 @@ section {
   margin-bottom: 0;
 }
 
+.about .php-email-form button[type="submit"] {
+  background: var(--main-blue);
+  border: 0;
+  padding: 10px 24px;
+  color: #fff;
+  transition: 0.4s;
+  border-radius: 50px;
+}
+
+.about .php-email-form button[type="submit"]:hover {
+  background: var(--main-blue-hover);
+}
+
 .about .play-btn {
   width: 94px;
   height: 94px;
