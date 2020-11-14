@@ -1,8 +1,12 @@
 import boto3
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
-# Create your views here.
+from resources.forms import AddFileForm
+from zid_web.decorators import require_staff, require_member
+
+
+@require_member
 def view_files(request):
     s3_client = boto3.client('s3')
     s3_objects = s3_client.list_objects_v2(Bucket='zid-files')
@@ -38,4 +42,36 @@ def view_files(request):
         'mavp_files': mavp_files,
         'misc_files': misc_files
     })
+
+
+@require_staff
+def add_file(request):
+    if request.method == 'POST':
+        s3 = boto3.client('s3')
+        # TODO: Make sure file with this name doesn't exist
+        s3.upload_fileobj(
+            request.FILES['file'],
+            'zid-files',
+            f'{request.POST["category"]}/{request.POST["file_name"]}',
+            ExtraArgs={
+                'ACL': 'public-read'
+            }
+        )
+        return redirect('/files')
+    else:
+        form = AddFileForm()
+        return render(request, 'add_file.html', {
+            'page_title': 'Add File',
+            'form': form
+        })
+
+
+@require_staff
+def delete_file(request, file_cat, file_name):
+    s3 = boto3.client('s3')
+    s3.delete_object(
+        Bucket='zid-files',
+        Key=f'{file_cat}/{file_name}'
+    )
+    return redirect('/files')
 
