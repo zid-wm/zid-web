@@ -4,6 +4,8 @@ import os
 import requests
 
 from datetime import date
+
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.db.models import Sum, Q
 from django.utils import timezone
@@ -15,7 +17,8 @@ from .forms import (
     AddMavpForm,
     EditProfileForm,
     EditEndorsementForm,
-    VisitingRequestForm
+    VisitingRequestForm,
+    ManualAddVisitorForm
 )
 from user.models import User, VisitRequest
 from user.update import add_visitor
@@ -64,11 +67,14 @@ def view_roster(request):
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
     ).order_by('last_name')
 
+    visitor_form = ManualAddVisitorForm()
+
     return render(request, 'roster.html', {
         'page_title': 'Roster',
         'home_roster': home_roster,
         'visit_roster': visit_roster,
-        'mavp_roster': mavp_roster
+        'mavp_roster': mavp_roster,
+        'visitor_form': visitor_form
     })
 
 
@@ -191,10 +197,13 @@ def view_profile(request, cid):
 
 @require_member
 def edit_profile(request, cid):
-    # TODO: Add check to verify user
+    if not (request.user_obj.cid == cid or request.user_obj.is_staff):
+        return HttpResponse(403)
     user = User.objects.get(
         cid=cid
     )
+
+    # TODO: Add option to remove profile picture
     if request.method == 'POST':
         if request.FILES:
             s3 = boto3.client('s3')
@@ -315,3 +324,10 @@ def deny_visit_request(request, cid):
     req.save()
     # TODO: Add denial email logic
     return redirect('/visit-request/manage')
+
+
+@require_staff
+@require_POST
+def manual_add_visitor(request):
+    add_visitor(request.POST['cid'])
+    return redirect('/roster')

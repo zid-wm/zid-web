@@ -93,3 +93,12 @@ class VisitingRequestForm(forms.Form):
         }),
         label='Why do you want to visit ZID?'
     )
+
+
+class ManualAddVisitorForm(forms.Form):
+    cid = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter CID'
+        })
+    )

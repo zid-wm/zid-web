@@ -123,7 +123,8 @@ def update_roster():
                     action=f'New MAVP controller {new_user.full_name} was created by system.'
                 ).save()
 
-            else:
+            # Don't update full visiting controllers during the MAVP update
+            elif User.objects.get(cid=details['cid']).main_role == 'MC':
                 edit_user = User.objects.get(cid=details['cid'])
                 edit_user.rating = details['rating_short']
                 edit_user.home_facility = mavp_artcc.facility_short
@@ -209,6 +210,12 @@ def add_visitor(cid):
         f'https://api.vatusa.net/v2/user/{cid}',
         params={'apikey': os.getenv('API_KEY')}
     ).json()
+
+    if User.objects.filter(
+        cid=cid,
+        main_role='MC'
+    ).exists():
+        User.objects.get(cid=cid).delete()
 
     new_user = User(
         first_name=user_data['fname'],
