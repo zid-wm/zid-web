@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'administration',
     'api.apps.ApiConfig',
     'event',
+    'feedback',
     'pilots',
     'resources',
     'uls',

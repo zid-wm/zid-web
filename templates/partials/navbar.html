@@ -51,7 +51,14 @@
                     </ul>
                 </li>
 
-                <li><a href="#">Feedback</a></li>
+                <li {% if request.user_obj.is_staff %} class="drop-down"{% endif %}><a href="/feedback">Feedback</a>
+                {% if request.user_obj.is_staff %}
+                <ul>
+                    <li><a href="/feedback/manage">Manage Feedback</a></li>
+                </ul>
+                {% endif %}
+                </li>
+
                 {% if request.session.vatsim_data %}
                     <li class="drop-down"><a href="#">{{ request.session.vatsim_data.firstname }} {{ request.session.vatsim_data.lastname }}</a>
                         <ul>

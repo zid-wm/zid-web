@@ -13,6 +13,7 @@ from django.views.decorators.http import require_POST
 
 from administration.models import MAVP
 from api.models import ControllerSession
+from feedback.models import Feedback
 from .forms import (
     AddMavpForm,
     EditProfileForm,
@@ -187,11 +188,17 @@ def view_profile(request, cid):
         year=Sum('duration', filter=Q(start__year=now.year))
     )
 
+    feedback = Feedback.objects.filter(
+        controller__cid=cid,
+        status=1
+    ).order_by('-last_updated')
+
     return render(request, 'profile.html', {
         'page_title': 'Profile',
         'user': user,
         'stats': stats,
-        'form': form
+        'form': form,
+        'feedback': feedback
     })
 
 

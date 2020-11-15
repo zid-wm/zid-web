@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from event import views as event
+from feedback import views as feedback
 from pilots import views as pilots
 from resources import views as resources
 from uls import views as uls
@@ -36,6 +37,13 @@ urlpatterns = [
     path('events/<int:event_id>', event.view_event_details, name='event-details'),
     path('events/<int:event_id>/delete-position/<int:position_id>',
          event.delete_position, name='delete-position'),
+
+    # Feedback
+    path('feedback/', feedback.new_feedback, name='feedback'),
+    path('feedback/manage/', feedback.manage_feedback, name='manage-feedback'),
+    path('feedback/post/<int:feedback_id>', feedback.post_feedback, name='post-feedback'),
+    path('feedback/reject/<int:feedback_id>', feedback.reject_feedback, name='reject-feedback'),
+    path('feedback/submit/', feedback.submit_feedback, name='submit-feedback'),
 
     # Pilots
     path('pilot-briefing/', pilots.view_pilot_briefing, name='briefing'),
