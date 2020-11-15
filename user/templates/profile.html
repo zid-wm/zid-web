@@ -22,7 +22,9 @@
                 <div class="member-info">
                     <p class="pt-3"><strong>Biography</strong><br />
                     {% if user.biography %}{{ user.biography }}{% else %}No Biography{% endif %}</p>
-                    <a href="/profile/edit/{{ user.cid }}">Edit Profile</a>
+                    {% if request.user_obj.cid == user.cid or request.user_obj.is_staff %}
+                        <a href="/profile/edit/{{ user.cid }}">Edit Profile</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
