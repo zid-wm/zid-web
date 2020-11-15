@@ -7,9 +7,13 @@ class NewEventForm(forms.Form):
     banner = forms.FileField(widget=forms.FileInput(
         attrs={'class': 'form-control'}))
     start = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={'class': 'form-control'}))
+        widget=forms.DateTimeInput(attrs={'class': 'form-control'}),
+        label='Event Start (YYYY-MM-DD HH:MMz)'
+    )
     end = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={'class': 'form-control'}))
+        widget=forms.DateTimeInput(attrs={'class': 'form-control'}),
+        label='Event End (YYYY-MM-DD HH:MMz)'
+    )
     host = forms.CharField(max_length=16, widget=forms.TextInput(
         attrs={'class': 'form-control'}))
     description = forms.CharField(
