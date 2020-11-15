@@ -120,6 +120,11 @@
                 <th scope="col">Staff Comments</th>
                 <th scope="col" style="width:18%">Submitted</th>
             </tr>
+            {% if not feedback %}
+            <tr>
+                <td colspan="5" style="text-align:center">No feedback posted!</td>
+            </tr>
+            {% endif %}
             {% for item in feedback %}
                 <tr>
                     <td>{{ item.position }}</td>
