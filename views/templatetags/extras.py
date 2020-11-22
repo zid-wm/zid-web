@@ -1,4 +1,5 @@
 import os
+import re
 
 from django import template
 
@@ -10,7 +11,15 @@ register = template.Library()
 
 @register.filter
 def format_duration(td):
-    return str(td).split('.')[0]
+    """
+    The native Django datetime field returns timestamps in the format:
+    DD days, HH:MM:SS.XXXXXX
+    This function chops off the seconds and changes the number of days
+    to appear as colon-delimited.
+    """
+    time = re.findall(r'\d+', str(td))
+    result = ':'
+    return result.join(time[:-2])  # [:-2] because we can discard the seconds
 
 
 @register.filter
@@ -32,3 +41,8 @@ def feedback(f):
 @register.simple_tag
 def uls_redirect_url():
     return os.getenv('ULS_REDIR_URL')
+
+
+@register.filter
+def lookup(dict, key):
+    return dict.get(key)

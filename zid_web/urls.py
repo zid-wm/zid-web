@@ -37,6 +37,7 @@ urlpatterns = [
     path('events/<int:event_id>', event.view_event_details, name='event-details'),
     path('events/<int:event_id>/delete-position/<int:position_id>',
          event.delete_position, name='delete-position'),
+    path('events/<int:event_id>/signup/<int:pos_id>', event.request_position, name='event-signup'),
 
     # Feedback
     path('feedback/', feedback.new_feedback, name='feedback'),

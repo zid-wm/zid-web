@@ -64,7 +64,8 @@
                         <ul>
                             {% if request.user_obj %}
                             <li><a href="/profile/{{ request.user_obj.cid }}">Profile</a></li>
-                            {% else %}
+                            {% endif %}
+                            {% if request.user_obj.main_role == 'MC' or not request.user_obj %}
                             <li><a href="/visit-request/">Become a Visitor</a></li>
                             {% endif %}
                             <li><a href="/logout">Log Out</a></li>

@@ -4,9 +4,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
-from event.models import Event, EventPosition
+from event.models import Event, EventPosition, EventSignup
 from .forms import NewEventForm, AddPositionForm, EditEventForm
-from zid_web.decorators import require_staff
+from user.models import User
+from zid_web.decorators import require_staff, require_member
 
 
 def view_events(request):
@@ -36,8 +37,13 @@ def view_event_details(request, event_id):
 
     if event.hidden and user.is_staff or not event.hidden:
         positions = {'center': [], 'tracon': [], 'cab': []}
+        position_signups = {}
         for position in event.positions.all():
             positions[position.category] += [position]
+
+            position_signups[position.callsign] = EventSignup.objects.filter(
+                position=position
+            )
 
         return render(request, 'event-details.html', {
             'page_title': event.name,
@@ -46,7 +52,8 @@ def view_event_details(request, event_id):
             'available': {k: len(list(filter(lambda pos: pos.user is None, positions[k]))) for k in positions},
             'user': user,
             'allowed_to_signup': user and user.status == 'ACTIVE' and event.end >= timezone.now(),
-            'add_position_form': add_position_form
+            'add_position_form': add_position_form,
+            'position_signups': position_signups
         })
 
     else:
@@ -158,3 +165,17 @@ def delete_position(request, position_id, event_id):
 def delete_event(request, event_id):
     Event.objects.get(id=event_id).delete()
     return redirect(f'/events')
+
+
+@require_member
+def request_position(request, event_id, pos_id):
+    signup = EventSignup(
+        position=EventPosition.objects.get(
+            id=pos_id
+        ),
+        user=User.objects.get(
+            cid=request.user_obj.cid
+        )
+    )
+    signup.save()
+    return redirect(f'/events/{event_id}')

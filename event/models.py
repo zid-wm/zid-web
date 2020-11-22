@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 from user.models import User
@@ -41,7 +43,6 @@ class EventSignup(models.Model):
         EventPosition, models.CASCADE, related_name='signups')
     user = models.ForeignKey(User, models.CASCADE,
                              related_name='event_signups')
-    rank = models.IntegerField()
 
     def assign(self):
         self.position.user = self.user

@@ -1,5 +1,6 @@
 {% extends 'mainTemplate.html' %}
 {% load static %}
+{% load extras %}
 
 {% block breadcrumbs %}
 <li><a href="/">Home</a></li>
@@ -59,7 +60,7 @@
                                 {% if positions.user %}
                                 <td style="vertical-align:middle">{{ p.user.name }}</td>
                                 {% else %}
-                                <td style="vertical-align:middle">No Assignment</td>
+                                <td style="vertical-align:middle">No Assignment - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a></td>
                                 {% endif %}
 
                                 {% if request.user_obj.is_staff %}
@@ -72,6 +73,15 @@
                                 <td>
                                 {% endif %}
                             </tr>
+                            {% if request.user_obj.is_staff %}
+                                {% for signup in position_signups|lookup:p.callsign %}
+                                    <tr>
+                                    <td></td>
+                                    <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
+                                    <td><strong><a href="#">Assign</a></strong></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
                             {% endfor %}
                         </thead>
                     </table>
@@ -94,7 +104,7 @@
                                 {% if positions.user %}
                                 <td style="vertical-align:middle">{{ p.user.name }}</td>
                                 {% else %}
-                                <td style="vertical-align:middle">No Assignment</td>
+                                <td style="vertical-align:middle">No Assignment - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a></td>
                                 {% endif %}
                                 
                                 {% if request.user_obj.is_staff %}
@@ -107,6 +117,15 @@
                                 <td>
                                 {% endif %}
                             </tr>
+                            {% if request.user_obj.is_staff %}
+                                {% for signup in position_signups|lookup:p.callsign %}
+                                    <tr>
+                                    <td></td>
+                                    <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
+                                    <td><strong><a href="#">Assign</a></strong></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
                             {% endfor %}
                         </thead>
                     </table>
@@ -129,7 +148,7 @@
                                 {% if positions.user %}
                                 <td style="vertical-align:middle">{{ p.user.name }}</td>
                                 {% else %}
-                                <td style="vertical-align:middle">No Assignment</td>
+                                <td style="vertical-align:middle">No Assignment - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a></td>
                                 {% endif %}
                                 
                                 {% if request.user_obj.is_staff %}
@@ -142,6 +161,15 @@
                                 <td>
                                 {% endif %}
                             </tr>
+                            {% if request.user_obj.is_staff %}
+                                {% for signup in position_signups|lookup:p.callsign %}
+                                    <tr>
+                                    <td></td>
+                                    <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
+                                    <td><strong><a href="#">Assign</a></strong></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
                             {% endfor %}
                         </thead>
                     </table>
