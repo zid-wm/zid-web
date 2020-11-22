@@ -35,8 +35,8 @@ def get_leaderboard_by_position(month, year, pos):
 def view_home(request):
     online_controllers_count = Controller.objects.count()
     total_home_controllers = User.objects.filter(main_role='HC').count()
-    month_control_time = str(ControllerSession.objects.aggregate(
-        Sum('duration'))['duration__sum']).split('.')[0]
+    month_control_time = ControllerSession.objects.aggregate(
+        Sum('duration'))['duration__sum']
 
     try:
         # The timeout is set to slightly longer than a standard TCP packet retransmission window.
