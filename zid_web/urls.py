@@ -30,6 +30,7 @@ urlpatterns = [
 
     # Events
     path('events/', event.view_events, name='events'),
+    path('events/assign/<int:signup_id>', event.assign_position, name='assign-position'),
     path('events/new/', event.view_new_event, name='new-event'),
     path('events/delete/<int:event_id>', event.delete_event, name='delete-event'),
     path('events/edit/<int:event_id>', event.edit_event, name='edit-event'),
