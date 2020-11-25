@@ -19,7 +19,7 @@ def update_roster():
     # Update home controllers
     #############################################
     roster = requests.get(
-        'https://api.vatusa.net/v2/facility/ZID/roster',
+        'https://api.vatusa.net/v2/facility/ZID/roster/both',
         params={
             'apikey': os.getenv('API_KEY')
         }
@@ -38,7 +38,7 @@ def update_roster():
                     details['fname'][0], details['lname'][0]
                 ),
                 rating=details['rating_short'],
-                main_role='HC'
+                main_role='HC' if details['facility'] == 'ZID' else 'VC'
             )
             for role in details['roles']:
                 if role['facility'] == 'ZID':
@@ -153,19 +153,6 @@ def update_roster():
                     action=f'MAVP Controller {user.full_name} was set as inactive by system.'
                 ).save()
 
-    #############################################
-    # Update visiting controllers
-    #############################################
-    for edit_user in User.objects.filter(main_role='VC'):
-        details = requests.get(
-            f'https://api.vatusa.net/v2/user/{edit_user.cid}',
-            params={
-                'apikey': os.getenv('API_KEY')
-            }
-        ).json()
-        edit_user.rating = details['rating_short']
-        edit_user.save()
-
 
 def update_loa():
     for user in User.objects.filter(status=1):
@@ -206,29 +193,18 @@ def assign_operating_initials(f_init, l_init, user=None):
 
 
 def add_visitor(cid):
-    user_data = requests.get(
-        f'https://api.vatusa.net/v2/user/{cid}',
+    response = requests.post(
+        f'https://api.vatusa.net/v2/facility/ZID/roster/manageVisitor/{cid}',
         params={'apikey': os.getenv('API_KEY')}
     ).json()
+
+    if response['status'] == 'OK':
+        print(f'Added CID {cid} to visiting roster.')
+    else:
+        print(f'Error adding CID {cid} to visiting roster: {response}')
 
     if User.objects.filter(
         cid=cid,
         main_role='MC'
     ).exists():
         User.objects.get(cid=cid).delete()
-
-    new_user = User(
-        first_name=user_data['fname'],
-        last_name=user_data['lname'],
-        cid=cid,
-        email=user_data['email'],
-        oper_init=assign_operating_initials(
-            user_data['fname'][0],
-            user_data['lname'][0],
-        ),
-        home_facility=user_data['facility'],
-        rating=user_data['rating_short'],
-        main_role='VC'
-    )
-    new_user.save()
-    new_user.assign_initial_certs()
