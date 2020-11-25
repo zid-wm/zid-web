@@ -23,6 +23,9 @@
                 <h5>End: {{ event.end }}</h5>
                 <h5>Host: {{ event.host }}</h5>
                 <p>{{ event.description }}</p>
+                {% if request.user_obj.is_staff %}
+                    <p><a href="/events/edit/{{ event.id }}"><i class="icofont-edit"></i> Edit Event</a></p>
+                {% endif %}
             </div>
 
             <div class="col">
@@ -57,10 +60,10 @@
                             {% for p in positions.center %}
                             <tr>
                                 <td style="vertical-align:middle">{{ p.callsign }}</td>
-                                {% if positions.user %}
-                                <td style="vertical-align:middle">{{ p.user.name }}</td>
+                                {% if p.user %}
+                                <td style="vertical-align:middle">{{ p.user.full_name }}</td>
                                 {% else %}
-                                <td style="vertical-align:middle">No Assignment - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a></td>
+                                <td style="vertical-align:middle">No Assignment{% if request.user_obj.is_staff %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
                                 {% endif %}
 
                                 {% if request.user_obj.is_staff %}
@@ -78,7 +81,7 @@
                                     <tr>
                                     <td></td>
                                     <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
-                                    <td><strong><a href="#">Assign</a></strong></td>
+                                    <td><strong><a href="/events/assign/{{ signup.id }}">Assign</a></strong></td>
                                     </tr>
                                 {% endfor %}
                             {% endif %}
@@ -101,10 +104,10 @@
                             {% for p in positions.tracon %}
                             <tr>
                                 <td style="vertical-align:middle">{{ p.callsign }}</td>
-                                {% if positions.user %}
-                                <td style="vertical-align:middle">{{ p.user.name }}</td>
+                                {% if p.user %}
+                                <td style="vertical-align:middle">{{ p.user.full_name }}</td>
                                 {% else %}
-                                <td style="vertical-align:middle">No Assignment - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a></td>
+                                <td style="vertical-align:middle">No Assignment{% if request.user_obj.is_staff %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
                                 {% endif %}
                                 
                                 {% if request.user_obj.is_staff %}
@@ -122,7 +125,7 @@
                                     <tr>
                                     <td></td>
                                     <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
-                                    <td><strong><a href="#">Assign</a></strong></td>
+                                    <td><strong><a href="/events/assign/{{ signup.id }}">Assign</a></strong></td>
                                     </tr>
                                 {% endfor %}
                             {% endif %}
@@ -145,10 +148,10 @@
                             {% for p in positions.cab %}
                             <tr>
                                 <td style="vertical-align:middle">{{ p.callsign }}</td>
-                                {% if positions.user %}
-                                <td style="vertical-align:middle">{{ p.user.name }}</td>
+                                {% if p.user %}
+                                <td style="vertical-align:middle">{{ p.user.full_name }}</td>
                                 {% else %}
-                                <td style="vertical-align:middle">No Assignment - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a></td>
+                                <td style="vertical-align:middle">No Assignment{% if request.user_obj.is_staff %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
                                 {% endif %}
                                 
                                 {% if request.user_obj.is_staff %}
@@ -166,7 +169,7 @@
                                     <tr>
                                     <td></td>
                                     <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
-                                    <td><strong><a href="#">Assign</a></strong></td>
+                                    <td><strong><a href="/events/assign/{{ signup.id }}">Assign</a></strong></td>
                                     </tr>
                                 {% endfor %}
                             {% endif %}

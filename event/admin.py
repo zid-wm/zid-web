@@ -1,3 +1,27 @@
 from django.contrib import admin
+from event.models import (
+    Event,
+    EventSignup,
+    EventPosition,
+    PositionPreset
+)
 
-# Register your models here.
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('name', 'start', 'end')
+
+
+@admin.register(EventSignup)
+class EventSignupAdmin(admin.ModelAdmin):
+    list_display = ('position', 'user')
+
+
+@admin.register(EventPosition)
+class EventPositionAdmin(admin.ModelAdmin):
+    list_display = ('event', 'user', 'callsign')
+
+
+@admin.register(PositionPreset)
+class PositionPresetAdmin(admin.ModelAdmin):
+    list_display = ('name', 'positions_json')

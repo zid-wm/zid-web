@@ -1,5 +1,6 @@
 import boto3
 
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -179,3 +180,18 @@ def request_position(request, event_id, pos_id):
     )
     signup.save()
     return redirect(f'/events/{event_id}')
+
+
+@require_staff
+def assign_position(request, signup_id):
+    signup = EventSignup.objects.get(
+        id=signup_id
+    )
+    signup.assign()
+    signup.save()
+
+    EventSignup.objects.filter(
+        Q(position=signup.position) |
+        Q(user=signup.user)
+    ).delete()
+    return redirect(f'/events/{signup.position.event_id}')
