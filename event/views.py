@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
+from administration.models import ActionLog
 from event.models import Event, EventPosition, EventSignup
 from .forms import NewEventForm, AddPositionForm, EditEventForm
 from user.models import User
@@ -100,6 +101,9 @@ def view_new_event(request):
             description=request.POST['description']
         )
         new_event.save()
+        ActionLog(
+            action=f'Event {request.POST["name"]} was created by {request.user_obj.full_name}.'
+        ).save()
         return redirect('/events')
 
     else:
@@ -135,6 +139,9 @@ def edit_event(request, event_id):
             event.banner = f'https://zid-files.s3.us-east-1.amazonaws.com/img/{request.POST["name"]}'
 
         event.save()
+        ActionLog(
+            action=f'Event {request.POST["name"]} was edited by {request.user_obj.full_name}.'
+        ).save()
         return redirect('/events')
     else:
         event = Event.objects.get(
@@ -164,6 +171,9 @@ def delete_position(request, position_id, event_id):
 
 @require_staff
 def delete_event(request, event_id):
+    ActionLog(
+        action=f'Event {Event.objects.get(id=event_id).name} was deleted by {request.user_obj.full_name}.'
+    ).save()
     Event.objects.get(id=event_id).delete()
     return redirect(f'/events')
 
@@ -189,6 +199,11 @@ def assign_position(request, signup_id):
     )
     signup.assign()
     signup.save()
+
+    ActionLog(
+        action=f'{signup.user.full_name} was assigned to {signup.position.callsign} for {signup.position.event.name} '
+               f'by {request.user_obj.full_name}.'
+    ).save()
 
     EventSignup.objects.filter(
         Q(position=signup.position) |

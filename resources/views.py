@@ -2,6 +2,7 @@ import boto3
 
 from django.shortcuts import render, redirect
 
+from administration.models import ActionLog
 from resources.forms import AddFileForm
 from zid_web.decorators import require_staff, require_member
 
@@ -57,6 +58,11 @@ def add_file(request):
                 'ACL': 'public-read'
             }
         )
+
+        ActionLog(
+            action=f'{request.user_obj.full_name} uploaded a file: {request.POST["file_name"]}'
+        ).save()
+
         return redirect('/files')
     else:
         form = AddFileForm()
@@ -73,5 +79,10 @@ def delete_file(request, file_cat, file_name):
         Bucket='zid-files',
         Key=f'{file_cat}/{file_name}'
     )
+
+    ActionLog(
+        action=f'{request.user_obj.full_name} deleted a file: {file_name}'
+    ).save()
+
     return redirect('/files')
 

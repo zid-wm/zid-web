@@ -69,7 +69,7 @@ def update_roster():
                 edit_user.email = details['email']
                 edit_user.oper_init = assign_operating_initials(
                     details['fname'][0], details['lname'][0], edit_user)
-                edit_user.main_role = 'HC'
+                edit_user.main_role = 'HC' if details['facility'] == 'ZID' else 'VC'
 
                 edit_user.save()
                 edit_user.assign_initial_certs()
@@ -82,7 +82,7 @@ def update_roster():
     # Set controllers to inactive if they are no longer on VATUSA roster
     #############################################
     roster_cids = [roster[user]['cid'] for user in roster]
-    for user in User.objects.filter(main_role='HC').exclude(status=2):
+    for user in User.objects.filter(main_role__in=['HC', 'VC']).exclude(status=2):
         if user.cid not in roster_cids:
             user.status = 2
             user.save()

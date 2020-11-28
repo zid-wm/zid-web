@@ -11,7 +11,7 @@ from django.db.models import Sum, Q
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from administration.models import MAVP
+from administration.models import MAVP, ActionLog
 from api.models import ControllerSession
 from feedback.models import Feedback
 from .forms import (
@@ -136,6 +136,10 @@ def view_mavp(request):
             facility_long=request.POST['facility_long']
         ).save()
 
+        ActionLog(
+            action=f'{request.user_obj.full_name} added an MAVP agreement with {request.POST["facility_short"]}.'
+        ).save()
+
     return render(request, 'mavp.html', {
         'page_title': 'MAVP Management',
         'mavps': mavps,
@@ -155,6 +159,10 @@ def view_remove_mavp(request, facility):
             home_facility=facility
         ).delete()
 
+        ActionLog(
+            action=f'{request.user_obj.full_name} removed the MAVP agreement with {facility}.'
+        ).save()
+
         return redirect('/mavp')
     else:
         facility = MAVP.objects.get(
@@ -169,6 +177,9 @@ def view_remove_mavp(request, facility):
 
 @require_member
 def view_profile(request, cid):
+    if not (request.user_obj.cid == cid or request.user_obj.is_staff or request.user_obj.is_trainer):
+        # Non-staff/trainer members should only be able to view their own profile
+        return HttpResponse(403)
     user = User.objects.get(
         cid=cid
     )
@@ -228,6 +239,15 @@ def edit_profile(request, cid):
         if request.POST['biography']:
             user.biography = request.POST['biography']
 
+        if request.user_obj.cid == cid:
+            ActionLog(
+                action=f'{request.user_obj.full_name} made changes to their profile.'
+            ).save()
+        else:
+            ActionLog(
+                action=f'{request.user_obj.full_name} made changes to {user.full_name}\'s profile.'
+            ).save()
+
         user.save()
         return redirect(f'/profile/{cid}')
 
@@ -256,6 +276,10 @@ def edit_endorsements(request, cid):
     user.ctr_cert = request.POST['center']
 
     user.save()
+
+    ActionLog(
+        action=f'{request.user_obj.full_name} made changes to the endorsements for {user.full_name}.'
+    ).save()
 
     return redirect(f'/profile/{cid}')
 
@@ -320,6 +344,10 @@ def approve_visit_request(request, cid):
     req = VisitRequest.objects.get(cid=cid)
     req.status = 1
     req.save()
+
+    ActionLog(
+        action=f'{request.user_obj.full_name} approved the visit request for {User.objects.get(cid=cid).full_name}.'
+    ).save()
     # TODO: Add approval email logic
     return redirect('/visit-request/manage')
 
@@ -329,6 +357,10 @@ def deny_visit_request(request, cid):
     req = VisitRequest.objects.get(cid=cid)
     req.status = 2
     req.save()
+
+    ActionLog(
+        action=f'{request.user_obj.full_name} denied the visit request for {User.objects.get(cid=cid).full_name}.'
+    ).save()
     # TODO: Add denial email logic
     return redirect('/visit-request/manage')
 
@@ -337,4 +369,9 @@ def deny_visit_request(request, cid):
 @require_POST
 def manual_add_visitor(request):
     add_visitor(request.POST['cid'])
+
+    ActionLog(
+        action=f'{request.user_obj.full_name} manually added {User.objects.get(cid=request.POST["cid"]).full_name} '
+               f'as a visiting controller.'
+    )
     return redirect('/roster')

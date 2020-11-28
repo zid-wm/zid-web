@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 
+from administration.models import ActionLog
 from feedback.forms import NewFeedbackForm, ReviewFeedbackForm
 from feedback.models import Feedback
 from user.models import User
@@ -52,6 +53,11 @@ def post_feedback(request, feedback_id):
         feedback.status = 1
         feedback.save()
 
+        ActionLog(
+            action=f'Feedback {feedback.id} for {feedback.controller.full_name} '
+                   f'was posted by {request.user_obj.full_name}.'
+        ).save()
+
         return redirect('/feedback/manage')
     else:
         form = ReviewFeedbackForm()
@@ -69,6 +75,11 @@ def reject_feedback(request, feedback_id):
         feedback.staff_comment = request.POST['staff_comment']
         feedback.status = 2
         feedback.save()
+
+        ActionLog(
+            action=f'Feedback {feedback.id} for {feedback.controller.full_name} '
+                   f'was rejected by {request.user_obj.full_name}.'
+        ).save()
 
         return redirect('/feedback/manage')
     else:
