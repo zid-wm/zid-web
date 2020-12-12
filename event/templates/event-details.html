@@ -63,7 +63,7 @@
                                 {% if p.user %}
                                 <td style="vertical-align:middle">{{ p.user.full_name }}</td>
                                 {% else %}
-                                <td style="vertical-align:middle">No Assignment{% if request.user_obj.is_staff %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
+                                <td style="vertical-align:middle">No Assignment{% if not user_has_position %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
                                 {% endif %}
 
                                 {% if request.user_obj.is_staff %}
@@ -107,7 +107,7 @@
                                 {% if p.user %}
                                 <td style="vertical-align:middle">{{ p.user.full_name }}</td>
                                 {% else %}
-                                <td style="vertical-align:middle">No Assignment{% if request.user_obj.is_staff %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
+                                <td style="vertical-align:middle">No Assignment{% if not user_has_position %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
                                 {% endif %}
                                 
                                 {% if request.user_obj.is_staff %}
@@ -151,7 +151,7 @@
                                 {% if p.user %}
                                 <td style="vertical-align:middle">{{ p.user.full_name }}</td>
                                 {% else %}
-                                <td style="vertical-align:middle">No Assignment{% if request.user_obj.is_staff %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
+                                <td style="vertical-align:middle">No Assignment{% if not user_has_position %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
                                 {% endif %}
                                 
                                 {% if request.user_obj.is_staff %}

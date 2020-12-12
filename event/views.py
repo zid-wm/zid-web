@@ -27,6 +27,10 @@ def view_events(request):
 def view_event_details(request, event_id):
     event = Event.objects.get(id=event_id)
     user = request.user_obj
+    user_has_position = EventPosition.objects.filter(
+        user=user,
+        event=event
+    ).exists()
 
     add_position_form = AddPositionForm()
 
@@ -55,7 +59,8 @@ def view_event_details(request, event_id):
             'user': user,
             'allowed_to_signup': user and user.status == 'ACTIVE' and event.end >= timezone.now(),
             'add_position_form': add_position_form,
-            'position_signups': position_signups
+            'position_signups': position_signups,
+            'user_has_position': user_has_position
         })
 
     else:
