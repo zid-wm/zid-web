@@ -21,8 +21,8 @@ ALLOWED_HOSTS = [
     '.amazonaws.com',
     'zidartcc.org',
     'localhost',
-    'zidbase-dev.name',
-    'zidbase-dev.alpha'
+    '.zidbase-dev.name',
+    '.zidbase-dev.alpha'
 ]
 
 
