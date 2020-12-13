@@ -4,6 +4,7 @@ import os
 from datetime import date
 from django.shortcuts import render
 from django.db.models import Sum, Q
+from json import JSONDecodeError
 
 from api.models import Controller, ControllerSession
 from user.models import User
@@ -42,6 +43,9 @@ def view_home(request):
         # The timeout is set to slightly longer than a standard TCP packet retransmission window.
         pilots = requests.get('https://api.denartcc.org/live/ZID', timeout=3.05).json()
     except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
+        pilots = []
+    except JSONDecodeError:
+        # TODO: Add logging here
         pilots = []
 
     online_controllers = Controller.objects.all()
