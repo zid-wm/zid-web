@@ -7,7 +7,7 @@ from datetime import date
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, ObjectDoesNotExist, F
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
@@ -21,12 +21,20 @@ from .forms import (
     VisitingRequestForm,
     ManualAddVisitorForm
 )
-from user.models import User, VisitRequest
+from user.models import User, VisitRequest, RATING_INTS
 from user.update import add_visitor
 from zid_web.decorators import require_staff, require_member, require_session
 
 
 def view_roster(request):
+    # TODO: Add select box to choose sort method
+    sort = request.GET.get('sort', 'last_name')
+    if sort in ['last_name', 'rating']:
+        pass # TODO: This is wrong, need to fix the rating sort logic
+        # sort_expr = RATING_INTS[F('rating')] if sort == 'rating' else F('last_name')
+    else:
+        return HttpResponse(400)
+
     home_roster = User.objects.filter(
         main_role='HC'
     ).values(
@@ -180,9 +188,12 @@ def view_profile(request, cid):
     if not (request.user_obj.cid == cid or request.user_obj.is_staff or request.user_obj.is_trainer):
         # Non-staff/trainer members should only be able to view their own profile
         return HttpResponse(403)
-    user = User.objects.get(
-        cid=cid
-    )
+    try:
+        user = User.objects.get(
+            cid=cid
+        )
+    except ObjectDoesNotExist:
+        return HttpResponse(404)
 
     form = EditEndorsementForm(initial={
         'delivery': user.del_cert,
@@ -217,9 +228,12 @@ def view_profile(request, cid):
 def edit_profile(request, cid):
     if not (request.user_obj.cid == cid or request.user_obj.is_staff):
         return HttpResponse(403)
-    user = User.objects.get(
-        cid=cid
-    )
+    try:
+        user = User.objects.get(
+            cid=cid
+        )
+    except ObjectDoesNotExist:
+        return HttpResponse(404)
 
     # TODO: Add option to remove profile picture
     if request.method == 'POST':
@@ -265,9 +279,12 @@ def edit_profile(request, cid):
 @require_staff
 @require_POST
 def edit_endorsements(request, cid):
-    user = User.objects.get(
-        cid=cid
-    )
+    try:
+        user = User.objects.get(
+            cid=cid
+        )
+    except ObjectDoesNotExist:
+        return HttpResponse(404)
 
     user.del_cert = request.POST['delivery']
     user.gnd_cert = request.POST['ground']
