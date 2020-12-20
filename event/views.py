@@ -1,6 +1,6 @@
 import boto3
 
-from django.db.models import Q
+from django.db.models import Q, ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -25,7 +25,11 @@ def view_events(request):
 
 
 def view_event_details(request, event_id):
-    event = Event.objects.get(id=event_id)
+    try:
+        event = Event.objects.get(id=event_id)
+    except ObjectDoesNotExist:
+        return HttpResponse(404)
+
     user = request.user_obj
     user_has_position = EventPosition.objects.filter(
         user=user,
@@ -120,10 +124,19 @@ def view_new_event(request):
 
 @require_staff
 def edit_event(request, event_id):
-    if request.method == 'POST':
+    try:
         event = Event.objects.get(
             id=event_id
         )
+    except ObjectDoesNotExist:
+        return HttpResponse(404)
+    if request.method == 'POST':
+        try:
+            event = Event.objects.get(
+                id=event_id
+            )
+        except ObjectDoesNotExist:
+            return HttpResponse(404)
 
         event.name = request.POST['name']
         event.start = request.POST['start']
@@ -149,10 +162,6 @@ def edit_event(request, event_id):
         ).save()
         return redirect('/events')
     else:
-        event = Event.objects.get(
-            id=event_id
-        )
-
         form = EditEventForm(initial={
             'name': event.name,
             'start': event.start,
@@ -170,16 +179,22 @@ def edit_event(request, event_id):
 
 @require_staff
 def delete_position(request, position_id, event_id):
-    EventPosition.objects.get(id=position_id).delete()
+    try:
+        EventPosition.objects.get(id=position_id).delete()
+    except ObjectDoesNotExist:
+        return HttpResponse(404)
     return redirect(f'/events/{event_id}')
 
 
 @require_staff
 def delete_event(request, event_id):
+    try:
+        Event.objects.get(id=event_id).delete()
+    except ObjectDoesNotExist:
+        return HttpResponse(404)
     ActionLog(
         action=f'Event {Event.objects.get(id=event_id).name} was deleted by {request.user_obj.full_name}.'
     ).save()
-    Event.objects.get(id=event_id).delete()
     return redirect(f'/events')
 
 
