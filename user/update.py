@@ -49,7 +49,7 @@ def update_roster():
             new_user.save()
             new_user.assign_initial_certs()
             ActionLog(
-                action=f'New user {new_user.full_name} was created by system.'
+                action=f'New home controller {new_user.full_name} was created by system.'
             ).save()
 
         else:
@@ -74,7 +74,7 @@ def update_roster():
                 edit_user.save()
                 edit_user.assign_initial_certs()
                 ActionLog(
-                    action=f'User {edit_user.full_name} was marked active by system.'
+                    action=f'Home controller {edit_user.full_name} was marked active by system.'
                 ).save()
             edit_user.save()
 
@@ -87,7 +87,7 @@ def update_roster():
             user.status = 2
             user.save()
             ActionLog(
-                action=f'User {user.full_name} was set as inactive by system.'
+                action=f'Home controller {user.full_name} was set as inactive by system.'
             ).save()
 
     #############################################
@@ -139,7 +139,7 @@ def update_roster():
                     edit_user.save()
                     edit_user.assign_initial_certs()
                     ActionLog(
-                        action=f'User {edit_user.full_name} was marked active by system.'
+                        action=f'MAVP Controller {edit_user.full_name} was marked active by system.'
                     ).save()
                 edit_user.save()
 
@@ -160,7 +160,7 @@ def update_loa():
             user.status = 0
             user.loa_last_month = True
             ActionLog(
-                action=f'User {user.full_name} was set as active by system.'
+                action=f'The leave of absence for {user.full_name} expired; marked active by system.'
             ).save()
 
 
