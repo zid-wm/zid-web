@@ -18,8 +18,9 @@ def format_duration(td):
     to appear as colon-delimited.
     """
     time = re.findall(r'\d+', str(td))
-    result = ':'
-    return result.join(time[:-2])  # [:-2] because we can discard the seconds
+    hours = (int(time[0]) * 24) + int(time[1])
+    minutes = time[2]
+    return f'{hours}:{minutes}'
 
 
 @register.filter
