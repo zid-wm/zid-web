@@ -2,8 +2,10 @@ from django.core.paginator import Paginator
 from django.shortcuts import render
 
 from administration.models import ActionLog
+from zid_web.decorators import require_staff
 
 
+@require_staff
 def view_audit_log(request):
     log_results = ActionLog.objects.all().order_by('-timestamp')
 

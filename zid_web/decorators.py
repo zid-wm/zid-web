@@ -68,6 +68,3 @@ def require_role(role_list):
                     'You lack the necessary role to access this endpoint.')
         return inner
     return decorator
-
-
-
