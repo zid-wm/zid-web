@@ -34,7 +34,7 @@
             </form>
         </div>
 
-        {% if routes %}
+        {% if request.method == 'POST' %}
         <div class="row m-3">
             <table class="table table-sm table-stripped">
                 <thead>
@@ -50,6 +50,10 @@
                         <td>{{ route.destination }}</td>
                         <td>{{ route.route }}</td>
                         <td>{% if route.flow %}{{ route.flow }}{% else %}No flow specified{% endif %}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No routes to display!</td>
                     </tr>
                     {% endfor %}
                 </thead>
