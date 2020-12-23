@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from administration import views as administration
 from event import views as event
 from feedback import views as feedback
 from pilots import views as pilots
@@ -27,6 +28,9 @@ from views import views as views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.view_home, name='home'),
+
+    # Administration
+    path('audit-log/', administration.view_audit_log, name='audit-log'),
 
     # Events
     path('events/', event.view_events, name='events'),

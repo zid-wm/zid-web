@@ -1,0 +1,50 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>Audit Log</li>
+{% endblock %}
+
+{% block body %}
+<section id="contact" class="contact">
+    <div class="container">
+        <div class="row m-3 pt-3">
+            <h3>Website Audit Log</h3>
+        </div>
+
+        <div class="row m-3">
+            <table class="table table-sm table-stripped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:20%">Time</th>
+                        <th scope="col">Message</th>
+                    </tr>
+                    {% for item in log_items %}
+                    <tr>
+                        <td>{{ item.timestamp }}</td>
+                        <td>{{ item.action }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No log items to display!</td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+        <div class="row m-3">
+            {% if has_previous %}
+            <div class="col">
+                <a class="btn btn-secondary mr-3" href="/audit-log?p={{ page_num|add:"-1" }}"><i class="icofont-arrow-left"></i> Previous</a>
+            </div>
+            {% endif %}
+            {% if has_next %}
+            <div class="col" style="text-align:right">
+                <a class="btn btn-primary" href="/audit-log?p={{ page_num|add:"1" }}">Next <i class="icofont-arrow-right"></i></a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -68,7 +68,10 @@
                             {% if request.user_obj.main_role == 'MC' or not request.user_obj %}
                             <li><a href="/visit-request/">Become a Visitor</a></li>
                             {% endif %}
-                            <li><a href="/logout">Log Out</a></li>
+                            {% if request.user_obj.is_staff %}
+                            <li><a href="/audit-log/">Website Audit Log</a></li>
+                            {% endif %}
+                            <li><a href="/logout"><strong>Log Out</strong></a></li>
                         </ul>
                     </li>
                 {% else %}
