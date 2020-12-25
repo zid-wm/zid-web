@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from apps.administration import views as administration
+from apps.api import views as api
 from apps.event import views as event
 from apps.feedback import views as feedback
 from apps.pilots import views as pilots
@@ -31,6 +32,9 @@ urlpatterns = [
 
     # Administration
     path('audit-log/', administration.view_audit_log, name='audit-log'),
+
+    # API
+    path('health-check/', api.health_check, name='health-check'),
 
     # Events
     path('events/', event.view_events, name='events'),
