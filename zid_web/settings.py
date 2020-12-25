@@ -35,14 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'administration',
-    'api.apps.ApiConfig',
-    'event',
-    'feedback',
-    'pilots',
-    'resources',
-    'uls',
-    'user.apps.UserConfig'
+    'apps.administration',
+    'apps.api.apps.ApiConfig',
+    'apps.event',
+    'apps.feedback',
+    'apps.pilots',
+    'apps.resources',
+    'apps.uls',
+    'apps.user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
@@ -64,7 +64,10 @@ ROOT_URLCONF = 'zid_web.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates/'),
+            os.path.join(BASE_DIR, 'util/email/templates/')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,7 +77,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages'
             ],
             'libraries': {
-                'extras': 'views.templatetags.extras'
+                'extras': 'apps.views.templatetags.extras'
             }
         },
     },
@@ -96,6 +99,13 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT')
     }
 }
+
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = bool(os.getenv('EMAIL_USE_TLS'))
+DEFAULT_FROM_EMAIL = 'no-reply@zidartcc.org'
 
 
 # Password validation
@@ -121,13 +131,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
