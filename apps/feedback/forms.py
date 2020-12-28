@@ -5,18 +5,12 @@ from apps.user.models import User
 
 
 class NewFeedbackForm(forms.Form):
-    user_items = User.objects.filter(
-        status=0
-    ).order_by('last_name')
-
-    user_choices = ((u.id, f'{u.first_name} {u.last_name}') for u in user_items)
-
     # TODO: Format fields such that they have more padding between them
     controller = forms.ChoiceField(
         widget=forms.Select(attrs={
             'class': 'form-control'
         }),
-        choices=user_choices
+        choices=('', '')
     )
 
     position = forms.CharField(
@@ -74,6 +68,13 @@ class NewFeedbackForm(forms.Form):
         }),
         required=False
     )
+
+    def __init__(self, *args, **kwargs):
+        super(NewFeedbackForm, self).__init__(*args, **kwargs)
+        user_items = User.objects.filter(
+            status=0
+        ).order_by('last_name')
+        self.controller.choices = ((u.id, f'{u.first_name} {u.last_name}') for u in user_items)
 
 
 class ReviewFeedbackForm(forms.Form):
