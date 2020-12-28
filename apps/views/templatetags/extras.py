@@ -17,12 +17,15 @@ def format_duration(td):
     This function chops off the seconds and changes the number of days
     to appear as colon-delimited.
     """
-    time = re.findall(r'\d+', str(td))
-    if len(time) == 5:  # then there is a day value
-        result = f'{(int(time[0]) * 24) + int(time[1])}:{time[2]}'
+    if td:
+        time = re.findall(r'\d+', str(td))
+        if len(time) == 5:  # then there is a day value
+            result = f'{(int(time[0]) * 24) + int(time[1])}:{time[2]}'
+        else:
+            result = f'{time[0]}:{time[1]}'
+        return result
     else:
-        result = f'{time[0]}:{time[1]}'
-    return result
+        return '0:00'
 
 
 @register.filter
