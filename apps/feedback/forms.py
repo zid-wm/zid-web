@@ -1,15 +1,7 @@
 from django import forms
 
+from apps.feedback.models import SERVICE_LEVEL_CHOICES
 from apps.user.models import User
-
-
-SERVICE_LEVEL_CHOICES = (
-    (1, 'Excellent'),
-    (2, 'Good'),
-    (3, 'Fair'),
-    (4, 'Needs Improvement'),
-    (5, 'Unsatisfactory/Poor')
-)
 
 
 class NewFeedbackForm(forms.Form):
