@@ -1,8 +1,9 @@
 import requests
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from .forms import RoutesForm, StaffingForm
+from util.email.email import send_event_request_email
 
 
 def view_pilot_briefing(request):
@@ -34,11 +35,12 @@ def view_preferred_routes(request):
 
 def view_staffing_request(request):
     if request.method == 'POST':
-        form = StaffingForm(request.POST)
+        send_event_request_email(request)
+        return redirect('/')
     else:
         form = StaffingForm()
 
-    return render(request, 'request-event-staffing.html', {
-        'page_title': 'Request Staffing',
-        'form': form
-    })
+        return render(request, 'request-event-staffing.html', {
+            'page_title': 'Request Staffing',
+            'form': form
+        })

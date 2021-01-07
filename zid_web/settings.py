@@ -65,8 +65,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates/'),
-            os.path.join(BASE_DIR, 'util/email/templates/')
+            os.path.join(BASE_DIR, 'templates/')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -104,8 +103,8 @@ EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = bool(os.getenv('EMAIL_USE_TLS'))
-DEFAULT_FROM_EMAIL = 'no-reply@zidartcc.org'
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == 'True'
+DEFAULT_FROM_EMAIL = 'Do Not Reply <no-reply@zidartcc.org>'
 
 
 # Password validation

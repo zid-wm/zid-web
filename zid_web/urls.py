@@ -32,6 +32,7 @@ urlpatterns = [
 
     # Administration
     path('audit-log/', administration.view_audit_log, name='audit-log'),
+    path('email/send/', administration.view_send_email, name='send-email'),
 
     # API
     path('health-check/', api.health_check, name='health-check'),

@@ -386,7 +386,7 @@ def approve_visit_request(request, cid):
     ActionLog(
         action=f'{request.user_obj.full_name} approved the visit request for {User.objects.get(cid=cid).full_name}.'
     ).save()
-    # TODO: Add approval email logic
+
     send_visitor_approval_email(cid, request.user_obj.full_name)
     return redirect('/visit-request/manage')
 
