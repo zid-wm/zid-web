@@ -8,6 +8,7 @@ from json import JSONDecodeError
 
 from apps.api.models import Controller, ControllerSession
 from apps.user.models import User
+from util.alert import MESSAGES
 
 
 def get_leaderboard(month, year):
@@ -38,6 +39,15 @@ def view_home(request):
     total_home_controllers = User.objects.filter(main_role='HC').count()
     month_control_time = ControllerSession.objects.aggregate(
         Sum('duration'))['duration__sum']
+
+    if request.GET.get('m', None):
+        message_no = int(request.GET.get('m', 0))
+        if message_no in MESSAGES:
+            message = MESSAGES[message_no]
+        else:
+            message = MESSAGES[0]
+    else:
+        message = None
 
     try:
         # The timeout is set to slightly longer than a standard TCP packet retransmission window.
@@ -87,5 +97,6 @@ def view_home(request):
         'app_this_month': app_this_month,
         'twr_this_month': twr_this_month,
         'gnd_this_month': gnd_this_month,
-        'dev_env': dev_env
+        'dev_env': dev_env,
+        'message': message
     })
