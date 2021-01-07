@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from apps.administration.forms import SendEmailForm
 from apps.administration.models import ActionLog
 from apps.user.models import User
-from util.email.email import send_broadcast_email
+from util.email import send_broadcast_email
 from zid_web.decorators import require_staff
 
 

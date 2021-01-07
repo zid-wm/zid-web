@@ -23,7 +23,7 @@ from .forms import (
 )
 from apps.user.models import User, VisitRequest
 from apps.user.update import add_visitor
-from util.email.email import send_visitor_approval_email
+from util.email import send_visitor_approval_email
 from zid_web.decorators import require_staff, require_member, require_session
 
 

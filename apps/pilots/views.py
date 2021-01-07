@@ -3,7 +3,7 @@ import requests
 from django.shortcuts import render, redirect
 
 from .forms import RoutesForm, StaffingForm
-from util.email.email import send_event_request_email
+from util.email import send_event_request_email
 
 
 def view_pilot_briefing(request):
