@@ -46,7 +46,7 @@ def view_send_email(request):
             request.POST['reply_email'],
             emails
         )
-        return redirect('/')
+        return redirect('/?m=3')
     else:
         form = SendEmailForm(request)
         return render(request, 'send_email.html', {

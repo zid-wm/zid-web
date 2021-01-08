@@ -32,9 +32,9 @@ def login(request):
         else:
             return HttpResponse('Something was wrong with the token we got from VATUSA!', status=500)
 
-    return redirect('/')
+    return redirect('/?m=5')
 
 
 def logout(request):
     request.session.flush()
-    return redirect('/')
+    return redirect('/?m=4')

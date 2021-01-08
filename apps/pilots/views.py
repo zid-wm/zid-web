@@ -36,7 +36,7 @@ def view_preferred_routes(request):
 def view_staffing_request(request):
     if request.method == 'POST':
         send_event_request_email(request)
-        return redirect('/')
+        return redirect('/?m=1')
     else:
         form = StaffingForm()
 

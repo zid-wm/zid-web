@@ -330,7 +330,7 @@ def view_visit_request(request):
             description=request.POST['description']
         ).save()
 
-        return redirect('/')
+        return redirect('/?m=6')
     else:
         form = VisitingRequestForm(initial={
             'cid': request.session["vatsim_data"]["cid"],

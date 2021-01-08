@@ -32,8 +32,7 @@ def submit_feedback(request):
     )
 
     feedback.save()
-    # TODO: Add submission success message
-    return redirect('/')
+    return redirect('/?m=2')
 
 
 @require_staff
