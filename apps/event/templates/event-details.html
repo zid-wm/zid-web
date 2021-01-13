@@ -1,0 +1,184 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+{% load extras %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li><a href="/events">Events</a></li>
+<li>{{ page_title }}</li>
+{% endblock %}
+
+{% block body %}
+<section id="contact" class="contact">
+    <div class="container">
+        <div class="row">
+            <img src="{{ event.banner }}" style="width:100%" />
+        </div>
+        <div class="row pt-3">
+            <h3>{{ event.name }}</h3>
+        </div>
+        <div class="row pt-3">
+            <div class="col col-4">
+                <h5>Start: {{ event.start }}</h5>
+                <h5>End: {{ event.end }}</h5>
+                <h5>Host: {{ event.host }}</h5>
+                <p>{{ event.description }}</p>
+                {% if request.user_obj.is_staff %}
+                    <p><a href="/events/edit/{{ event.id }}"><i class="icofont-edit"></i> Edit Event</a></p>
+                {% endif %}
+            </div>
+
+            <div class="col">
+                {% if request.user_obj.is_staff %}
+                <div class="row">
+                    <form action="/events/{{ event.id }}" method="post" role="form" class="php-email-form">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="col-8">
+                                {{ add_position_form.callsign }}
+                            </div>
+                            <div class="col">
+                                <div class="text-center">
+                                    <button type="submit" value="Add Position">Add Position</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+                <div class="row pt-3">
+                    <h5>Center</h5>
+                    <table class="table table-sm table-stripped">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width:40%">Position</th>
+                                <th scope="col">Assignment</th>
+                                {% if request.user_obj.is_staff %}
+                                <th scope="col" style="width:10%"></th>
+                                {% endif %}
+                            </tr>
+                            {% for p in positions.center %}
+                            <tr>
+                                <td style="vertical-align:middle">{{ p.callsign }}</td>
+                                {% if p.user %}
+                                <td style="vertical-align:middle">{{ p.user.full_name }}</td>
+                                {% else %}
+                                <td style="vertical-align:middle">No Assignment{% if not user_has_position %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
+                                {% endif %}
+
+                                {% if request.user_obj.is_staff %}
+                                <td>
+                                    <button type="button" class="btn btn-danger">
+                                        <a href="/events/{{ event.id }}/delete-position/{{ p.id }}" style="color:white">
+                                            <i class="icofont-ui-delete"></i>
+                                        </a>
+                                    </button>
+                                <td>
+                                {% endif %}
+                            </tr>
+                            {% if request.user_obj.is_staff %}
+                                {% for signup in position_signups|lookup:p.callsign %}
+                                    <tr>
+                                    <td></td>
+                                    <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
+                                    <td><strong><a href="/events/assign/{{ signup.id }}">Assign</a></strong></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            {% endfor %}
+                        </thead>
+                    </table>
+                </div>
+
+                <div class="row pt-3">
+                    <h5>TRACON</h5>
+                    <table class="table table-sm table-stripped">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width:40%">Position</th>
+                                <th scope="col">Assignment</th>
+                                {% if request.user_obj.is_staff %}
+                                <th scope="col" style="width:10%"></th>
+                                {% endif %}
+                            </tr>
+                            {% for p in positions.tracon %}
+                            <tr>
+                                <td style="vertical-align:middle">{{ p.callsign }}</td>
+                                {% if p.user %}
+                                <td style="vertical-align:middle">{{ p.user.full_name }}</td>
+                                {% else %}
+                                <td style="vertical-align:middle">No Assignment{% if not user_has_position %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
+                                {% endif %}
+                                
+                                {% if request.user_obj.is_staff %}
+                                <td>
+                                    <button type="button" class="btn btn-danger">
+                                        <a href="/events/{{ event.id }}/delete-position/{{ p.id }}" style="color:white">
+                                            <i class="icofont-ui-delete"></i>
+                                        </a>
+                                    </button>
+                                <td>
+                                {% endif %}
+                            </tr>
+                            {% if request.user_obj.is_staff %}
+                                {% for signup in position_signups|lookup:p.callsign %}
+                                    <tr>
+                                    <td></td>
+                                    <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
+                                    <td><strong><a href="/events/assign/{{ signup.id }}">Assign</a></strong></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            {% endfor %}
+                        </thead>
+                    </table>
+                </div>
+
+                <div class="row pt-3">
+                    <h5>Tower Cab</h5>
+                    <table class="table table-sm table-stripped">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width:40%">Position</th>
+                                <th scope="col">Assignment</th>
+                                {% if request.user_obj.is_staff %}
+                                <th scope="col" style="width:10%"></th>
+                                {% endif %}
+                            </tr>
+                            {% for p in positions.cab %}
+                            <tr>
+                                <td style="vertical-align:middle">{{ p.callsign }}</td>
+                                {% if p.user %}
+                                <td style="vertical-align:middle">{{ p.user.full_name }}</td>
+                                {% else %}
+                                <td style="vertical-align:middle">No Assignment{% if not user_has_position %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
+                                {% endif %}
+                                
+                                {% if request.user_obj.is_staff %}
+                                <td>
+                                    <button type="button" class="btn btn-danger">
+                                        <a href="/events/{{ event.id }}/delete-position/{{ p.id }}" style="color:white">
+                                            <i class="icofont-ui-delete"></i>
+                                        </a>
+                                    </button>
+                                <td>
+                                {% endif %}
+                            </tr>
+                            {% if request.user_obj.is_staff %}
+                                {% for signup in position_signups|lookup:p.callsign %}
+                                    <tr>
+                                    <td></td>
+                                    <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
+                                    <td><strong><a href="/events/assign/{{ signup.id }}">Assign</a></strong></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            {% endfor %}
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

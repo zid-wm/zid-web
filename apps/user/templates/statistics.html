@@ -1,0 +1,63 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+{% load extras %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>Controller Statistics</li>
+{% endblock %}
+
+{% block body %}
+<section id="about" class="about">
+    <div class="container">
+        <div class="row m-3 pt-3">
+            <div class="col d-md-flex align-items-md-stretch">
+                <div class="count-box py-5">
+                    <i class="icofont-clock-time"></i>
+                    <span data-toggle="counter-up">{{ hours_month|format_duration }}</span>
+                    <p>{{ month }} {{ year }} Hours</p>
+                </div>
+            </div>
+            <div class="col d-md-flex align-items-md-stretch">
+                <div class="count-box py-5">
+                    <i class="icofont-clock-time"></i>
+                    <span data-toggle="counter-up">{{ hours_year|format_duration }}</span>
+                    <p>{{ year }} Hours</p>
+                </div>
+            </div>
+            <div class="col d-md-flex align-items-md-stretch">
+                <div class="count-box py-5">
+                    <i class="icofont-clock-time"></i>
+                    <span data-toggle="counter-up">{{ hours_total|format_duration }}</span>
+                    <p>All-Time Hours</p>
+                </div>
+            </div>
+        </div>
+        <div class="row m-3">
+            <h3>Controller Statistics - Month of {{ month }} {{ year }}</h3>
+        </div>
+
+        <div class="row m-3">
+        <table class="table table-sm table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col" style="width:10%">Rating</th>
+                <th scope="col" style="width:25%">Total Time</th>
+            </tr>
+            {% for cont in stats %}
+            <tr>
+                <td>
+                {{ cont.user__first_name }} {{ cont.user__last_name }}
+                </td>
+                <td>{{ cont.user__rating }}</td>
+                <td>{{ cont.duration|format_duration }}
+            </tr>
+            {% endfor %}
+            </thead>
+        </table>
+        </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

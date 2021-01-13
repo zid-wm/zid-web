@@ -1,0 +1,54 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+{% load extras %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li><a href="/apps/feedbackdback">Feedback</a></li>
+<li>Manage Feedback</li>
+{% endblock %}
+
+{% block body %}
+    <section id="about" class="about">
+        <div class="container">
+            <div class="row m-3 pt-3">
+                <h3>Manage Feedback</h3>
+            </div>
+
+            <div class="row m-3">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:20%">Controller</th>
+                            <th scope="col" style="width:20%">Service Level</th>
+                            <th scope="col">Comments</th>
+                            <th scope="col" style="width:18%">Submitted</th>
+                            <th scope="col" style="width:10%"></th>
+                        </tr>
+                    {% for item in feedback %}
+                        <tr>
+                            <td><strong>{{ item.controller.full_name }}</strong> <br />({{ item.position }})</td>
+                            <td>{{ item.service_level|feedback }}</td>
+                            <td>
+                                {{ item.additional_comments }}
+                                {% if item.staff_comment %}
+                                    <br />
+                                    <strong>Staff Comment:</strong> {{ item.staff_comment }}
+                                {% endif %}
+                            </td>
+                            <td>{{ item.submitted }}</td>
+                            {% if item.status == 0 %}
+                                <td><a href="/feedback/post/{{ item.id }}">Post</a>&nbsp;<a href="/feedback/reject/{{ item.id }}">Reject</a></td>
+                            {% elif item.status == 1 %}
+                                <td>Posted</td>
+                            {% else %}
+                                <td>Rejected</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}

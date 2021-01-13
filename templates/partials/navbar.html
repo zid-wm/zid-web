@@ -1,4 +1,5 @@
 {% load static %}
+{% load extras %}
 
 <header id="header" class="fixed-top">
     <div class="container d-flex">
@@ -20,23 +21,62 @@
 
                 <li class="drop-down"><a href="#">Controllers</a>
                     <ul>
-                        <li><a href="/roster">Roster</a></li>
+                        <li {% if request.user_obj.is_staff %} class="drop-down" {% endif %}>
+                            <a href="/roster">Roster</a>
+                            {% if request.user_obj.is_staff %}
+                            <ul>
+                                <li><a href="/mavp">Manage MAVPs</a></li>
+                                <li><a href="/visit-request/manage">Manage Visit Requests</a></li>
+                            </ul>
+                            {% endif %}
+                        </li>
                         <li><a href="/staff">Staff</a></li>
-                        <li><a href="#">Files</a></li>
-                        <li><a href="#">Controller Statistics</a></li>
-                        <li><a href="#">Events</a></li>
+                        {% if request.user_obj %}<li {% if request.user_obj.is_staff %} class="drop-down" {% endif %}><a href="/files">Files</a>
+                            {% if request.user_obj.is_staff %}
+                            <ul>
+                                <li><a href="/files/add">Add File</a></li>
+                            </ul>
+                            {% endif %}
+                        </li>{% endif %}
+                        <li><a href="/statistics">Controller Statistics</a></li>
+                        <li {% if request.user_obj.is_staff %} class="drop-down" {% endif %}>
+                            <a href="/events">Events</a>
+                            {% if request.user_obj.is_staff %}
+                            <ul>
+                                <li><a href="/events/new">New Event</a></li>
+                                <li><a href="/events/archived">Archived Events</a></li>
+                            </ul>
+                            {% endif %}
+                        </li>
                     </ul>
                 </li>
 
-                <li><a href="#">Feedback</a></li>
+                <li {% if request.user_obj.is_staff %} class="drop-down"{% endif %}><a href="/feedback">Feedback</a>
+                {% if request.user_obj.is_staff %}
+                <ul>
+                    <li><a href="/feedback/manage">Manage Feedback</a></li>
+                </ul>
+                {% endif %}
+                </li>
+
                 {% if request.session.vatsim_data %}
                     <li class="drop-down"><a href="#">{{ request.session.vatsim_data.firstname }} {{ request.session.vatsim_data.lastname }}</a>
                         <ul>
-                            <li><a href="#">Profile</a></li>
+                            {% if request.user_obj %}
+                            <li><a href="/profile/{{ request.user_obj.cid }}">Profile</a></li>
+                            {% endif %}
+                            {% if request.user_obj.main_role == 'MC' or not request.user_obj %}
+                            <li><a href="/visit-request/">Become a Visitor</a></li>
+                            {% endif %}
+                            {% if request.user_obj.is_staff %}
+                            <li><a href="/audit-log/">Website Audit Log</a></li>
+                            <li><a href="/email/send/">Send an Email</a></li>
+                            {% endif %}
+                            <li><a href="/logout"><strong>Log Out</strong></a></li>
                         </ul>
                     </li>
                 {% else %}
-                <li class="get-started"><a href="https://login.vatusa.net/uls/v2/login?fac=ZID&url=5">Log In</a></li>
+                <li class="get-started"><a href="https://login.vatusa.net/uls/v2/login?fac=ZID&url={% uls_redirect_url %}">Log In</a></li>
                 {% endif %}
             </ul>
         </nav>

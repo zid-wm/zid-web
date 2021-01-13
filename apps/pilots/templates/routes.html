@@ -1,0 +1,65 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>Preferred Routes</li>
+{% endblock %}
+
+{% block body %}
+<section id="contact" class="contact">
+    <div class="container">
+        <div class="row m-3 pt-3">
+            <h3>IFR Preferred Routing</h3>
+        </div>
+
+        <div class="row m-3">
+            <p>Use three-letter IATA airport codes when requesting IFR routes. You can omit either the departure or arrival to see all routes associated with the given airport.</p>
+        </div>
+
+        <div class="row m-3" style="width:100%">
+            <form action="/routes/" method="post" role="form" class="php-email-form">
+                {% csrf_token %}
+                <div class="form-row">
+                    {% for field in form %}
+                        <div class="col-md-6 form-group">
+                            {{ field }}
+                            <div class="validate">{{ field.errors }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="text-center">
+                    <button type="submit" value="Find Routes">Find Routes</button>
+                </div>
+            </form>
+        </div>
+
+        {% if request.method == 'POST' %}
+        <div class="row m-3">
+            <table class="table table-sm table-stripped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:8%">Departure</th>
+                        <th scope="col" style="width:8%">Arrival</th>
+                        <th scope="col" style="width:50%">Route</th>
+                        <th scope="col">Flow</th>
+                    </tr>
+                    {% for route in routes %}
+                    <tr>
+                        <td>{{ route.origin }}</td>
+                        <td>{{ route.destination }}</td>
+                        <td>{{ route.route }}</td>
+                        <td>{% if route.flow %}{{ route.flow }}{% else %}No flow specified{% endif %}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No routes to display!</td>
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

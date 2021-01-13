@@ -1,4 +1,5 @@
 apscheduler==3.6.3
+boto3==1.11.9
 Django==3.1
 Pillow==7.2.0
 psycopg2-binary==2.8.5

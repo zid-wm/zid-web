@@ -1,0 +1,4 @@
+{% extends 'errorTemplate.html' %}
+
+{% block error_code %}403{% endblock %}
+{% block error_desc %}You do not have permission to access the requested resource:<br />{{ exception|default:'None' }}{% endblock %}

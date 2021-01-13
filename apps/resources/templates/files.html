@@ -1,0 +1,232 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>Files</li>
+{% endblock %}
+
+{% block body %}
+<section id="about" class="about">
+    <div class="container">
+        <div class="row m-3 pt-3">
+            <div class="col">
+                <h3>Files</h3>
+            </div>
+            {% if request.user_obj.is_staff %}
+            <div class="col" style="text-align:right">
+                <button class="btn btn-success"><a href="/files/add" style="color:white">Add File</a></button>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="row m-3">
+            <h5>VRC</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:50%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                        {% if request.user_obj.is_staff %}
+                        <th scope="col"></th>
+                        {% endif %}
+                    </tr>
+                    {% for file in vrc_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</a></td>
+                        {% if request.user_obj.is_staff %}
+                        <td><a href="/files/delete/{{ file.category }}/{{ file.name }}">Delete</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>vSTARS</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                        {% if request.user_obj.is_staff %}
+                        <th scope="col"></th>
+                        {% endif %}
+                    </tr>
+                    {% for file in vstars_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</a></td>
+                        {% if request.user_obj.is_staff %}
+                        <td><a href="/files/delete/{{ file.category }}/{{ file.name }}">Delete</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>vERAM</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                        {% if request.user_obj.is_staff %}
+                        <th scope="col"></th>
+                        {% endif %}
+                    </tr>
+                    {% for file in veram_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</a></td>
+                        {% if request.user_obj.is_staff %}
+                        <td><a href="/files/delete/{{ file.category }}/{{ file.name }}">Delete</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>vATIS</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                        {% if request.user_obj.is_staff %}
+                        <th scope="col"></th>
+                        {% endif %}
+                    </tr>
+                    {% for file in vatis_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</a></td>
+                        {% if request.user_obj.is_staff %}
+                        <td><a href="/files/delete/{{ file.category }}/{{ file.name }}">Delete</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>SOPs</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                        {% if request.user_obj.is_staff %}
+                        <th scope="col"></th>
+                        {% endif %}
+                    </tr>
+                    {% for file in sop_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</a></td>
+                        {% if request.user_obj.is_staff %}
+                        <td><a href="/files/delete/{{ file.category }}/{{ file.name }}">Delete</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>LOAs</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                        {% if request.user_obj.is_staff %}
+                        <th scope="col"></th>
+                        {% endif %}
+                    </tr>
+                    {% for file in loa_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</a></td>
+                        {% if request.user_obj.is_staff %}
+                        <td><a href="/files/delete/{{ file.category }}/{{ file.name }}">Delete</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>MAVP Agreements</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                        {% if request.user_obj.is_staff %}
+                        <th scope="col"></th>
+                        {% endif %}
+                    </tr>
+                    {% for file in mavp_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</a></td>
+                        {% if request.user_obj.is_staff %}
+                        <td><a href="/files/delete/{{ file.category }}/{{ file.name }}">Delete</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+
+        <div class="row m-3">
+            <h5>Miscellaneous Files</h5>
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:60%">Name</th>
+                        <th scope="col">Last Updated</th>
+                        <th scope="col"></th>
+                        {% if request.user_obj.is_staff %}
+                        <th scope="col"></th>
+                        {% endif %}
+                    </tr>
+                    {% for file in misc_files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.updated }}</td>
+                        <td><a href="https://zid-files.s3.amazonaws.com/{{file.category}}/{{file.name}}">Download</a></td>
+                        {% if request.user_obj.is_staff %}
+                        <td><a href="/files/delete/{{ file.category }}/{{ file.name }}">Delete</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

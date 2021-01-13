@@ -1,0 +1,52 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li><a href="/roster">Roster</a></li>
+<li>Manage Visiting Requests</li>
+{% endblock %}
+
+{% block body %}
+<section id="about" class="about">
+    <div class="container">
+        <div class="row m-3 pt-3">
+            <h3>Manage Visiting Requests</h3>
+        </div>
+
+        <div class="row m-3">
+            <table class="table table-sm table-striped">
+                <thead>
+                <tr>
+                    <th scope="col" style="width:20%">Name</th>
+                    <th scope="col" style="width:8%">Rating</th>
+                    <th scope="col" style="width:25%">Email</th>
+                    <th scope="col" style="width:12%">Home Facility</th>
+                    <th scope="col">Submitted</th>
+                    <th scope="col" style="width:12%">Status</th>
+                </tr>
+                {% for cont in requests %}
+                    <tr>
+                    <td>{{ cont.name }} ({{ cont.cid }})</td>
+                    <td>{{ cont.rating }}</td>
+                    <td>{{ cont.email }}</td>
+                    <td>{{ cont.home }}</td>
+                    <td>{{ cont.submitted }}</td>
+                    {% if cont.status_code == 0 %}
+                    <td>
+                        <a href="/visit-request/approve/{{ cont.cid }}">Approve</a>&nbsp;
+                        <a href="/visit-request/deny/{{ cont.cid }}">Deny</a>
+                    </td>
+                    {% elif cont.status_code == 1 %}
+                    <td>Approved</td>
+                    {% else %}
+                    <td>Denied</td>
+                    {% endif %}
+                    </tr>
+                {% endfor %}
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

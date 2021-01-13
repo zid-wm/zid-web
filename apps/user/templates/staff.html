@@ -1,0 +1,122 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li>Staff</li>
+{% endblock %}
+
+{% block body %}
+<section id="team" class="team">
+    <div class="container">
+        <div class="row m-3 pt-3">
+            <h1>Indianapolis Center Staff</h1>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                <div class="member" data-aos="fade-up">
+                    <div class="member-img">
+                        <img src="{% if atm.profile_picture %}{{ atm.profile_picture }}{% else %}{% static "img/no-profile.jpg" %}{% endif %}" class="img-fluid" alt="">
+                    </div>
+                    <div class="member-info">
+                        {% if atm %}
+                        <h4>{{ atm.first_name }} {{ atm.last_name }}</h4>
+                        {% else %}
+                        <h4>Vacant</h4>
+                        {% endif %}
+                        <span>Air Traffic Manager</span>
+                        <p>{% if atm.biography %}{{ atm.biography }}{% else %}No Biography{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                <div class="member" data-aos="fade-up">
+                    <div class="member-img">
+                        <img src="{% if datm.profile_picture %}{{ datm.profile_picture }}{% else %}{% static "img/no-profile.jpg" %}{% endif %}" class="img-fluid" alt="">
+                    </div>
+                    <div class="member-info">
+                        {% if datm %}
+                        <h4>{{ datm.first_name }} {{ datm.last_name }}</h4>
+                        {% else %}
+                        <h4>Vacant</h4>
+                        {% endif %}
+                        <span>Deputy Air Traffic Manager</span>
+                        <p>{% if datm.biography %}{{ datm.biography }}{% else %}No Biography{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                <div class="member" data-aos="fade-up">
+                    <div class="member-img">
+                        <img src="{% if ta.profile_picture %}{{ ta.profile_picture }}{% else %}{% static "img/no-profile.jpg" %}{% endif %}" class="img-fluid" alt="">
+                    </div>
+                    <div class="member-info">
+                        {% if ta %}
+                        <h4>{{ ta.first_name }} {{ ta.last_name }}</h4>
+                        {% else %}
+                        <h4>Vacant</h4>
+                        {% endif %}
+                        <span>Training Administrator</span>
+                        <p>{% if ta.biography %}{{ ta.biography }}{% else %}No Biography{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                <div class="member" data-aos="fade-up">
+                    <div class="member-img">
+                        <img src="{% if fe.profile_picture %}{{ fe.profile_picture }}{% else %}{% static "img/no-profile.jpg" %}{% endif %}" class="img-fluid" alt="">
+                    </div>
+                    <div class="member-info">
+                        {% if fe %}
+                        <h4>{{ fe.first_name }} {{ fe.last_name }}</h4>
+                        {% else %}
+                        <h4>Vacant</h4>
+                        {% endif %}
+                        <span>Facilities Engineer</span>
+                        <p>{% if fe.biography %}{{ fe.biography }}{% else %}No Biography{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                <div class="member" data-aos="fade-up">
+                    <div class="member-img">
+                        <img src="{% if ec.profile_picture %}{{ ec.profile_picture }}{% else %}{% static "img/no-profile.jpg" %}{% endif %}" class="img-fluid" alt="">
+                    </div>
+                    <div class="member-info">
+                        {% if ec %}
+                        <h4>{{ ec.first_name }} {{ ec.last_name }}</h4>
+                        {% else %}
+                        <h4>Vacant</h4>
+                        {% endif %}
+                        <span>Events Coordinator</span>
+                        <p>{% if ec.biography %}{{ ec.biography }}{% else %}No Biography{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                <div class="member" data-aos="fade-up">
+                    <div class="member-img">
+                        <img src="{% if wm.profile_picture %}{{ wm.profile_picture }}{% else %}{% static "img/no-profile.jpg" %}{% endif %}" class="img-fluid" alt="">
+                    </div>
+                    <div class="member-info">
+                        {% if wm %}
+                        <h4>{{ wm.first_name }} {{ wm.last_name }}</h4>
+                        {% else %}
+                        <h4>Vacant</h4>
+                        {% endif %}
+                        <span>Webmaster</span>
+                        <p>{% if wm.biography %}{{ wm.biography }}{% else %}No Biography{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

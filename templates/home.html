@@ -8,6 +8,7 @@
     </head>
     <body>
         <div class="home-wrapper">
+        
             {% include 'partials/navbar.html' %}
 
             <section id="hero">
@@ -21,6 +22,20 @@
 
             <section id="about" class="about">
                 <div class="container" data-aos="fade-up">
+                    {% if dev_env %}
+                    <div class="row">
+                        <div class="alert alert-danger" style="width:100%" role="alert">
+                            <i class="icofont-exclamation-tringle"></i> Heads up! You are viewing this website in a development environment. For the production ZID website, please visit zidartcc.org.
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if message %}
+                    <div class="row">
+                        <div class="alert alert-{{ message.type }}" style="width:100%" role="alert">
+                            {{ message.text }}
+                        </div>
+                    </div>
+                    {% endif %}
                     <div class="row justify-content-end">
                         <div class="col-lg-11">
                             <div class="row justify-content-end">
@@ -43,7 +58,7 @@
                                 <div class="col-lg-3 col-md-5 col-6 d-md-flex align-items-md-stretch">
                                     <div class="count-box py-5">
                                         <i class="icofont-clock-time"></i>
-                                        <span data-toggle="counter-up">{{ month_control_time }}</span>
+                                        <span data-toggle="counter-up">{{ month_control_time|format_duration }}</span>
                                         <p>Control Time This Month</p>
                                     </div>
                                 </div>
