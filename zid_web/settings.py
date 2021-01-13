@@ -15,7 +15,7 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv('DEV_ENV'))
+DEBUG = os.getenv('DEV_ENV').lower() == 'true'
 
 ALLOWED_HOSTS = [
     '.amazonaws.com',
@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'apps.pilots',
     'apps.resources',
     'apps.uls',
-    'apps.user.apps.UserConfig'
+    'apps.user.apps.UserConfig',
+    'apps.views'
 ]
 
 MIDDLEWARE = [
@@ -103,7 +104,7 @@ EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == 'True'
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS').lower() == 'true'
 DEFAULT_FROM_EMAIL = 'Do Not Reply <no-reply@zidartcc.org>'
 
 

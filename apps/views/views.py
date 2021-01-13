@@ -4,6 +4,7 @@ import os
 from datetime import date
 from django.shortcuts import render
 from django.db.models import Sum, Q
+from django.http import HttpResponse
 from json import JSONDecodeError
 
 from apps.api.models import Controller, ControllerSession
@@ -99,4 +100,43 @@ def view_home(request):
         'gnd_this_month': gnd_this_month,
         'dev_env': dev_env,
         'message': message
+    })
+
+
+def error_400(request, exception):
+    if request.method == 'POST':
+        return HttpResponse(exception, status=400)
+
+    return render(request, 'error_400.html', {
+        'page_title': '400 Error',
+        'exception': exception
+    })
+
+
+def error_403(request, exception):
+    if request.method == 'POST':
+        return HttpResponse(exception, status=403)
+
+    return render(request, 'error_403.html', {
+        'page_title': '403 Error',
+        'exception': exception
+    })
+
+
+def error_404(request, exception):
+    if request.method == 'POST':
+        return HttpResponse(exception, status=404)
+
+    return render(request, 'error_404.html', {
+        'page_title': '404 Error',
+        'exception': exception
+    })
+
+
+def error_500(request):
+    if request.method == 'POST':
+        return HttpResponse('There was an error processing your request.', status=500)
+
+    return render(request, 'error_400.html', {
+        'page_title': '500 Error'
     })

@@ -1,0 +1,36 @@
+{% load static %}
+
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        {% include 'partials/head.html' %}
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <div class="page-wrapper">
+            {% include 'partials/navbar.html' %}
+
+            <main id="main">
+
+                <!-- Page Content -->
+                <section id="about">
+                    <div class="container">
+                        <div class="row m-3 pt-3">
+                            <h3>Something happened that wasn't supposed to!</h3>
+                        </div>
+
+                        <div class="row m-3">
+                            <p><b>HTTP Error Code {% block error_code %}{% endblock %}</b><br />
+                            {% block error_desc %}{% endblock %}<br /><br/>
+                            The webmaster has been notified of this error.</p>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+
+            {% include 'partials/footer.html' %}
+        </div>
+
+        {% block scripts %}{% endblock %}
+    </body>

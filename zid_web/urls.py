@@ -86,3 +86,8 @@ urlpatterns = [
     path('visit-request/manage/', user.manage_visit_requests, name='manage-visit-requests'),
     path('visit-request/manual-add/', user.manual_add_visitor, name='manual-add-visitor')
 ]
+
+handler400 = 'apps.views.views.error_400'
+handler403 = 'apps.views.views.error_403'
+handler404 = 'apps.views.views.error_404'
+handler500 = 'apps.views.views.error_500'
