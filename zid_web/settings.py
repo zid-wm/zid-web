@@ -1,3 +1,4 @@
+import boto3
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -7,6 +8,17 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 # Loads environment variables from .env file
 load_dotenv(os.path.join(BASE_DIR, '.env'))
+ENVIRONMENT = os.getenv('ENVIRONMENT')
+SSM = boto3.client('ssm')
+
+os.environ['API_KEY'] = SSM.get_parameter(
+    Name=f'/zid/{ENVIRONMENT}/vatusa/api-key',
+    WithDecryption=True
+)['Parameter']['Value']
+os.environ['ULS_K_VALUE'] = SSM.get_parameter(
+    Name=f'/zid/{ENVIRONMENT}/vatusa/k-value',
+    WithDecryption=True
+)['Parameter']['Value']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -15,7 +27,7 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEV_ENV').lower() == 'true'
+DEBUG = os.getenv('ENVIRONMENT').lower() != 'prod'
 
 ALLOWED_HOSTS = [
     '.amazonaws.com',
@@ -92,18 +104,33 @@ WSGI_APPLICATION = 'zid_web.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASS'),
+        'NAME': SSM.get_parameter(
+            Name=f'/zid/{ENVIRONMENT}/db/database'
+        )['Parameter']['Value'],
+        'USER': SSM.get_parameter(
+            Name=f'/zid/{ENVIRONMENT}/db/username'
+        )['Parameter']['Value'],
+        'PASSWORD': SSM.get_parameter(
+            Name=f'/zid/{ENVIRONMENT}/db/password',
+            WithDecryption=True
+        )['Parameter']['Value'],
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT')
     }
 }
 
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = SSM.get_parameter(
+    Name=f'/zid/{ENVIRONMENT}/smtp/host'
+)['Parameter']['Value']
+EMAIL_PORT = SSM.get_parameter(
+    Name=f'/zid/{ENVIRONMENT}/smtp/port'
+)['Parameter']['Value']
+EMAIL_HOST_USER = SSM.get_parameter(
+    Name=f'/zid/{ENVIRONMENT}/smtp/username'
+)['Parameter']['Value']
+EMAIL_HOST_PASSWORD = SSM.get_parameter(
+    Name=f'/zid/{ENVIRONMENT}/smtp/password'
+)['Parameter']['Value']
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS').lower() == 'true'
 DEFAULT_FROM_EMAIL = 'Do Not Reply <no-reply@zidartcc.org>'
 

@@ -82,7 +82,7 @@ def view_home(request):
         .annotate(duration=Sum('duration')) \
         .order_by('-duration')[0:5]
 
-    dev_env = os.getenv('DEV_ENV')
+    dev_env = os.getenv('ENVIRONMENT').lower != 'prod'
 
     return render(request, 'home.html', {
         'page_title': 'Home',
