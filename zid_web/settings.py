@@ -24,7 +24,10 @@ os.environ['ULS_K_VALUE'] = SSM.get_parameter(
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = SSM.get_parameter(
+    Name=f'/zid/{ENVIRONMENT}/django/secret-key',
+    WithDecryption=True
+)['Parameter']['Value']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('ENVIRONMENT').lower() != 'prod'
