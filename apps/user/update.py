@@ -60,6 +60,8 @@ def update_roster():
             edit_user = User.objects.get(cid=details['cid'])
             edit_user.rating = details['rating_short']
 
+            if details['rating_short'] in ['I1', 'I3']:
+                edit_user.training_role = 'INS'
             for role in details['roles']:
                 if role['facility'] == 'ZID':
                     if role['role'] == 'INS' or role['role'] == 'MTR':
