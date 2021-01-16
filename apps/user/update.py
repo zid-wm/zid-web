@@ -40,14 +40,18 @@ def update_roster():
                 rating=details['rating_short'],
                 main_role='HC' if details['facility'] == 'ZID' else 'VC'
             )
+
+            if details['rating_short'] in ['I1', 'I3']:
+                new_user.training_role = 'INS'
             for role in details['roles']:
                 if role['facility'] == 'ZID':
-                    if role['role'] == 'INS' or role['role'] == 'MTR':
+                    if role['role'] in ['INS', 'MTR']:
                         new_user.training_role = role['role']
                     else:
                         new_user.staff_role = role['role']
             new_user.save()
             new_user.assign_initial_certs()
+
             ActionLog(
                 action=f'New home controller {new_user.full_name} was created by system.'
             ).save()
