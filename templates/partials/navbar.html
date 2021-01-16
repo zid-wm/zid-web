@@ -64,11 +64,14 @@
                         <ul>
                             {% if request.user_obj %}
                             <li><a href="/profile/{{ request.user_obj.cid }}">Profile</a></li>
+                            <li><a href="https://www.picktime.com/zidartcc">Schedule Training</a></li>
                             {% endif %}
                             {% if request.user_obj.main_role == 'MC' or not request.user_obj %}
                             <li><a href="/visit-request/">Become a Visitor</a></li>
                             {% endif %}
                             {% if request.user_obj.is_staff %}
+                            <li><strong>&nbsp;&nbsp;Staff Tools</strong></li>
+                            <li><a href="/training">Training Hub</a></li>
                             <li><a href="/audit-log/">Website Audit Log</a></li>
                             <li><a href="/email/send/">Send an Email</a></li>
                             {% endif %}

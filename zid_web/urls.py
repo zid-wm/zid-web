@@ -22,6 +22,7 @@ from apps.event import views as event
 from apps.feedback import views as feedback
 from apps.pilots import views as pilots
 from apps.resources import views as resources
+from apps.training import views as training
 from apps.uls import views as uls
 from apps.user import views as user
 from apps.views import views as views
@@ -66,6 +67,11 @@ urlpatterns = [
     path('files/', resources.view_files, name='files'),
     path('files/add/', resources.add_file, name='add-file'),
     path('files/delete/<str:file_cat>/<str:file_name>', resources.delete_file, name='delete-file'),
+
+    # Training
+    path('training/', training.view_training_hub, name='training'),
+    path('training/ticket/<int:ticket_id>', training.view_ticket_details, name='ticket-details'),
+    path('training/ticket/submit/', training.submit_training_ticket, name='submit-training-ticket'),
 
     # ULS (Auth)
     path('login/', uls.login, name='login'),

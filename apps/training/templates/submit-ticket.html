@@ -1,0 +1,28 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+{% load extras %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li><a href="/roster/">Roster</a></li>
+<li>Submit Training Ticket</li>
+{% endblock %}
+
+{% block body %}
+<section id="contact" class="contact">
+    <div class="container">
+        <div class="row m-3 pt-3">
+            <h3>Submit Training Ticket</h3>
+        </div>
+        <div class="row m-3">
+            <form action="/training/ticket/submit/" enctype="multipart/form-data" method="post" role="form" class="php-email-form">
+                {% csrf_token %}
+                {{ form }}
+                <div class="text-center pt-3">
+                    <button type="submit" value="Save">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
