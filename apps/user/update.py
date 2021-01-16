@@ -41,7 +41,7 @@ def update_roster():
                 main_role='HC' if details['facility'] == 'ZID' else 'VC'
             )
 
-            if details['rating_short'] in ['I1', 'I3']:
+            if details['rating_short'] in ['I1', 'I3'] and details['facility'] == 'ZID':
                 new_user.training_role = 'INS'
             for role in details['roles']:
                 if role['facility'] == 'ZID':
@@ -60,7 +60,7 @@ def update_roster():
             edit_user = User.objects.get(cid=details['cid'])
             edit_user.rating = details['rating_short']
 
-            if details['rating_short'] in ['I1', 'I3']:
+            if details['rating_short'] in ['I1', 'I3'] and details['facility'] == 'ZID':
                 edit_user.training_role = 'INS'
             for role in details['roles']:
                 if role['facility'] == 'ZID':
