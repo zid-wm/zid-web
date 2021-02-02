@@ -1,6 +1,8 @@
+import calendar
 import os
 import requests
 
+from datetime import date
 from django.core import mail
 from django.template.loader import render_to_string
 
@@ -96,5 +98,25 @@ def send_event_request_email(request):
     )]
 
     mail_data[0].attach_alternative(html_msg, 'text/html')
+    with mail.get_connection() as conn:
+        conn.send_messages(mail_data)
+
+
+@run_async
+def send_inactivity_warning_email(email_list):
+    html_msg = render_to_string(
+        'email/EMAIL_inactivity.html',
+        {
+            'month': calendar.month_name[date.today().month]
+        }
+    )
+    mail_data = [mail.EmailMultiAlternatives(
+        'Controller Inactivity Warning',
+        html_msg,
+        to=[email['email']]
+    ) for email in email_list]
+
+    for item in mail_data:
+        item.attach_alternative(html_msg, 'text/html')
     with mail.get_connection() as conn:
         conn.send_messages(mail_data)
