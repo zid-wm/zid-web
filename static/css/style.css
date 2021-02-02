@@ -185,6 +185,14 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
 }
 
+.nav-menu .drop-down li strong {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 1000;
+  text-transform: none;
+  color: var(--main-blue);
+}
+
 .nav-menu .drop-down ul a {
   padding: 10px 20px;
   font-size: 14px;
