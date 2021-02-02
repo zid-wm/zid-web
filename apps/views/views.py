@@ -37,11 +37,11 @@ def get_leaderboard_by_position(month, year, pos):
 
 def view_home(request):
     online_controllers_count = Controller.objects.count()
-    total_home_controllers = User.objects.filter(main_role='HC').count()
+    total_home_controllers = User.objects.filter(main_role='HC', status=0).count()
     month_control_time = ControllerSession.objects.aggregate(
         Sum('duration'))['duration__sum']
 
-    if request.GET.get('m', None):
+    if request.GET.get('m', False):
         message_no = int(request.GET.get('m', 0))
         if message_no in MESSAGES:
             message = MESSAGES[message_no]

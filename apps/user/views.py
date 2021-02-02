@@ -38,7 +38,8 @@ def view_roster(request):
         return HttpResponse(400)
 
     home_roster = User.objects.filter(
-        main_role='HC'
+        main_role='HC',
+        status=0
     ).values(
         'first_name',
         'last_name',
@@ -51,7 +52,8 @@ def view_roster(request):
     ).order_by('last_name')
 
     visit_roster = User.objects.filter(
-        main_role='VC'
+        main_role='VC',
+        status=0
     ).values(
         'first_name',
         'last_name',
@@ -65,7 +67,8 @@ def view_roster(request):
     ).order_by('last_name')
 
     mavp_roster = User.objects.filter(
-        main_role='MC'
+        main_role='MC',
+        status=0
     ).values(
         'first_name',
         'last_name',
