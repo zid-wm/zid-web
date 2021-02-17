@@ -9,7 +9,10 @@ from json import JSONDecodeError
 
 from apps.api.models import Controller, ControllerSession
 from apps.user.models import User
+<<<<<<< HEAD
 from apps.news.models import NewsArticle
+=======
+>>>>>>> 17b581ec4d004a92609c3439c6975842f478b743
 from util.alert import MESSAGES
 
 
@@ -38,11 +41,19 @@ def get_leaderboard_by_position(month, year, pos):
 
 def view_home(request):
     online_controllers_count = Controller.objects.count()
+<<<<<<< HEAD
     total_home_controllers = User.objects.filter(main_role='HC', status=0).count()
     month_control_time = ControllerSession.objects.aggregate(
         Sum('duration'))['duration__sum']
 
     if request.GET.get('m', False):
+=======
+    total_home_controllers = User.objects.filter(main_role='HC').count()
+    month_control_time = ControllerSession.objects.aggregate(
+        Sum('duration'))['duration__sum']
+
+    if request.GET.get('m', None):
+>>>>>>> 17b581ec4d004a92609c3439c6975842f478b743
         message_no = int(request.GET.get('m', 0))
         if message_no in MESSAGES:
             message = MESSAGES[message_no]
@@ -83,11 +94,15 @@ def view_home(request):
         .annotate(duration=Sum('duration')) \
         .order_by('-duration')[0:5]
 
+<<<<<<< HEAD
     dev_env = os.getenv('ENVIRONMENT').lower != 'prod'
 
     latest_news = NewsArticle.objects.all().values(
         'title', 'date_posted', 'id'
     ).order_by('-date_posted')[0:3]
+=======
+    dev_env = os.getenv('DEV_ENV')
+>>>>>>> 17b581ec4d004a92609c3439c6975842f478b743
 
     return render(request, 'home.html', {
         'page_title': 'Home',
@@ -104,8 +119,12 @@ def view_home(request):
         'twr_this_month': twr_this_month,
         'gnd_this_month': gnd_this_month,
         'dev_env': dev_env,
+<<<<<<< HEAD
         'message': message,
         'latest_news': latest_news
+=======
+        'message': message
+>>>>>>> 17b581ec4d004a92609c3439c6975842f478b743
     })
 
 
