@@ -7,6 +7,11 @@ To run the development server, you must have the following installed:
 - Pip
 - Venv (optional; recommended)
 
+## PostgreSQL
+To run the development server locally, you will need to set up a local PostgreSQL instance. [This article](https://www.prisma.io/dataguide/postgresql/setting-up-a-local-postgresql-database) is a good starting point for setup on Windows, MacOS, and Linux.
+
+To access the AWS parameters that include the database credentials, you will need to contact the ZID Webmaster to be set up with an AWS account. You will not be able to run the code locally without this access.
+
 ## Setup
 If you are running the development server in a virtual environment, run the following commands in a terminal window to initialize and activate your environment:
 
