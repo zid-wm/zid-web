@@ -20,6 +20,7 @@ from apps.administration import views as administration
 from apps.api import views as api
 from apps.event import views as event
 from apps.feedback import views as feedback
+from apps.news import views as news
 from apps.pilots import views as pilots
 from apps.resources import views as resources
 from apps.training import views as training
@@ -56,6 +57,12 @@ urlpatterns = [
     path('feedback/post/<int:feedback_id>', feedback.post_feedback, name='post-feedback'),
     path('feedback/reject/<int:feedback_id>', feedback.reject_feedback, name='reject-feedback'),
     path('feedback/submit/', feedback.submit_feedback, name='submit-feedback'),
+
+    # News
+    path('news/', news.view_news, name='news'),
+    path('news/article/<int:article_id>', news.view_article, name='article'),
+    path('news/article/<int:article_id>/delete', news.delete_article, name='delete-article'),
+    path('news/article/new', news.view_submit_new_article, name='new-article'),
 
     # Pilots
     path('pilot-briefing/', pilots.view_pilot_briefing, name='briefing'),

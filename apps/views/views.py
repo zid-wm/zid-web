@@ -9,6 +9,7 @@ from json import JSONDecodeError
 
 from apps.api.models import Controller, ControllerSession
 from apps.user.models import User
+from apps.news.models import NewsArticle
 from util.alert import MESSAGES
 
 
@@ -84,6 +85,10 @@ def view_home(request):
 
     dev_env = os.getenv('ENVIRONMENT').lower != 'prod'
 
+    latest_news = NewsArticle.objects.all().values(
+        'title', 'date_posted', 'id'
+    ).order_by('-date_posted')[0:3]
+
     return render(request, 'home.html', {
         'page_title': 'Home',
         'online_controllers_count': online_controllers_count,
@@ -99,7 +104,8 @@ def view_home(request):
         'twr_this_month': twr_this_month,
         'gnd_this_month': gnd_this_month,
         'dev_env': dev_env,
-        'message': message
+        'message': message,
+        'latest_news': latest_news
     })
 
 

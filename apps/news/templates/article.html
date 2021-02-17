@@ -1,0 +1,27 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li><a href="/news">News</a></li>
+<li>{{ article.title }}</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row m-3 pt-3">
+        <h3>{{ article.title }}</h3>
+    </div>
+
+    <div class="row m-3">
+        <p>{{ article.content }}<br />
+        <i>Posted by {{ article.author.full_name }} on {{ article.date_posted }}</i></p>
+    </div>
+
+    <div class="row m-3">
+        <a class="btn btn-danger" href="/news/article/{{ article.id }}/delete">
+            <i class="icofont-ui-delete"></i> Delete Article
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li><a href="/news">News</a></li>
+<li>New Article</li>
+{% endblock %}
+
+{% block body %}
+<section id="contact" class="contact">
+    <div class="container">
+        <div class="row m-3 pt-3">
+            <h3>New Article</h3>
+        </div>
+
+        <div class="row m-3" style="width:100%">
+            <form action="/news/article/new" method="post" role="form" class="php-email-form">
+            {% csrf_token %}
+            {{ form }}
+            <div class="pt-3">
+                <p>Your name ({{ request.user_obj.full_name }}) will be submitted as the author of this article.</p>
+            </div>
+            <div class="text-center pt-3">
+                <button type="submit" value="Post Article">Post Article</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
