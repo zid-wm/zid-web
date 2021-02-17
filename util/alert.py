@@ -39,5 +39,9 @@ MESSAGES = {
     6: {
         'type': 'success',
         'text': 'Your visiting request has been successfully submitted.'
+    },
+    7: {
+        'type': 'success',
+        'text': 'News article successfully posted.'
     }
 }

@@ -124,6 +124,18 @@
                 </div>
             </section>
 
+            <section id="cta" class="cta">
+                <div class="container" data-aos="fade-in">
+                <div class="text-center">
+                    <h3>Latest News</h3>
+                    {% for article in latest_news %}
+                    <p><strong>{{ article.date_posted }} - </strong><a href="/news/article/{{ article.id }}">{{ article.title }}</a></p>
+                    {% endfor %}
+                    <a class="cta-btn" href="/news">See More</a>
+                </div>
+                </div>
+            </section>
+
             <section id="services" class="services section-bg">
                 <div class="container">
                     <div class="section-title pt-5" data-aos="fade-up">

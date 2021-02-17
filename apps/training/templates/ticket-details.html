@@ -1,0 +1,36 @@
+{% extends 'mainTemplate.html' %}
+{% load static %}
+{% load extras %}
+
+{% block breadcrumbs %}
+<li><a href="/">Home</a></li>
+<li><a href="/training">Training Hub</a></li>
+<li>Ticket Details</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row m-3 pt-3">
+        <h3>Training Ticket Details for {{ ticket.student.full_name }} ({{ ticket.position }})</h3>
+    </div>
+
+    <div class="row m-3">
+        <p>
+            Instructor: {{ ticket.instructor.full_name }}<br />
+            Session Date: {{ ticket.session_date }}<br />
+            Duration: {{ ticket.session_duration|format_duration }}<br /><br />
+            Number of Aircraft Movements: {{ ticket.movements }}<br />
+            Session Score: {{ ticket.get_score_display }}<br />
+            Session Location: {{ ticket.get_location_display }}<br />
+            OTS Status: {{ ticket.get_ots_status_display }}<br />
+            Solo Granted: {{ ticket.solo_granted }}<br /><br />
+            Notes: {{ ticket.notes }}
+        </p>
+    </div>
+    {% if request.user_obj.is_staff %}
+    <div class="row m-3">
+        <p><a href="/training">Return to Training Hub</a></p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

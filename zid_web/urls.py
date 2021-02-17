@@ -20,8 +20,10 @@ from apps.administration import views as administration
 from apps.api import views as api
 from apps.event import views as event
 from apps.feedback import views as feedback
+from apps.news import views as news
 from apps.pilots import views as pilots
 from apps.resources import views as resources
+from apps.training import views as training
 from apps.uls import views as uls
 from apps.user import views as user
 from apps.views import views as views
@@ -56,6 +58,12 @@ urlpatterns = [
     path('feedback/reject/<int:feedback_id>', feedback.reject_feedback, name='reject-feedback'),
     path('feedback/submit/', feedback.submit_feedback, name='submit-feedback'),
 
+    # News
+    path('news/', news.view_news, name='news'),
+    path('news/article/<int:article_id>', news.view_article, name='article'),
+    path('news/article/<int:article_id>/delete', news.delete_article, name='delete-article'),
+    path('news/article/new', news.view_submit_new_article, name='new-article'),
+
     # Pilots
     path('pilot-briefing/', pilots.view_pilot_briefing, name='briefing'),
     path('routes/', pilots.view_preferred_routes, name='routes'),
@@ -66,6 +74,11 @@ urlpatterns = [
     path('files/', resources.view_files, name='files'),
     path('files/add/', resources.add_file, name='add-file'),
     path('files/delete/<str:file_cat>/<str:file_name>', resources.delete_file, name='delete-file'),
+
+    # Training
+    path('training/', training.view_training_hub, name='training'),
+    path('training/ticket/<int:ticket_id>', training.view_ticket_details, name='ticket-details'),
+    path('training/ticket/submit/', training.submit_training_ticket, name='submit-training-ticket'),
 
     # ULS (Auth)
     path('login/', uls.login, name='login'),

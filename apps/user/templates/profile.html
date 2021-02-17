@@ -138,6 +138,31 @@
             {% endfor %}
         </table>
     </div>
+    <div class="row">
+        <h5>Latest Training Sessions</h5>
+        <table class="table table-striped">
+            <tr>
+                <th scope="col" style="width:20%">Session Date</th>
+                <th scope="col" style="width:15%">Instructor</th>
+                <th scope="col" style="width:12%">Position</th>
+                <th scope="col">Instructor Notes</th>
+                <th scope="col" style="width:10%"></th>
+            </tr>
+            {% for session in training_sessions %}
+            <tr>
+                <td>{{ session.session_date }}</td>
+                <td>{{ session.instructor.full_name }}</td>
+                <td>{{ session.position }}</td>
+                <td>{{ session.notes }}</td>
+                <td><a href="/training/ticket/{{ session.id }}">Details</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center">No training records to display!</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 </section>
 {% endblock %}

@@ -21,6 +21,7 @@ from .forms import (
     VisitingRequestForm,
     ManualAddVisitorForm
 )
+from apps.training.models import TrainingTicket
 from apps.user.models import User, VisitRequest
 from apps.user.update import add_visitor
 from util.email import send_visitor_approval_email
@@ -37,7 +38,8 @@ def view_roster(request):
         return HttpResponse(400)
 
     home_roster = User.objects.filter(
-        main_role='HC'
+        main_role='HC',
+        status=0
     ).values(
         'first_name',
         'last_name',
@@ -50,7 +52,8 @@ def view_roster(request):
     ).order_by('last_name')
 
     visit_roster = User.objects.filter(
-        main_role='VC'
+        main_role='VC',
+        status=0
     ).values(
         'first_name',
         'last_name',
@@ -64,7 +67,8 @@ def view_roster(request):
     ).order_by('last_name')
 
     mavp_roster = User.objects.filter(
-        main_role='MC'
+        main_role='MC',
+        status=0
     ).values(
         'first_name',
         'last_name',
@@ -224,6 +228,10 @@ def view_profile(request, cid):
         'center': user.ctr_cert
     })
 
+    training_sessions = TrainingTicket.objects.filter(
+        student=user
+    ).order_by('-session_date')
+
     sessions = ControllerSession.objects.filter(user=user)
     now = timezone.now()
     stats = sessions.aggregate(
@@ -241,7 +249,8 @@ def view_profile(request, cid):
         'user': user,
         'stats': stats,
         'form': form,
-        'feedback': feedback
+        'feedback': feedback,
+        'training_sessions': training_sessions
     })
 
 

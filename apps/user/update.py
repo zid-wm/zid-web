@@ -4,13 +4,18 @@ import os
 from apscheduler.schedulers.background import BackgroundScheduler
 from .models import User
 from apps.administration.models import ActionLog, MAVP
+from apps.api.models import ControllerSession
+from util.email import send_inactivity_warning_email
+from datetime import date
 from django.utils import timezone
+from django.db.models import Sum, Q
 
 
 def start():
     scheduler = BackgroundScheduler()
     scheduler.add_job(update_roster, 'interval', minutes=30)
     scheduler.add_job(update_loa, 'cron', hour=0)
+    scheduler.add_job(send_inactivity_warning, 'cron', day=24)
     scheduler.start()
 
 
@@ -40,14 +45,18 @@ def update_roster():
                 rating=details['rating_short'],
                 main_role='HC' if details['facility'] == 'ZID' else 'VC'
             )
+
+            if details['rating_short'] in ['I1', 'I3'] and details['facility'] == 'ZID':
+                new_user.training_role = 'INS'
             for role in details['roles']:
                 if role['facility'] == 'ZID':
-                    if role['role'] == 'INS' or role['role'] == 'MTR':
+                    if role['role'] in ['INS', 'MTR']:
                         new_user.training_role = role['role']
                     else:
                         new_user.staff_role = role['role']
             new_user.save()
             new_user.assign_initial_certs()
+
             ActionLog(
                 action=f'New home controller {new_user.full_name} was created by system.'
             ).save()
@@ -56,6 +65,8 @@ def update_roster():
             edit_user = User.objects.get(cid=details['cid'])
             edit_user.rating = details['rating_short']
 
+            if details['rating_short'] in ['I1', 'I3'] and details['facility'] == 'ZID':
+                edit_user.training_role = 'INS'
             for role in details['roles']:
                 if role['facility'] == 'ZID':
                     if role['role'] == 'INS' or role['role'] == 'MTR':
@@ -208,3 +219,37 @@ def add_visitor(cid):
         main_role='MC'
     ).exists():
         User.objects.get(cid=cid).delete()
+
+
+def send_inactivity_warning():
+    now = date.today()
+    month = now.month
+    year = now.year
+
+    active_users = ControllerSession.objects.filter(
+        start__year=year,
+        start__month=month
+    )\
+        .values('user', 'duration')\
+        .order_by('user')\
+        .annotate(month_duration=Sum('duration'))\
+        .filter(
+        (Q(month_duration__gte=os.getenv('HOME_ACTIVITY_REQUIREMENT'))
+         & Q(user__main_role='HC')) |
+        (Q(month_duration__gte=os.getenv('VISITOR_ACTIVITY_REQUIREMENT'))
+         & Q(user__main_role='VC'))
+    )
+
+    all_users = User.objects.filter(
+        main_role__in=['HC', 'VC']
+    )
+
+    inactive_users = [u.id for u in all_users]
+    for u in active_users:
+        inactive_users.remove(u['user'])
+
+    email_list = User.objects.filter(
+        id__in=inactive_users
+    ).values('email')
+
+    send_inactivity_warning_email(email_list)
