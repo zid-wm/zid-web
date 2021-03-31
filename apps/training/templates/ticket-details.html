@@ -11,18 +11,18 @@
 {% block body %}
 <div class="container">
     <div class="row m-3 pt-3">
-        <h3>Training Ticket Details for {{ ticket.student.full_name }} ({{ ticket.position }})</h3>
+        <h3>Training Ticket Details for {{ student.full_name }} ({{ ticket.position }})</h3>
     </div>
 
     <div class="row m-3">
         <p>
-            Instructor: {{ ticket.instructor.full_name }}<br />
+            Instructor: {{ instructor.full_name }}<br />
             Session Date: {{ ticket.session_date }}<br />
-            Duration: {{ ticket.session_duration|format_duration }}<br /><br />
+            Duration: {{ ticket.duration }}<br /><br />
             Number of Aircraft Movements: {{ ticket.movements }}<br />
-            Session Score: {{ ticket.get_score_display }}<br />
-            Session Location: {{ ticket.get_location_display }}<br />
-            OTS Status: {{ ticket.get_ots_status_display }}<br />
+            Session Score: {{ ticket.score|training_score_display }}<br />
+            Session Location: {{ ticket.position }}<br />
+            OTS Status: {{ ticket.ots_status|ots_display }}<br />
             Solo Granted: {{ ticket.solo_granted }}<br /><br />
             Notes: {{ ticket.notes }}
         </p>

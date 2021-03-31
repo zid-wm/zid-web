@@ -17,11 +17,12 @@
         <p>{{ article.content }}<br />
         <i>Posted by {{ article.author.full_name }} on {{ article.date_posted }}</i></p>
     </div>
-
+    {% if request.user_obj.is_staff %}
     <div class="row m-3">
         <a class="btn btn-danger" href="/news/article/{{ article.id }}/delete">
             <i class="icofont-ui-delete"></i> Delete Article
         </a>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

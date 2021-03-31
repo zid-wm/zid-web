@@ -19,8 +19,26 @@ def view_training_hub(request):
         main_role='HC'
     ).order_by('last_name')
 
-    session_query = TrainingTicket.objects.all().order_by('-session_date')
-    paginator = Paginator(session_query, per_page=10)
+    data = requests.get(
+        'https://api.vatusa.net/v2/facility/ZID/training/records',
+        params={
+            'apikey': os.getenv('API_KEY')
+        }
+    ).json()['data']
+
+    training_tickets = [
+        {
+            'id': item['id'],
+            'session_date': item['session_date'],
+            'student': User.objects.get(cid=item['student_id']).full_name,
+            'instructor': User.objects.get(cid=item['instructor_id']).full_name,
+            'position': item['position']
+        }
+        for item in data]
+
+    training_tickets = sorted(training_tickets, key=lambda k: k['session_date'], reverse=True)
+
+    paginator = Paginator(training_tickets, per_page=10)
     page_num = request.GET.get('p')
     page = paginator.get_page(page_num)
 
@@ -39,24 +57,37 @@ def view_training_hub(request):
 
 @require_member
 def view_ticket_details(request, ticket_id):
-    ticket = TrainingTicket.objects.get(
-        id=ticket_id
+    response = requests.get(
+        f'https://api.vatusa.net/v2/training/record/{ticket_id}',
+        params={
+            'apikey': os.getenv('API_KEY')
+        }
     )
+
+    if not response.status_code == 200:
+        return HttpResponse(status=500)
+
+    ticket = response.json()['data']
 
     if not (
             request.user_obj.is_staff
             or request.user_obj.is_trainer
-            or request.user_obj.cid == ticket.student.cid
+            or request.user_obj.cid == ticket['student_id']
     ):
         return HttpResponse(status=403)
 
+    student = User.objects.get(cid=ticket['student_id'])
+    instructor = User.objects.get(cid=ticket['instructor_id'])
+
     return render(request, 'ticket-details.html', {
         'page_title': 'Ticket Details',
-        'ticket': ticket
+        'ticket': ticket,
+        'student': student,
+        'instructor': instructor
     })
 
 
-def post_training_ticket(ticket, data, student, instructor):
+def post_training_ticket(data, student, instructor):
     post_data = {
         'instructor_id': instructor.cid,
         'session_date': data['session_date'],
@@ -77,7 +108,6 @@ def post_training_ticket(ticket, data, student, instructor):
     }).json()
 
     if response['status'] == 'OK':
-        ticket.vatusa_id = response['id']
         return True
     else:
         print(response)
@@ -91,25 +121,9 @@ def submit_training_ticket(request):
             cid=request.POST['student']
         )
 
-        print(request.POST)
         data = request.POST
 
-        ticket = TrainingTicket(
-            student=student,
-            instructor=request.user_obj,
-            session_date=data['session_date'],
-            position=data['position'],
-            session_duration=data['session_duration'],
-            movements=int(data['movements']),
-            score=int(data['score']),
-            notes=data['notes'],
-            location=int(data['location']),
-            ots_status=int(data['ots_status']),
-            solo_granted='solo_granted' in data
-        )
-
-        if post_training_ticket(ticket, data, student, request.user_obj):
-            ticket.save()
+        if post_training_ticket(data, student, request.user_obj):
             ActionLog(action=f'{request.user_obj.full_name} created a new training ticket for {student.full_name}.')
             return redirect('/training')
 

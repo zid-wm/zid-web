@@ -44,6 +44,29 @@ def feedback(f):
     return ''
 
 
+@register.filter
+def ots_display(n):
+    display_text = {
+        0: "No OTS",
+        1: "OTS Pass",
+        2: "OTS Fail",
+        3: "OTS Recommended"
+    }
+    return display_text[n]
+
+
+@register.filter
+def training_score_display(n):
+    display_text = {
+        1: "No Progress",
+        2: "Little Progress",
+        3: "Average Progress",
+        4: "Great Progress",
+        5: "Exceptional Progress"
+    }
+    return display_text[n]
+
+
 @register.simple_tag
 def uls_redirect_url():
     return os.getenv('ULS_REDIR_URL')

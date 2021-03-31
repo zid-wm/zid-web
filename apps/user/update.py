@@ -28,27 +28,25 @@ def update_roster():
         params={
             'apikey': os.getenv('API_KEY')
         }
-    ).json()
-    del roster['testing']
+    ).json()['data']
 
     for user in roster:
-        details = roster[user]
-        if not User.objects.filter(cid=details['cid']).exists():
+        if not User.objects.filter(cid=user['cid']).exists():
             new_user = User(
-                first_name=details['fname'].capitalize(),
-                last_name=details['lname'].capitalize(),
-                cid=int(details['cid']),
-                email=details['email'],
+                first_name=user['fname'].capitalize(),
+                last_name=user['lname'].capitalize(),
+                cid=int(user['cid']),
+                email=user['email'],
                 oper_init=assign_operating_initials(
-                    details['fname'][0], details['lname'][0]
+                    user['fname'][0], user['lname'][0]
                 ),
-                rating=details['rating_short'],
-                main_role='HC' if details['facility'] == 'ZID' else 'VC'
+                rating=user['rating_short'],
+                main_role='HC' if user['facility'] == 'ZID' else 'VC'
             )
 
-            if details['rating_short'] in ['I1', 'I3'] and details['facility'] == 'ZID':
+            if user['rating_short'] in ['I1', 'I3'] and user['facility'] == 'ZID':
                 new_user.training_role = 'INS'
-            for role in details['roles']:
+            for role in user['roles']:
                 if role['facility'] == 'ZID':
                     if role['role'] in ['INS', 'MTR']:
                         new_user.training_role = role['role']
@@ -58,16 +56,16 @@ def update_roster():
             new_user.assign_initial_certs()
 
             ActionLog(
-                action=f'New home controller {new_user.full_name} was created by system.'
+                action=f'New home/visiting controller {new_user.full_name} was created by system.'
             ).save()
 
         else:
-            edit_user = User.objects.get(cid=details['cid'])
-            edit_user.rating = details['rating_short']
+            edit_user = User.objects.get(cid=user['cid'])
+            edit_user.rating = user['rating_short']
 
-            if details['rating_short'] in ['I1', 'I3'] and details['facility'] == 'ZID':
+            if user['rating_short'] in ['I1', 'I3'] and user['facility'] == 'ZID':
                 edit_user.training_role = 'INS'
-            for role in details['roles']:
+            for role in user['roles']:
                 if role['facility'] == 'ZID':
                     if role['role'] == 'INS' or role['role'] == 'MTR':
                         edit_user.training_role = role['role']
@@ -77,28 +75,28 @@ def update_roster():
             # If user is rejoining the ARTCC after being marked as inactive
             if edit_user.status == 2:
                 edit_user.status = 0
-                edit_user.email = details['email']
+                edit_user.email = user['email']
                 edit_user.oper_init = assign_operating_initials(
-                    details['fname'][0], details['lname'][0], edit_user)
-                edit_user.main_role = 'HC' if details['facility'] == 'ZID' else 'VC'
+                    user['fname'][0], user['lname'][0], edit_user)
+                edit_user.main_role = 'HC' if user['facility'] == 'ZID' else 'VC'
 
                 edit_user.save()
                 edit_user.assign_initial_certs()
                 ActionLog(
-                    action=f'Home controller {edit_user.full_name} was marked active by system.'
+                    action=f'Home/visiting controller {edit_user.full_name} was marked active by system.'
                 ).save()
             edit_user.save()
 
     #############################################
     # Set controllers to inactive if they are no longer on VATUSA roster
     #############################################
-    roster_cids = [roster[user]['cid'] for user in roster]
+    roster_cids = [user['cid'] for user in roster]
     for user in User.objects.filter(main_role__in=['HC', 'VC']).exclude(status=2):
         if user.cid not in roster_cids:
             user.status = 2
             user.save()
             ActionLog(
-                action=f'Home controller {user.full_name} was set as inactive by system.'
+                action=f'Home/visiting controller {user.full_name} was set as inactive by system.'
             ).save()
 
     #############################################
@@ -110,21 +108,19 @@ def update_roster():
             params={
                 'apikey': os.getenv('API_KEY')
             }
-        ).json()
-        del mavp_roster['testing']
+        ).json()['data']
 
         for user in mavp_roster:
-            details = mavp_roster[user]
-            if not User.objects.filter(cid=details['cid']).exists():
+            if not User.objects.filter(cid=user['cid']).exists():
                 new_user = User(
-                    first_name=details['fname'].capitalize(),
-                    last_name=details['lname'].capitalize(),
-                    cid=int(details['cid']),
-                    email=details['email'],
+                    first_name=user['fname'].capitalize(),
+                    last_name=user['lname'].capitalize(),
+                    cid=int(user['cid']),
+                    email=user['email'],
                     oper_init=assign_operating_initials(
-                        details['fname'][0], details['lname'][0]
+                        user['fname'][0], user['lname'][0]
                     ),
-                    rating=details['rating_short'],
+                    rating=user['rating_short'],
                     main_role='MC',
                     home_facility=mavp_artcc.facility_short
                 )
@@ -135,16 +131,16 @@ def update_roster():
                 ).save()
 
             # Don't update full visiting controllers during the MAVP update
-            elif User.objects.get(cid=details['cid']).main_role == 'MC':
-                edit_user = User.objects.get(cid=details['cid'])
-                edit_user.rating = details['rating_short']
+            elif User.objects.get(cid=user['cid']).main_role == 'MC':
+                edit_user = User.objects.get(cid=user['cid'])
+                edit_user.rating = user['rating_short']
                 edit_user.home_facility = mavp_artcc.facility_short
 
                 if edit_user.status == 2:
                     edit_user.status = 0
-                    edit_user.email = details['email']
+                    edit_user.email = user['email']
                     edit_user.oper_init = assign_operating_initials(
-                        details['fname'][0], details['lname'][0], edit_user)
+                        user['fname'][0], user['lname'][0], edit_user)
                     edit_user.main_role = 'MC'
 
                     edit_user.save()
@@ -155,7 +151,7 @@ def update_roster():
                 edit_user.save()
 
         # Set MAVP controllers inactive
-        mavp_roster_cids = [mavp_roster[user]['cid'] for user in mavp_roster]
+        mavp_roster_cids = [user['cid'] for user in mavp_roster]
         for user in User.objects.filter(main_role='MC').exclude(status=2):
             if user.cid not in mavp_roster_cids:
                 user.status = 2
