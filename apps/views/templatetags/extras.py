@@ -19,7 +19,7 @@ def format_duration(td):
     """
     if td:
         time = re.findall(r'\d+', str(td))
-        if len(time) == 5:  # then there is a day value
+        if len(time) == 4:  # then there is a day value
             result = f'{(int(time[0]) * 24) + int(time[1])}:{time[2]}'
         else:
             result = f'{time[0]}:{time[1]}'

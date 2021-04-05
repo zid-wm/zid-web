@@ -191,7 +191,7 @@ def base26encode(int_n):
 
 def assign_operating_initials(f_init, l_init, user=None):
     oi = (f_init + l_init).upper()
-    while User.objects.filter(oper_init=oi).exclude(id=user.id if user else 0).exists():
+    while User.objects.filter(oper_init=oi).exclude(cid=user.cid if user else 0).exists():
         new_oi = base26decode(oi) + 1
         oi = base26encode(new_oi if new_oi <= 675 else 0)
     if len(oi) < 2:
@@ -240,12 +240,12 @@ def send_inactivity_warning():
         main_role__in=['HC', 'VC']
     )
 
-    inactive_users = [u.id for u in all_users]
+    inactive_users = [u.cid for u in all_users]
     for u in active_users:
         inactive_users.remove(u['user'])
 
     email_list = User.objects.filter(
-        id__in=inactive_users
+        cid__in=inactive_users
     ).values('email')
 
     send_inactivity_warning_email(email_list)

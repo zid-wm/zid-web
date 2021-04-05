@@ -39,7 +39,14 @@ def get_leaderboard_by_position(month, year, pos):
 def view_home(request):
     online_controllers_count = Controller.objects.count()
     total_home_controllers = User.objects.filter(main_role='HC', status=0).count()
-    month_control_time = ControllerSession.objects.aggregate(
+
+    now = date.today()
+    month = now.month
+    year = now.year
+    month_control_time = ControllerSession.objects.filter(
+        start__year=year,
+        start__month=month
+    ).aggregate(
         Sum('duration'))['duration__sum']
 
     if request.GET.get('m', False):
