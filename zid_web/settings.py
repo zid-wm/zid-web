@@ -37,7 +37,8 @@ ALLOWED_HOSTS = [
     'zidartcc.org',
     'localhost',
     '.zidbase-dev.name',
-    '.zidbase-dev.alpha'
+    '.zidbase-dev.alpha',
+    '.zid-internal.com'
 ]
 
 
