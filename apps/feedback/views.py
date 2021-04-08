@@ -20,7 +20,7 @@ def new_feedback(request):
 def submit_feedback(request):
     feedback = Feedback(
         controller=User.objects.get(
-            id=request.POST['controller']
+            cid=request.POST['controller']
         ),
         position=request.POST['position'],
         service_level=request.POST['service_level'],

@@ -74,7 +74,7 @@ class NewFeedbackForm(forms.Form):
         user_items = User.objects.filter(
             status=0
         ).order_by('last_name')
-        self.fields['controller'].choices = ((u.id, f'{u.first_name} {u.last_name}') for u in user_items)
+        self.fields['controller'].choices = ((u.cid, f'{u.first_name} {u.last_name}') for u in user_items)
 
 
 class ReviewFeedbackForm(forms.Form):
