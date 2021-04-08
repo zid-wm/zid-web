@@ -31,7 +31,7 @@ class User(models.Model):
 
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
-    cid = models.IntegerField()
+    cid = models.IntegerField(primary_key=True)
     email = models.EmailField(null=True, blank=True)
     oper_init = models.CharField(max_length=16)
     home_facility = models.CharField(max_length=32, null=True, blank=True)

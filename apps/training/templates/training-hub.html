@@ -44,8 +44,8 @@
                     {% for s in sessions %}
                     <tr>
                         <td><a href="/training/ticket/{{ s.id }}">{{ s.session_date }}</a></td>
-                        <td>{{ s.student.full_name }}</td>
-                        <td>{{ s.instructor.full_name }}</td>
+                        <td>{{ s.student }}</td>
+                        <td>{{ s.instructor }}</td>
                         <td>{{ s.position }}</td>
                     </tr>
                     {% endfor %}

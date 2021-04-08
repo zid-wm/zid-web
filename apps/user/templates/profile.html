@@ -143,7 +143,7 @@
         <table class="table table-striped">
             <tr>
                 <th scope="col" style="width:20%">Session Date</th>
-                <th scope="col" style="width:15%">Instructor</th>
+                <th scope="col" style="width:15%">Rating</th>
                 <th scope="col" style="width:12%">Position</th>
                 <th scope="col">Instructor Notes</th>
                 <th scope="col" style="width:10%"></th>
@@ -151,7 +151,7 @@
             {% for session in training_sessions %}
             <tr>
                 <td>{{ session.session_date }}</td>
-                <td>{{ session.instructor.full_name }}</td>
+                <td>{{ session.score|training_score_display }}</td>
                 <td>{{ session.position }}</td>
                 <td>{{ session.notes }}</td>
                 <td><a href="/training/ticket/{{ session.id }}">Details</a></td>

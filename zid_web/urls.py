@@ -37,7 +37,7 @@ urlpatterns = [
     path('email/send/', administration.view_send_email, name='send-email'),
 
     # API
-    path('health-check/', api.health_check, name='health-check'),
+    path('api/health-check/', api.health_check, name='health-check'),
 
     # Events
     path('events/', event.view_events, name='events'),

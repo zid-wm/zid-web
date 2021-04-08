@@ -228,9 +228,21 @@ def view_profile(request, cid):
         'center': user.ctr_cert
     })
 
-    training_sessions = TrainingTicket.objects.filter(
-        student=user
-    ).order_by('-session_date')
+    # training_sessions = TrainingTicket.objects.filter(
+    #     student=user
+    # ).order_by('-session_date')
+
+    response = requests.get(
+        f'https://api.vatusa.net/v2/user/{cid}/training/records',
+        params={
+            'apikey': os.getenv('API_KEY')
+        }
+    )
+
+    if not response.status_code == 200:
+        return HttpResponse(status=500)
+
+    training_sessions = sorted(response.json()['data'], key=lambda k: k['session_date'], reverse=True)
 
     sessions = ControllerSession.objects.filter(user=user)
     now = timezone.now()
