@@ -33,12 +33,8 @@ SECRET_KEY = SSM.get_parameter(
 DEBUG = os.getenv('ENVIRONMENT').lower() != 'prod'
 
 ALLOWED_HOSTS = [
-    '.amazonaws.com',
-    'zidartcc.org',
-    'localhost',
-    '.zidbase-dev.name',
-    '.zidbase-dev.alpha',
-    '.zid-internal.com'
+    f'{os.getenv("WEBSITE_DOMAIN")}',
+    f'.{os.getenv("WEBSITE_DOMAIN")}'
 ]
 
 
@@ -65,9 +61,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    # TODO: This module cannot be used until it supports Django 2.0
-    # Pull requests exist to fix the issue but no apparent progress
-    # 'subdomains.middleware.SubdomainURLRoutingMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -138,7 +131,7 @@ EMAIL_HOST_PASSWORD = SSM.get_parameter(
     Name=f'/zid/{ENVIRONMENT}/smtp/password'
 )['Parameter']['Value']
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS').lower() == 'true'
-DEFAULT_FROM_EMAIL = 'Do Not Reply <no-reply@zidartcc.org>'
+DEFAULT_FROM_EMAIL = 'Do Not Reply <noreply@zidartcc.org>'
 
 
 # Password validation
