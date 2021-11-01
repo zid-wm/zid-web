@@ -1,4 +1,3 @@
-import boto3
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -9,7 +8,6 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # Loads environment variables from .env file
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 ENVIRONMENT = os.getenv('ENVIRONMENT')
-SSM = boto3.client('ssm')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
