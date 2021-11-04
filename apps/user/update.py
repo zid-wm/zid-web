@@ -24,7 +24,7 @@ def update_roster():
     # Update home controllers
     #############################################
     roster = requests.get(
-        'https://api.vatusa.net/v2/facility/ZID/roster/both',
+        f'{os.getenv("VATUSA_API_URL")}/facility/ZID/roster/both',
         params={
             'apikey': os.getenv('API_KEY')
         }
@@ -41,6 +41,7 @@ def update_roster():
                     user['fname'][0], user['lname'][0]
                 ),
                 rating=user['rating_short'],
+                home_facility=user['facility'],
                 main_role='HC' if user['facility'] == 'ZID' else 'VC'
             )
 
@@ -61,16 +62,33 @@ def update_roster():
 
         else:
             edit_user = User.objects.get(cid=user['cid'])
+
             edit_user.rating = user['rating_short']
+            edit_user.home_facility = user['facility']
+            edit_user.email = user['email']
+            edit_user.main_role = 'HC' if user['facility'] == 'ZID' else 'VC'
+
+            # Keep track of whether training/staff roles are present,
+            # else remove the appropriate tags from current user.
+            training_role = False
+            staff_role = False
 
             if user['rating_short'] in ['I1', 'I3'] and user['facility'] == 'ZID':
                 edit_user.training_role = 'INS'
+                training_role = True
             for role in user['roles']:
                 if role['facility'] == 'ZID':
                     if role['role'] == 'INS' or role['role'] == 'MTR':
                         edit_user.training_role = role['role']
+                        training_role = True
                     else:
                         edit_user.staff_role = role['role']
+                        staff_role = True
+
+            if not training_role:
+                edit_user.training_role = None
+            if not staff_role:
+                edit_user.staff_role = None
 
             # If user is rejoining the ARTCC after being marked as inactive
             if edit_user.status == 2:
@@ -104,14 +122,14 @@ def update_roster():
     #############################################
     for mavp_artcc in MAVP.objects.all():
         mavp_roster = requests.get(
-            f'https://api.vatusa.net/v2/facility/{mavp_artcc.facility_short}/roster',
+            f'{os.getenv("VATUSA_API_URL")}/facility/{mavp_artcc.facility_short}/roster',
             params={
                 'apikey': os.getenv('API_KEY')
             }
         ).json()['data']
 
         for user in mavp_roster:
-            if not User.objects.filter(cid=user['cid']).exists():
+            if user['rating'] > 1 and not User.objects.filter(cid=user['cid']).exists():
                 new_user = User(
                     first_name=user['fname'].capitalize(),
                     last_name=user['lname'].capitalize(),
@@ -201,7 +219,7 @@ def assign_operating_initials(f_init, l_init, user=None):
 
 def add_visitor(cid):
     response = requests.post(
-        f'https://api.vatusa.net/v2/facility/ZID/roster/manageVisitor/{cid}',
+        f'{os.getenv("VATUSA_API_URL")}/facility/ZID/roster/manageVisitor/{cid}',
         params={'apikey': os.getenv('API_KEY')}
     ).json()
 
