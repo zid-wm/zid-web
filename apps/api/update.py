@@ -1,16 +1,14 @@
 import ast
 import os
-import requests
 import pytz
 
 from apscheduler.schedulers.background import BackgroundScheduler
-
 from datetime import datetime
-
 from django.utils import timezone
 
-from .models import Controller, ControllerSession
+from .models import Controller
 from apps.user.models import User
+from util.vatsim.data import vatsim_controllers
 
 
 def start():
@@ -20,37 +18,37 @@ def start():
 
 
 def pull_controllers():
-    airports = ast.literal_eval(os.getenv('CONTROLLED_FIELDS'))
-    data_file = requests.get('http://us.data.vatsim.net/vatsim-data.txt').text
-    data = [line.split(':') for line in data_file.split('\n')]
-    atc_clients = {client[0]: client for client in data
-                   if len(client) == 42 and client[3] == 'ATC'}
+    atc_clients = vatsim_controllers()
+    update_existing_controllers(atc_clients)
+    add_new_controllers(atc_clients)
 
-    # TODO: Need to update controller callsign every update as well
+
+def update_existing_controllers(atc_clients):
     for controller in Controller.objects.all():
-        if controller.callsign in atc_clients:
+        controller_data = next((entry for entry in atc_clients if entry['callsign'] == controller.callsign), None)
+        if controller_data:
             controller.last_update = timezone.now()
+            controller.frequency = controller_data['frequency']
             controller.save()
         else:
-            ControllerSession(
-                user=controller.user,
-                callsign=controller.callsign,
-                start=controller.online_since,
-                duration=controller.last_update - controller.online_since
-            ).save()
+            controller.convert_to_session()
             controller.delete()
 
-    for callsign, controller in atc_clients.items():
-        if controller[1] and User.objects.filter(cid=controller[1]).exists():
-            split = callsign.split('_')
-            if split[0] in airports:
-                if split[-1] in ['FD', 'DEL', 'GND', 'TWR', 'DEP', 'APP', 'CTR', 'FSS']:
-                    if not Controller.objects.filter(callsign=callsign).exists():
-                        Controller(
-                            user=User.objects.get(cid=int(controller[1])),
-                            callsign=callsign,
-                            frequency=controller[4],
-                            online_since=pytz.utc.localize(
-                                datetime.strptime(controller[36], '%Y%m%d%H%M%S')),
-                            last_update=timezone.now()
-                        ).save()
+
+def add_new_controllers(atc_clients):
+    airports = ast.literal_eval(os.getenv('CONTROLLED_FIELDS'))
+
+    for controller in atc_clients:
+        user = User.objects.filter(cid=controller['cid'])
+        if user.exists() \
+                and controller['facility'] != 0 \
+                and controller['callsign'].split('_')[0] in airports:
+            if not Controller.objects.filter(callsign=controller['callsign']).exists():
+                Controller(
+                    user=user.first(),
+                    callsign=controller['callsign'],
+                    frequency=controller['frequency'],
+                    online_since=pytz.utc.localize(
+                        datetime.strptime(controller['logon_time'][:-2], '%Y-%m-%dT%H:%M:%S.%f')),
+                    last_update=timezone.now()
+                ).save()

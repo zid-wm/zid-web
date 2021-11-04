@@ -30,8 +30,10 @@ def view_training_hub(request):
         {
             'id': item['id'],
             'session_date': item['session_date'],
-            'student': User.objects.get(cid=item['student_id']).full_name,
-            'instructor': User.objects.get(cid=item['instructor_id']).full_name,
+            'student': User.objects.get(cid=item['student_id']).full_name
+            if User.objects.filter(cid=item['student_id']).exists() else None,
+            'instructor': User.objects.get(cid=item['instructor_id']).full_name
+            if User.objects.filter(cid=item['instructor_id']).exists() else None,
             'position': item['position']
         }
         for item in data]
@@ -76,8 +78,10 @@ def view_ticket_details(request, ticket_id):
     ):
         return HttpResponse(status=403)
 
-    student = User.objects.get(cid=ticket['student_id'])
-    instructor = User.objects.get(cid=ticket['instructor_id'])
+    student = User.objects.get(cid=ticket['student_id']) \
+        if User.objects.filter(cid=ticket['student_id']).exists() else None
+    instructor = User.objects.get(cid=ticket['instructor_id'])\
+        if User.objects.filter(cid=ticket['instructor_id']).exists() else None
 
     return render(request, 'ticket-details.html', {
         'page_title': 'Ticket Details',

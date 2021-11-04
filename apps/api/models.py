@@ -14,6 +14,14 @@ class Controller(models.Model):
     def duration(self):
         return self.last_update - self.online_since
 
+    def convert_to_session(self):
+        ControllerSession(
+            user=self.user,
+            callsign=self.callsign,
+            start=self.online_since,
+            duration=self.duration
+        ).save()
+
     def __str__(self):
         return f'{self.user.full_name} on {self.callsign}'
 

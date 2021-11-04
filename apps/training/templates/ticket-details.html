@@ -24,7 +24,7 @@
             Session Location: {{ ticket.position }}<br />
             OTS Status: {{ ticket.ots_status|ots_display }}<br />
             Solo Granted: {{ ticket.solo_granted }}<br /><br />
-            Notes: {{ ticket.notes }}
+            Notes: {{ ticket.notes | safe}}
         </p>
     </div>
     {% if request.user_obj.is_staff %}
