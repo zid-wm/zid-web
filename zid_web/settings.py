@@ -80,6 +80,42 @@ TEMPLATES = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {name} {process:d} {thread:d} {message}',
+            'style': '{'
+        }
+    },
+    'handlers': {
+        'applog': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'log/app.log'),
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['applog'],
+            'level': 'WARNING',
+            'propagate': True
+        },
+        'apps': {
+            'handlers': ['applog'],
+            'level': 'INFO',
+            'propagate': True
+        },
+        'util': {
+            'handlers': ['applog'],
+            'level': 'INFO',
+            'propagate': True
+        }
+    }
+}
+
 WSGI_APPLICATION = 'zid_web.wsgi.application'
 
 

@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 
@@ -46,7 +48,11 @@ def manage_feedback(request):
 
 @require_staff
 def post_feedback(request, feedback_id):
-    feedback = Feedback.objects.get(id=feedback_id)
+    try:
+        feedback = Feedback.objects.get(id=feedback_id)
+    except ObjectDoesNotExist:
+        raise Http404()
+
     if request.method == 'POST':
         feedback.staff_comment = request.POST['staff_comment']
         feedback.status = 1
@@ -58,6 +64,7 @@ def post_feedback(request, feedback_id):
         ).save()
 
         return redirect('/feedback/manage')
+
     else:
         form = ReviewFeedbackForm()
         return render(request, 'post-feedback.html', {
@@ -69,7 +76,10 @@ def post_feedback(request, feedback_id):
 
 @require_staff
 def reject_feedback(request, feedback_id):
-    feedback = Feedback.objects.get(id=feedback_id)
+    try:
+        feedback = Feedback.objects.get(id=feedback_id)
+    except ObjectDoesNotExist:
+        raise Http404()
     if request.method == 'POST':
         feedback.staff_comment = request.POST['staff_comment']
         feedback.status = 2

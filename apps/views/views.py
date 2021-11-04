@@ -1,3 +1,4 @@
+import logging
 import requests
 import os
 
@@ -11,6 +12,9 @@ from apps.api.models import Controller, ControllerSession
 from apps.user.models import User
 from apps.news.models import NewsArticle
 from util.alert import MESSAGES
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def get_leaderboard(month, year):
@@ -117,39 +121,43 @@ def view_home(request):
 
 
 def error_400(request, exception):
+    LOGGER.error(f'404 Request: {request} Exception: {exception}')
     if request.method == 'POST':
         return HttpResponse(exception, status=400)
 
     return render(request, 'error_400.html', {
         'page_title': '400 Error',
         'exception': exception
-    })
+    }, status=400)
 
 
 def error_403(request, exception):
+    LOGGER.error(f'403 Request: {request} Exception: {exception}')
     if request.method == 'POST':
         return HttpResponse(exception, status=403)
 
     return render(request, 'error_403.html', {
         'page_title': '403 Error',
         'exception': exception
-    })
+    }, status=403)
 
 
 def error_404(request, exception):
+    LOGGER.error(f'404 Request: {request} Exception: {exception}')
     if request.method == 'POST':
         return HttpResponse(exception, status=404)
 
     return render(request, 'error_404.html', {
         'page_title': '404 Error',
         'exception': exception
-    })
+    }, status=404)
 
 
 def error_500(request):
+    LOGGER.error(f'500 Request: {request}')
     if request.method == 'POST':
         return HttpResponse('There was an error processing your request.', status=500)
 
-    return render(request, 'error_400.html', {
+    return render(request, 'error_500.html', {
         'page_title': '500 Error'
-    })
+    }, status=500)

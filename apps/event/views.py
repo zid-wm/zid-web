@@ -1,7 +1,7 @@
 import boto3
 
 from django.db.models import Q, ObjectDoesNotExist
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
@@ -28,7 +28,7 @@ def view_event_details(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
     except ObjectDoesNotExist:
-        return HttpResponse(404)
+        raise Http404()
 
     user = request.user_obj
     user_has_position = EventPosition.objects.filter(
@@ -129,15 +129,9 @@ def edit_event(request, event_id):
             id=event_id
         )
     except ObjectDoesNotExist:
-        return HttpResponse(404)
-    if request.method == 'POST':
-        try:
-            event = Event.objects.get(
-                id=event_id
-            )
-        except ObjectDoesNotExist:
-            return HttpResponse(404)
+        raise Http404()
 
+    if request.method == 'POST':
         event.name = request.POST['name']
         event.start = request.POST['start']
         event.end = request.POST['end']
@@ -182,7 +176,7 @@ def delete_position(request, position_id, event_id):
     try:
         EventPosition.objects.get(id=position_id).delete()
     except ObjectDoesNotExist:
-        return HttpResponse(404)
+        raise Http404()
     return redirect(f'/events/{event_id}')
 
 
@@ -191,7 +185,7 @@ def delete_event(request, event_id):
     try:
         Event.objects.get(id=event_id).delete()
     except ObjectDoesNotExist:
-        return HttpResponse(404)
+        raise Http404()
     ActionLog(
         action=f'Event {Event.objects.get(id=event_id).name} was deleted by {request.user_obj.full_name}.'
     ).save()
@@ -200,25 +194,32 @@ def delete_event(request, event_id):
 
 @require_member
 def request_position(request, event_id, pos_id):
-    signup = EventSignup(
-        position=EventPosition.objects.get(
-            id=pos_id
-        ),
-        user=User.objects.get(
-            cid=request.user_obj.cid
+    try:
+        signup = EventSignup(
+            position=EventPosition.objects.get(
+                id=pos_id
+            ),
+            user=User.objects.get(
+                cid=request.user_obj.cid
+            )
         )
-    )
-    signup.save()
+        signup.save()
+    except ObjectDoesNotExist:
+        return HttpResponse(404)
+
     return redirect(f'/events/{event_id}')
 
 
 @require_staff
 def assign_position(request, signup_id):
-    signup = EventSignup.objects.get(
-        id=signup_id
-    )
-    signup.assign()
-    signup.save()
+    try:
+        signup = EventSignup.objects.get(
+            id=signup_id
+        )
+        signup.assign()
+        signup.save()
+    except ObjectDoesNotExist:
+        raise Http404()
 
     ActionLog(
         action=f'{signup.user.full_name} was assigned to {signup.position.callsign} for {signup.position.event.name} '
@@ -229,4 +230,5 @@ def assign_position(request, signup_id):
         Q(position=signup.position) |
         Q(user=signup.user)
     ).delete()
+
     return redirect(f'/events/{signup.position.event_id}')
