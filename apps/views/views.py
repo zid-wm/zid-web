@@ -150,6 +150,6 @@ def error_500(request):
     if request.method == 'POST':
         return HttpResponse('There was an error processing your request.', status=500)
 
-    return render(request, 'error_400.html', {
+    return render(request, 'error_500.html', {
         'page_title': '500 Error'
     })
