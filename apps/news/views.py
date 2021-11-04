@@ -1,4 +1,5 @@
-from django.http.response import HttpResponse
+from django.http.response import Http404
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
@@ -26,7 +27,10 @@ def view_news(request):
 
 
 def view_article(request, article_id):
-    article = NewsArticle.objects.get(id=article_id)
+    try:
+        article = NewsArticle.objects.get(id=article_id)
+    except ObjectDoesNotExist:
+        raise Http404()
     return render(request, 'article.html', {
         'page_title': article.title,
         'article': article
@@ -54,5 +58,8 @@ def view_submit_new_article(request):
 
 @require_staff
 def delete_article(request, article_id):
-    NewsArticle.objects.get(id=article_id).delete()
+    try:
+        NewsArticle.objects.get(id=article_id).delete()
+    except ObjectDoesNotExist:
+        raise Http404()
     return redirect('/news')

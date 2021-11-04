@@ -5,7 +5,7 @@ import requests
 
 from datetime import date
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.db.models import Sum, Q, ObjectDoesNotExist
 from django.utils import timezone
@@ -32,7 +32,7 @@ def view_roster(request):
     # TODO: Add select box to choose sort method
     sort = request.GET.get('sort', 'last_name')
     if sort in ['last_name', 'rating']:
-        pass # TODO: This is wrong, need to fix the rating sort logic
+        pass  # TODO: This is wrong, need to fix the rating sort logic
         # sort_expr = RATING_INTS[F('rating')] if sort == 'rating' else F('last_name')
     else:
         return HttpResponse(400)
@@ -212,13 +212,13 @@ def view_remove_mavp(request, facility):
 def view_profile(request, cid):
     if not (request.user_obj.cid == cid or request.user_obj.is_staff or request.user_obj.is_trainer):
         # Non-staff/trainer members should only be able to view their own profile
-        return HttpResponse(403)
+        return HttpResponse(status=403)
     try:
         user = User.objects.get(
             cid=cid
         )
     except ObjectDoesNotExist:
-        return HttpResponse(404)
+        raise Http404()
 
     form = EditEndorsementForm(initial={
         'delivery': user.del_cert,
@@ -269,13 +269,13 @@ def view_profile(request, cid):
 @require_member
 def edit_profile(request, cid):
     if not (request.user_obj.cid == cid or request.user_obj.is_staff):
-        return HttpResponse(403)
+        return HttpResponse(status=403)
     try:
         user = User.objects.get(
             cid=cid
         )
     except ObjectDoesNotExist:
-        return HttpResponse(404)
+        raise Http404()
 
     # TODO: Add option to remove profile picture
     if request.method == 'POST':
@@ -326,7 +326,7 @@ def edit_endorsements(request, cid):
             cid=cid
         )
     except ObjectDoesNotExist:
-        return HttpResponse(404)
+        raise Http404()
 
     user.del_cert = request.POST['delivery']
     user.gnd_cert = request.POST['ground']
@@ -400,9 +400,12 @@ def manage_visit_requests(request):
 def approve_visit_request(request, cid):
     add_visitor(cid)
 
-    req = VisitRequest.objects.get(cid=cid)
-    req.status = 1
-    req.save()
+    try:
+        req = VisitRequest.objects.get(cid=cid)
+        req.status = 1
+        req.save()
+    except ObjectDoesNotExist:
+        raise Http404()
 
     ActionLog(
         action=f'{request.user_obj.full_name} approved the visit request for {User.objects.get(cid=cid).full_name}.'
@@ -414,9 +417,12 @@ def approve_visit_request(request, cid):
 
 @require_staff
 def deny_visit_request(request, cid):
-    req = VisitRequest.objects.get(cid=cid)
-    req.status = 2
-    req.save()
+    try:
+        req = VisitRequest.objects.get(cid=cid)
+        req.status = 2
+        req.save()
+    except ObjectDoesNotExist:
+        raise Http404()
 
     ActionLog(
         action=f'{request.user_obj.full_name} denied the visit request for {User.objects.get(cid=cid).full_name}.'
