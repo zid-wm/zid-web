@@ -153,7 +153,7 @@
                 <td>{{ session.session_date }}</td>
                 <td>{{ session.score|training_score_display }}</td>
                 <td>{{ session.position }}</td>
-                <td>{{ session.notes }}</td>
+                <td>{{ session.notes | safe }}</td>
                 <td><a href="/training/ticket/{{ session.id }}">Details</a></td>
             </tr>
             {% empty %}
