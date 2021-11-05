@@ -243,6 +243,7 @@ def view_profile(request, cid):
         return HttpResponse(status=500)
 
     training_sessions = sorted(response.json()['data'], key=lambda k: k['session_date'], reverse=True)
+    training_sessions = filter(lambda session: session['facility_id'] == 'ZID', training_sessions)
 
     sessions = ControllerSession.objects.filter(user=user)
     now = timezone.now()

@@ -64,7 +64,10 @@ def training_score_display(n):
         4: "Great Progress",
         5: "Exceptional Progress"
     }
-    return display_text[n]
+    if n in display_text:
+        return display_text[n]
+    else:
+        return 'Not Available'
 
 
 @register.simple_tag
