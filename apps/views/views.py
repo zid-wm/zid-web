@@ -94,7 +94,7 @@ def view_home(request):
         .annotate(duration=Sum('duration')) \
         .order_by('-duration')[0:5]
 
-    dev_env = os.getenv('ENVIRONMENT').lower != 'prod'
+    dev_env = os.getenv('ENVIRONMENT').lower() != 'prod'
 
     latest_news = NewsArticle.objects.all().values(
         'title', 'date_posted', 'id'
