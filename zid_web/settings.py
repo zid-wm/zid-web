@@ -22,6 +22,8 @@ ALLOWED_HOSTS = [
     f'{os.getenv("WEBSITE_DOMAIN")}',
     f'.{os.getenv("WEBSITE_DOMAIN")}'
 ]
+if os.getenv("ALLOWED_CIDR", None):
+    ALLOWED_CIDR_NETS = [f'{os.getenv("ALLOWED_CIDR")}']
 
 
 # Application definition
@@ -55,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'zid_web.middleware.UserMiddleware',
+    'allow_cidr.middleware.AllowCIDRMiddleware'
 ]
 
 ROOT_URLCONF = 'zid_web.urls'
