@@ -11,6 +11,22 @@
         
             {% include 'partials/navbar.html' %}
 
+            <div class="modal fade" id="disclaimer" data-backdrop="static" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="disclaimerLabel">Disclaimer</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p>This website is for a group of online hobbyists who partake in simulated flying and air traffic control on the VATSIM network. The procedures we use mirror, to the greatest extent possible, those utilized by real world air traffic control. At no time, however, should a procedure, chart, or other information contained on this website be used for real world navigation.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="disclaimerHide" type="button" class="btn btn-primary" data-dismiss="modal">I Agree</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <section id="hero">
                 <div class="hero-container" data-aos="fade-up">
                     <h1>Welcome to Indianapolis Center</h1>
@@ -126,13 +142,13 @@
 
             <section id="cta" class="cta">
                 <div class="container" data-aos="fade-in">
-                <div class="text-center">
-                    <h3>Latest News</h3>
-                    {% for article in latest_news %}
-                    <p><strong>{{ article.date_posted }} - </strong><a href="/news/article/{{ article.id }}">{{ article.title }}</a></p>
-                    {% endfor %}
-                    <a class="cta-btn" href="/news">See More</a>
-                </div>
+                    <div class="text-center">
+                        <h3>Latest News</h3>
+                        {% for article in latest_news %}
+                        <p><strong>{{ article.date_posted }} - </strong><a href="/news/article/{{ article.id }}">{{ article.title }}</a></p>
+                        {% endfor %}
+                        <a class="cta-btn" href="/news">See More</a>
+                    </div>
                 </div>
             </section>
 
@@ -233,6 +249,19 @@
             </main>
 
             {% include 'partials/footer.html' %}
+
+            <script type="text/javascript">
+                $(window).on('load', function() {
+                    if (!document.cookie.includes("disclaimerAcknowledged=true")) {
+                        $('#disclaimer').modal('show');
+                    }
+                });
+            </script>
+            <script type="text/javascript">
+                $("#disclaimerHide").on("click", function() {
+                    document.cookie = 'disclaimerAcknowledged=true'
+                })
+            </script>
         </div>
     </body>
 </html>
