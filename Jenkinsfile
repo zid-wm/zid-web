@@ -2,7 +2,7 @@ import java.time.*
 
 node {
     def app
-    def buildNumber = "${BUILD_YEAR,2}.${BUILD_MONTH,2}.${BUILD_DAY,2}.${env.BUILD_NUMBER}"
+    def buildNumber = "${env.BUILD_YEAR,2}.${env.BUILD_MONTH,2}.${env.BUILD_DAY,2}.${env.BUILD_NUMBER}"
 
     stage('Checkout Code') {
         checkout scm
