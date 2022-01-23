@@ -2,7 +2,8 @@ import java.time.*
 
 node {
     def app
-    def buildNumber = "${env.BUILD_YEAR,2}.${env.BUILD_MONTH,2}.${env.BUILD_DAY,2}.${env.BUILD_NUMBER}"
+    def buildId = VersionNumber projectStartDate: '', versionNumberString: '${BUILD_YEAR,2}.${BUILD_MONTH,2}.${BUILD_DAY,2}'
+    def build = "${buildId}.${env.BUILD_NUMBER}"
 
     stage('Checkout Code') {
         checkout scm
@@ -16,10 +17,10 @@ node {
     stage('Push Image to Docker Hub') {
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
             if (env.BRANCH_NAME == "master") {
-                app.push("${buildNumber}")
+                app.push("${build}")
                 app.push("latest")
             } else {
-                app.push("${buildNumber}-${env.BRANCH_NAME}")
+                app.push("${build}-${env.BRANCH_NAME}")
             }
         }
     }
