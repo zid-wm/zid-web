@@ -10,7 +10,21 @@
 <section id="about" class="about">
   <div class="container">
     <div class="row m-3 pt-3">
-      <h3>Home Controllers</h3>
+        <div class="col">
+            <h3>Home Controllers</h3>
+        </div>
+        <div class="col" style="text-align:right">
+            <div class="btn-group">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                    Sort Roster
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="/roster?sort=first_name">First Name</a>
+                    <a class="dropdown-item" href="/roster?sort=last_name">Last Name</a>
+                    <a class="dropdown-item" href="/roster?sort=rating">Rating</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row m-3">
