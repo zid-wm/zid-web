@@ -6,6 +6,7 @@ node {
 
     stage('Checkout Code') {
         checkout scm
+        echo "Building branch ${env.BRANCH_NAME}"
     }
 
     stage('Build Docker Image') {
@@ -14,8 +15,12 @@ node {
 
     stage('Push Image to Docker Hub') {
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-            app.push("${buildNumber}")
-            app.push("latest")
+            if (env.BRANCH_NAME == "master") {
+                app.push("${buildNumber}")
+                app.push("latest")
+            } else {
+                app.push("${buildNumber}-${env.BRANCH_NAME}")
+            }
         }
     }
 }
