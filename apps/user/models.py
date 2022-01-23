@@ -78,6 +78,10 @@ class User(models.Model):
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
+    @property
+    def rating_int(self):
+        return RATING_INTS[self.rating]
+
     # Assign minor certifications to transfer/visiting controllers
     def assign_initial_certs(self):
         if RATING_INTS[self.rating] > 0:

@@ -30,12 +30,9 @@ from zid_web.decorators import require_staff, require_member, require_session
 
 def view_roster(request):
     # TODO: Add select box to choose sort method
-    sort = request.GET.get('sort', 'last_name')
-    if sort in ['last_name', 'rating']:
-        pass  # TODO: This is wrong, need to fix the rating sort logic
-        # sort_expr = RATING_INTS[F('rating')] if sort == 'rating' else F('last_name')
-    else:
-        return HttpResponse(400)
+    sort = request.GET.get('sort', 'first_name')
+    if sort not in ['first_name', 'last_name', 'rating_int']:
+        return HttpResponse(status=400)
 
     home_roster = User.objects.filter(
         main_role='HC',
@@ -49,7 +46,9 @@ def view_roster(request):
         'staff_role',
         'training_role',
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
-    ).order_by('last_name')
+    ).all()
+    print(home_roster)
+    home_roster = sorted(home_roster, key=lambda r: r.rating_int)
 
     visit_roster = User.objects.filter(
         main_role='VC',
@@ -64,7 +63,7 @@ def view_roster(request):
         'staff_role',
         'training_role',
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
-    ).order_by('last_name')
+    ).order_by(sort)
 
     mavp_roster = User.objects.filter(
         main_role='MC',
@@ -79,7 +78,7 @@ def view_roster(request):
         'staff_role',
         'training_role',
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
-    ).order_by('last_name')
+    ).order_by(sort)
 
     visitor_form = ManualAddVisitorForm()
 
