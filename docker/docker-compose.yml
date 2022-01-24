@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  zid_postgres:
+    platform: linux/amd64
+    image: postgres:14.1-alpine
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+
+  zid_django:
+    platform: linux/amd64
+    image: zid_web:${BUILD_VERSION}
+    command: /app/docker/start.sh
+    volumes:
+      - .:/code
+    depends_on:
+      - zid_postgres

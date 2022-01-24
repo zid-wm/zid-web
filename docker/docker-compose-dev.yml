@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  zid_postgres:
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_CREDS_PSW}
+      POSTGRES_USER: ${POSTGRES_CREDS_USR}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+  zid_django:
+    ports:
+      - "8081:8000"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_CREDS_PSW}
+      POSTGRES_USER: ${POSTGRES_CREDS_USR}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
