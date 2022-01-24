@@ -22,7 +22,7 @@ node {
     }
 
     stage('Build Docker Image') {
-        echo "<b>Building docker image version ${build}"
+        echo "**Building docker image version ${build}**"
         app = docker.build("nallen013/zidartcc")
         echo "<b>\u001b[32;1mDocker container image successfully built.\u001b[0m</b>"
     }
