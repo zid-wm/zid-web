@@ -15,6 +15,10 @@ node {
         POSTGRES_PORT = 5432
     }
 
+    stage('Initialize Environment Variables (Shell)') {
+        sh 'export BUILD_VERSION=${build}'
+    }
+
     stage('Checkout Code') {
         echo "Checking out code for branch: ${env.BRANCH_NAME}"
         checkout scm
