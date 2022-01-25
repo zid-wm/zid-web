@@ -25,6 +25,7 @@ node {
         echo "Building docker image version ${build}"
         app = docker.build("nallen013/zidartcc")
         echo "Docker container image successfully built."
+        sh 'printenv'
     }
 
     stage('Push Image to Docker Hub') {
