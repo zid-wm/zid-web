@@ -16,29 +16,29 @@ node {
     }
 
     stage('Checkout Code') {
-        echo "<b>Checking out code for branch: ${env.BRANCH_NAME}</b>"
+        echo "Checking out code for branch: ${env.BRANCH_NAME}"
         checkout scm
-        echo "<b>\u001b[32;1mCode checkout complete.\u001b[0m</b>"
+        echo "Code checkout complete."
     }
 
     stage('Build Docker Image') {
-        echo "**Building docker image version ${build}**"
+        echo "Building docker image version ${build}"
         app = docker.build("nallen013/zidartcc")
-        echo "<b>\u001b[32;1mDocker container image successfully built.\u001b[0m</b>"
+        echo "Docker container image successfully built."
     }
 
     stage('Push Image to Docker Hub') {
-        echo "<b>Pushing image to Docker hub</b>"
+        echo "Pushing image to Docker hub"
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
             if (isMasterBranch) {
-                echo "<b>Pipeline will push version ${build} and tag <i>latest</i></b>"
+                echo "Pipeline will push version ${build} and tag latest"
                 app.push("${build}")
                 app.push("latest")
-                echo "<b>\u001b[32;1mPushed production image to Docker Hub.\u001b[0m</b>"
+                echo "Pushed production image to Docker Hub."
             } else {
-                echo "<b>Pipeline will push version ${build}-${env.BRANCH_NAME}</b>"
+                echo "Pipeline will push version ${build}-${env.BRANCH_NAME}"
                 app.push("${build}-${env.BRANCH_NAME}")
-                echo "<b>\u001b[32;1mPushed development image to Docker Hub.\u001b[0m</b>"
+                echo "Pushed development image to Docker Hub."
             }
         }
     }
@@ -46,13 +46,13 @@ node {
     if (isMasterBranch) {
         stage('Deploy Application (Production)') {
             input(message='Click "Proceed" to deploy the application to production, otherwise click "Abort".')
-            sh "docker-compose -f docker/docker-compose.yml -f docker/docker-compose-prod.yml up -d"
-            echo "<b>\u001b[32;1mContainer successfully started in production!\u001b[0m</b>"
+            step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker/docker-compose-prod.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
+            echo "Container successfully started in production!"
         }
     } else {
         stage('Deploy Application (Dev)') {
-            sh "docker-compose -f docker/docker-compose.yml -f docker/docker-compose-dev.yml up -d"
-            echo "<b>\u001b[32;1mContainer successfully started in dev!\u001b[0m</b>"
+            step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker/docker-compose-dev.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
+            echo "Container successfully started in dev!"
         }
     }
 }
