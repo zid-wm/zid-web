@@ -16,7 +16,7 @@ node {
     }
 
     stage('Initialize Environment Variables (Shell)') {
-        sh 'export BUILD_VERSION=${build}'
+        sh 'export BUILD_VERSION=test1'
     }
 
     stage('Checkout Code') {
