@@ -15,10 +15,6 @@ node {
         POSTGRES_PORT = 5432
     }
 
-    stage('Initialize Environment Variables (Shell)') {
-        sh 'export BUILD_VERSION=test1'
-    }
-
     stage('Checkout Code') {
         echo "Checking out code for branch: ${env.BRANCH_NAME}"
         checkout scm
@@ -29,7 +25,6 @@ node {
         echo "Building docker image version ${build}"
         app = docker.build("nallen013/zidartcc")
         echo "Docker container image successfully built."
-        sh 'printenv'
     }
 
     stage('Push Image to Docker Hub') {
@@ -63,7 +58,8 @@ node {
             }
         } else {
             stage('Deploy Application (Dev)') {
-                step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker/docker-compose-dev.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
+                sh "docker-compose -f docker/docker-compose-dev.yml up -e BUILD_VERSION=${build}"
+                // step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker/docker-compose-dev.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
                 echo "Container successfully started in dev!"
             }
         }
