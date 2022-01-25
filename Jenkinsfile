@@ -42,17 +42,25 @@ node {
             }
         }
     }
-
-    if (isMasterBranch) {
-        stage('Deploy Application (Production)') {
-            input(message='Click "Proceed" to deploy the application to production, otherwise click "Abort".')
-            step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker/docker-compose-prod.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
-            echo "Container successfully started in production!"
-        }
-    } else {
-        stage('Deploy Application (Dev)') {
-            step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker/docker-compose-dev.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
-            echo "Container successfully started in dev!"
+    withEnv(
+        ['BUILD_VERSION=${build}',
+         'POSTGRES_CREDS_PSW=${POSTGRES_CREDS_PSW}',
+         'POSTGRES_CREDS_USR=${POSTGRES_CREDS_USR}',
+         'POSTGRES_DB=${POSTGRES_DB}',
+         'POSTGRES_HOST=${POSTGRES_PORT}',
+         'POSTGRES_PORT=${POSTGRES_PORT}']) {
+        if (isMasterBranch) {
+            stage('Deploy Application (Production)') {
+                input(message='Click "Proceed" to deploy the application to production, otherwise click "Abort".')
+                sh "docker-compose -f docker-compose-prod.yml up -e BUILD_VERSION=${build}"
+                step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker/docker-compose-prod.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
+                echo "Container successfully started in production!"
+            }
+        } else {
+            stage('Deploy Application (Dev)') {
+                step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker/docker-compose-dev.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
+                echo "Container successfully started in dev!"
+            }
         }
     }
 }
