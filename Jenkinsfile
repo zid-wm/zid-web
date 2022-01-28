@@ -19,8 +19,7 @@ node {
         echo "Checking out code for branch: ${env.BRANCH_NAME}"
         checkout scm
         echo "Code checkout complete."
-        sh "export TEST_ENV=test"
-        sh "printenv"
+        sh "pwd"
     }
 
     stage('Build Docker Image') {
