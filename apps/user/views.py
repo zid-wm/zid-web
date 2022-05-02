@@ -31,7 +31,7 @@ from zid_web.decorators import require_staff, require_member, require_session
 def view_roster(request):
     # TODO: Add select box to choose sort method
     sort = request.GET.get('sort', 'first_name')
-    if sort not in ['first_name', 'last_name', 'rating_int']:
+    if sort not in ['first_name', 'last_name', 'rating']:
         return HttpResponse(status=400)
 
     home_roster = User.objects.filter(
@@ -46,9 +46,7 @@ def view_roster(request):
         'staff_role',
         'training_role',
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
-    ).all()
-    print(home_roster)
-    home_roster = sorted(home_roster, key=lambda r: r.rating_int)
+    ).order_by(sort)
 
     visit_roster = User.objects.filter(
         main_role='VC',
