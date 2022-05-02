@@ -3,7 +3,6 @@ boto3~=1.19.7
 Django~=4.0.3
 django-allow-cidr~=0.4.0
 eventlet~=0.33.0
-https://github.com/benoitc/gunicorn/archive/ff58e0c6da83d5520916bc4cc109a529258d76e1.zip#egg=gunicorn==20.1.0
 Pillow~=8.4.0
 psycopg2-binary~=2.9.1
 python-dotenv~=0.19.1
