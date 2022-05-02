@@ -17,6 +17,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ENVIRONMENT.lower() != 'prod'
+CSRF_TRUSTED_ORIGINS = [f'https://{os.getenv("WEBSITE_DOMAIN")}']
 
 ALLOWED_HOSTS = [
     f'{os.getenv("WEBSITE_DOMAIN")}',
