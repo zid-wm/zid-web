@@ -22,8 +22,8 @@ ALLOWED_HOSTS = [
     f'{os.getenv("WEBSITE_DOMAIN")}',
     f'.{os.getenv("WEBSITE_DOMAIN")}'
 ]
-if os.getenv("ALLOWED_CIDR", None):
-    ALLOWED_CIDR_NETS = [f'{os.getenv("ALLOWED_CIDR")}']
+
+ALLOWED_CIDR_NETS = [os.getenv('ALLOWED_CIDR')]
 
 
 # Application definition
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'allow_cidr.middleware.AllowCIDRMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -128,11 +129,11 @@ WSGI_APPLICATION = 'zid_web.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_HOST'),
-        'PORT': os.getenv('POSTGRES_PORT')
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASS'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT')
     }
 }
 
@@ -140,7 +141,7 @@ EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_HOST_USER = os.getenv('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS').lower() == 'true'
+EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Do Not Reply <noreply@zidartcc.org>'
 
 
