@@ -23,7 +23,7 @@ class EditProfileForm(forms.Form):
     ), required=False)
 
 
-class EditEndorsementForm(forms.Form):
+class EditUserForm(forms.Form):
     delivery = forms.ChoiceField(
         widget=forms.Select,
         choices=ENDORSEMENTS
@@ -43,6 +43,13 @@ class EditEndorsementForm(forms.Form):
     center = forms.ChoiceField(
         widget=forms.Select,
         choices=ENDORSEMENTS
+    )
+    oper_init = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'New Operating Initials'
+        })
     )
 
 
