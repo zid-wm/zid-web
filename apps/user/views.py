@@ -17,7 +17,7 @@ from apps.feedback.models import Feedback
 from .forms import (
     AddMavpForm,
     EditProfileForm,
-    EditEndorsementForm,
+    EditUserForm,
     VisitingRequestForm,
     ManualAddVisitorForm
 )
@@ -217,7 +217,7 @@ def view_profile(request, cid):
     except ObjectDoesNotExist:
         raise Http404()
 
-    form = EditEndorsementForm(initial={
+    form = EditUserForm(initial={
         'delivery': user.del_cert,
         'ground': user.gnd_cert,
         'tower': user.twr_cert,
@@ -325,6 +325,11 @@ def edit_endorsements(request, cid):
         )
     except ObjectDoesNotExist:
         raise Http404()
+
+    if request.POST['oper_init']:
+        if len(request.POST['oper_init']) is not 2:
+            return HttpResponse('Operating initials must be 2 characters long!', status=404)
+        user.oper_init = request.POST['oper_init']
 
     user.del_cert = request.POST['delivery']
     user.gnd_cert = request.POST['ground']

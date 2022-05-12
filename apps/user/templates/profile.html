@@ -32,6 +32,7 @@
             <p><strong>CID:</strong> {{ user.cid }}</p>
             <p><strong>Rating:</strong> {{ user.rating }}</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Operating Initials:</strong> {{ user.oper_init }}</p>
             <hr />
             <p><strong>Control Time This Month:</strong> {{ stats.month|format_duration }}</p>
             <p><strong>Control Time This Year:</strong> {{ stats.year|format_duration }}</p>
@@ -45,37 +46,38 @@
                     <th scope="col">Rating</th>
                 </tr>
                 <tr>
-                    <th scope="row">Delivery</th>
+                    <td>Delivery</td>
                     <td>
                         {{ form.delivery }}
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Ground</th>
+                    <td>Ground</td>
                     <td>
                         {{ form.ground }}
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Tower</th>
+                    <td>Tower</td>
                     <td>
                         {{ form.tower }}
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Approach/Departure</th>
+                    <td>Approach/Departure</td>
                     <td>
                         {{ form.approach }}
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Center</th>
+                    <td>Center</td>
                     <td>
                         {{ form.center }}
                     </td>
                 </tr>
                 </thead>
             </table>
+            {{ form.oper_init }}
             <div class="text-center pt-3">
                 <button type="submit" class="btn btn-success">Save Changes</button>
             </div>
