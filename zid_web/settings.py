@@ -25,7 +25,8 @@ ALLOWED_HOSTS = [
     f'.{os.getenv("WEBSITE_DOMAIN")}'
 ]
 
-ALLOWED_CIDR_NETS = [os.getenv('ALLOWED_CIDR')]
+if os.getenv('ALLOWED_CIDR', False):
+    ALLOWED_CIDR_NETS = [os.getenv('ALLOWED_CIDR')]
 
 
 # Application definition
