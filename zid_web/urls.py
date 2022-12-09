@@ -23,8 +23,8 @@ from apps.feedback import views as feedback
 from apps.news import views as news
 from apps.pilots import views as pilots
 from apps.resources import views as resources
+from apps.sso import views as sso
 from apps.training import views as training
-from apps.uls import views as uls
 from apps.user import views as user
 from apps.views import views as views
 
@@ -75,14 +75,15 @@ urlpatterns = [
     path('files/add/', resources.add_file, name='add-file'),
     path('files/delete/<str:file_cat>/<str:file_name>', resources.delete_file, name='delete-file'),
 
+    # SSO (Auth)
+    path('login-start/', sso.login_start, name='login-start'),
+    path('login/', sso.login, name='login'),
+    path('logout/', sso.logout, name='logout'),
+
     # Training
     path('training/', training.view_training_hub, name='training'),
     path('training/ticket/<int:ticket_id>', training.view_ticket_details, name='ticket-details'),
     path('training/ticket/submit/', training.submit_training_ticket, name='submit-training-ticket'),
-
-    # ULS (Auth)
-    path('login/', uls.login, name='login'),
-    path('logout/', uls.logout, name='logout'),
 
     # User
     path('mavp/', user.view_mavp, name='mavp'),
