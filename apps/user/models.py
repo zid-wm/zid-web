@@ -82,7 +82,7 @@ class User(models.Model):
     def rating_int(self):
         return RATING_INTS[self.rating]
 
-    # Assign minor certifications to transfer/visiting controllers
+    # Assign minor certifications to MAVP controllers
     def assign_initial_certs(self):
         if RATING_INTS[self.rating] > 0:
             self.del_cert = 1
