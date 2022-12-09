@@ -90,8 +90,7 @@ class VisitingRequestForm(forms.Form):
     )
     facility = forms.CharField(
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'readonly': 'readonly'
+            'class': 'form-control'
         })
     )
     description = forms.CharField(

@@ -357,11 +357,10 @@ def view_visit_request(request):
         return redirect('/?m=6')
     else:
         form = VisitingRequestForm(initial={
-            'cid': request.session["vatsim_data"]["cid"],
-            'name': f'{request.session["vatsim_data"]["firstname"]} {request.session["vatsim_data"]["lastname"]}',
-            'email': request.session["vatsim_data"]["email"],
-            'rating': request.session["vatsim_data"]["rating"],
-            'facility': request.session['vatsim_data']['facility']['name']
+            'cid': request.session['cid'],
+            'name': request.session['vatsim_data']['personal']['name_full'],
+            'email': request.session['vatsim_data']['personal']['email'],
+            'rating': request.session['vatsim_data']['vatsim']['rating']['short']
         })
 
         return render(request, 'visit-request.html', {
