@@ -236,11 +236,11 @@ def view_profile(request, cid):
         }
     )
 
-    if not response.status_code == 200:
-        return HttpResponse(status=500)
-
-    training_sessions = sorted(response.json()['data'], key=lambda k: k['session_date'], reverse=True)
-    training_sessions = filter(lambda session: session['facility_id'] == 'ZID', training_sessions)
+    if response.status_code == 200:
+        training_sessions = sorted(response.json()['data'], key=lambda k: k['session_date'], reverse=True)
+        training_sessions = filter(lambda session: session['facility_id'] == 'ZID', training_sessions)
+    else:
+        training_sessions = []
 
     sessions = ControllerSession.objects.filter(user=user)
     now = timezone.now()
