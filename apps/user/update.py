@@ -54,7 +54,6 @@ def update_roster():
                     else:
                         new_user.staff_role = role['role']
             new_user.save()
-            new_user.assign_initial_certs()
 
             ActionLog(
                 action=f'New home/visiting controller {new_user.full_name} was created by system.'
@@ -99,7 +98,6 @@ def update_roster():
                 edit_user.main_role = 'HC' if user['facility'] == 'ZID' else 'VC'
 
                 edit_user.save()
-                edit_user.assign_initial_certs()
                 ActionLog(
                     action=f'Home/visiting controller {edit_user.full_name} was marked active by system.'
                 ).save()

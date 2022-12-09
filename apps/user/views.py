@@ -236,11 +236,11 @@ def view_profile(request, cid):
         }
     )
 
-    if not response.status_code == 200:
-        return HttpResponse(status=500)
-
-    training_sessions = sorted(response.json()['data'], key=lambda k: k['session_date'], reverse=True)
-    training_sessions = filter(lambda session: session['facility_id'] == 'ZID', training_sessions)
+    if response.status_code == 200:
+        training_sessions = sorted(response.json()['data'], key=lambda k: k['session_date'], reverse=True)
+        training_sessions = filter(lambda session: session['facility_id'] == 'ZID', training_sessions)
+    else:
+        training_sessions = []
 
     sessions = ControllerSession.objects.filter(user=user)
     now = timezone.now()
@@ -357,11 +357,10 @@ def view_visit_request(request):
         return redirect('/?m=6')
     else:
         form = VisitingRequestForm(initial={
-            'cid': request.session["vatsim_data"]["cid"],
-            'name': f'{request.session["vatsim_data"]["firstname"]} {request.session["vatsim_data"]["lastname"]}',
-            'email': request.session["vatsim_data"]["email"],
-            'rating': request.session["vatsim_data"]["rating"],
-            'facility': request.session['vatsim_data']['facility']['name']
+            'cid': request.session['cid'],
+            'name': request.session['vatsim_data']['personal']['name_full'],
+            'email': request.session['vatsim_data']['personal']['email'],
+            'rating': request.session['vatsim_data']['vatsim']['rating']['short']
         })
 
         return render(request, 'visit-request.html', {

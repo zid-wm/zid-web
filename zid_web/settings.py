@@ -1,6 +1,8 @@
+import django_heroku
 import os
-from pathlib import Path
+
 from dotenv import load_dotenv
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -45,8 +47,8 @@ INSTALLED_APPS = [
     'apps.news',
     'apps.pilots',
     'apps.resources',
+    'apps.sso',
     'apps.training',
-    'apps.uls',
     'apps.user.apps.UserConfig',
     'apps.views'
 ]
@@ -89,7 +91,7 @@ TEMPLATES = [
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
             'format': '{levelname} {asctime} {name} {process:d} {thread:d} {message}',
@@ -102,21 +104,24 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'log/app.log'),
             'formatter': 'verbose'
+        },
+        'console': {
+            'class': 'logging.StreamHandler'
         }
     },
     'loggers': {
         'django': {
-            'handlers': ['applog'],
+            'handlers': ['applog', 'console'],
             'level': 'WARNING',
             'propagate': True
         },
         'apps': {
-            'handlers': ['applog'],
+            'handlers': ['applog', 'console'],
             'level': 'INFO',
             'propagate': True
         },
         'util': {
-            'handlers': ['applog'],
+            'handlers': ['applog', 'console'],
             'level': 'INFO',
             'propagate': True
         }
@@ -185,3 +190,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+django_heroku.settings(locals())

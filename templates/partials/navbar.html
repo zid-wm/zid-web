@@ -70,11 +70,11 @@
                 </li>
 
                 {% if request.session.vatsim_data %}
-                    <li class="drop-down"><a href="#">{{ request.session.vatsim_data.firstname }} {{ request.session.vatsim_data.lastname }}</a>
+                    <li class="drop-down"><a href="#">{{ request.session.vatsim_data.personal.name_full }}</a>
                         <ul>
                             {% if request.user_obj %}
                             <li><a href="/profile/{{ request.user_obj.cid }}">Profile</a></li>
-                            <li><a href="https://www.picktime.com/zidartcc">Schedule Training</a></li>
+                            <li><a href="https://academy.vatusa.net/my/">Training</a></li>
                             {% endif %}
                             {% if request.user_obj.main_role == 'MC' or not request.user_obj %}
                             <li><a href="/visit-request/">Become a Visitor</a></li>
@@ -89,7 +89,7 @@
                         </ul>
                     </li>
                 {% else %}
-                <li class="get-started"><a href="https://login.vatusa.net/uls/v2/login?fac=ZID&url={% uls_redirect_url %}">Log In</a></li>
+                <li class="get-started"><a href="/login-start">Log In</a></li>
                 {% endif %}
             </ul>
         </nav>
