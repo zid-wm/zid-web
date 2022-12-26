@@ -120,6 +120,12 @@ def view_home(request):
     })
 
 
+def view_privacy_policy(request):
+    return render(request, 'privacy_policy.html', {
+        'page_title': 'Privacy Policy'
+    })
+
+
 def error_400(request, exception):
     LOGGER.error(f'404 Request: {request} Exception: {exception}')
     if request.method == 'POST':
