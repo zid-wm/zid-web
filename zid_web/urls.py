@@ -31,6 +31,7 @@ from apps.views import views as views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.view_home, name='home'),
+    path('privacy-policy/', views.view_privacy_policy, name='privacy-policy'),
 
     # Administration
     path('audit-log/', administration.view_audit_log, name='audit-log'),
