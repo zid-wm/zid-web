@@ -119,7 +119,7 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True
         },
-        'util': {
+        '': {
             'handlers': ['applog', 'console'],
             'level': 'INFO',
             'propagate': True
