@@ -1,10 +1,14 @@
 import json
+import logging
 import os
 import requests
 import urllib.parse
 
 from django.http import HttpResponse
 from django.shortcuts import redirect
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def login_start(request):
@@ -43,6 +47,7 @@ def login(request):
             })
 
             if user_response.ok:
+                LOGGER.info(json.loads(user_response.text))
                 user_data = json.loads(user_response.text)['data']
                 request.session['vatsim_data'] = user_data
                 request.session['cid'] = user_data['cid']
