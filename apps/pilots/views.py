@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 
 from .forms import RoutesForm, StaffingForm
 from util.email import send_event_request_email
+from zid_web.decorators import require_session
 
 
 def view_pilot_briefing(request):
@@ -33,6 +34,7 @@ def view_preferred_routes(request):
     })
 
 
+@require_session
 def view_staffing_request(request):
     if request.method == 'POST':
         send_event_request_email(request)

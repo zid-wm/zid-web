@@ -55,7 +55,7 @@ def login(request):
                 return HttpResponse(error_string, status=500)
         else:
             return HttpResponse(error_string, status=500)
-        return redirect("/?m=5")
+        return redirect(request.session.pop('redirect_after_login', '/?m=5'))
     else:
         return HttpResponse(error_string, status=500)
 

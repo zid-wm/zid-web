@@ -7,9 +7,10 @@ from apps.administration.models import ActionLog
 from apps.feedback.forms import NewFeedbackForm, ReviewFeedbackForm
 from apps.feedback.models import Feedback
 from apps.user.models import User
-from zid_web.decorators import require_staff
+from zid_web.decorators import require_staff, require_session
 
 
+@require_session
 def new_feedback(request):
     form = NewFeedbackForm()
     return render(request, 'feedback.html', {
@@ -29,7 +30,7 @@ def submit_feedback(request):
         flight_callsign=request.POST['flight_callsign'],
         pilot_name=request.POST['pilot_name'],
         pilot_email=request.POST['pilot_email'],
-        pilot_cid=request.POST['pilot_cid'],
+        pilot_cid=request.session['cid'],
         additional_comments=request.POST['additional_comments']
     )
 
