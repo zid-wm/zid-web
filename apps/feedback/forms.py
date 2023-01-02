@@ -51,16 +51,6 @@ class NewFeedbackForm(forms.Form):
         max_length=255
     )
 
-    pilot_cid = forms.CharField(
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Optional'
-        }),
-        max_length=16,
-        required=False,
-        label='Pilot VATSIM CID'
-    )
-
     additional_comments = forms.CharField(
         widget=forms.Textarea(attrs={
             'class': 'form-control',
@@ -74,7 +64,10 @@ class NewFeedbackForm(forms.Form):
         user_items = User.objects.filter(
             status=0
         ).order_by('last_name')
-        self.fields['controller'].choices = ((u.cid, f'{u.first_name} {u.last_name}') for u in user_items)
+
+        controller_choices = [(u.cid, f'{u.first_name} {u.last_name}') for u in user_items]
+        controller_choices.insert(0, ('', 'Select a Controller'))
+        self.fields['controller'].choices = controller_choices
 
 
 class ReviewFeedbackForm(forms.Form):
