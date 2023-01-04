@@ -29,10 +29,20 @@ from zid_web.decorators import require_staff, require_member, require_session
 
 
 def view_roster(request):
-    # TODO: Add select box to choose sort method
-    sort = request.GET.get('sort', 'first_name')
-    if sort not in ['first_name', 'last_name', 'rating']:
-        return HttpResponse(status=400)
+    sort_options = {
+        'first_name': 'First Name',
+        'last_name': 'Last Name',
+        'rating': 'Rating'
+    }
+
+    current_sort = request.session.get('roster_sort', 'first_name')
+
+    if request.GET.get('sort', False):
+        if request.GET.get('sort') in sort_options:
+            request.session['roster_sort'] = request.GET.get('sort')
+            return redirect('/roster')
+        else:
+            return HttpResponse('Invalid roster sort method!', status=400)
 
     home_roster = User.objects.filter(
         main_role='HC',
@@ -46,7 +56,7 @@ def view_roster(request):
         'staff_role',
         'training_role',
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
-    ).order_by(sort)
+    ).order_by(current_sort)
 
     visit_roster = User.objects.filter(
         main_role='VC',
@@ -61,7 +71,7 @@ def view_roster(request):
         'staff_role',
         'training_role',
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
-    ).order_by(sort)
+    ).order_by(current_sort)
 
     mavp_roster = User.objects.filter(
         main_role='MC',
@@ -76,7 +86,7 @@ def view_roster(request):
         'staff_role',
         'training_role',
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
-    ).order_by(sort)
+    ).order_by(current_sort)
 
     visitor_form = ManualAddVisitorForm()
 
@@ -85,7 +95,8 @@ def view_roster(request):
         'home_roster': home_roster,
         'visit_roster': visit_roster,
         'mavp_roster': mavp_roster,
-        'visitor_form': visitor_form
+        'visitor_form': visitor_form,
+        'current_sort': sort_options[current_sort]
     })
 
 
@@ -343,7 +354,7 @@ def edit_endorsements(request, cid):
         action=f'{request.user_obj.full_name} made changes to the endorsements for {user.full_name}.'
     ).save()
 
-    return redirect(f'/profile/{cid}')
+    return redirect(f'/roster')
 
 
 @require_session
