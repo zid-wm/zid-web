@@ -11,7 +11,7 @@ from django.db.models import Sum, Q, ObjectDoesNotExist
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from apps.administration.models import MAVP, ActionLog
+from apps.administration.models import MAVP, ActionLog, StaffComment
 from apps.api.models import ControllerSession
 from apps.feedback.models import Feedback
 from .forms import (
@@ -54,6 +54,7 @@ def view_roster(request):
         'oper_init',
         'rating',
         'staff_role',
+        'assistant_staff_role',
         'training_role',
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
     ).order_by(current_sort)
@@ -69,6 +70,7 @@ def view_roster(request):
         'home_facility',
         'rating',
         'staff_role',
+        'assistant_staff_role',
         'training_role',
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
     ).order_by(current_sort)
@@ -84,6 +86,7 @@ def view_roster(request):
         'home_facility',
         'rating',
         'staff_role',
+        'assistant_staff_role',
         'training_role',
         'del_cert', 'gnd_cert', 'twr_cert', 'app_cert', 'ctr_cert'
     ).order_by(current_sort)
@@ -233,12 +236,10 @@ def view_profile(request, cid):
         'ground': user.gnd_cert,
         'tower': user.twr_cert,
         'approach': user.app_cert,
-        'center': user.ctr_cert
+        'center': user.ctr_cert,
+        'oper_init': user.oper_init,
+        'assistant_staff_role': user.assistant_staff_role
     })
-
-    # training_sessions = TrainingTicket.objects.filter(
-    #     student=user
-    # ).order_by('-session_date')
 
     response = requests.get(
         f'https://api.vatusa.net/v2/user/{cid}/training/records',
@@ -265,13 +266,18 @@ def view_profile(request, cid):
         status=1
     ).order_by('-last_updated')
 
+    staff_comments = StaffComment.objects.filter(
+        subject=cid
+    ).order_by('-timestamp')
+
     return render(request, 'profile.html', {
         'page_title': 'Profile',
         'user': user,
         'stats': stats,
         'form': form,
         'feedback': feedback,
-        'training_sessions': training_sessions
+        'training_sessions': training_sessions,
+        'staff_comments': staff_comments
     })
 
 
@@ -323,6 +329,7 @@ def edit_profile(request, cid):
 
         return render(request, 'edit-profile.html', {
             'page_title': 'Edit Profile',
+            'user': user,
             'form': form
         })
 
@@ -341,6 +348,8 @@ def edit_endorsements(request, cid):
         if len(request.POST['oper_init']) is not 2:
             return HttpResponse('Operating initials must be 2 characters long!', status=404)
         user.oper_init = request.POST['oper_init']
+
+    user.assistant_staff_role = request.POST['assistant_staff_role']
 
     user.del_cert = request.POST['delivery']
     user.gnd_cert = request.POST['ground']

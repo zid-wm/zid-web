@@ -19,12 +19,13 @@
         </div>
         <div class="row pt-3">
             <div class="col col-4">
-                <h5>Start: {{ event.start }}</h5>
-                <h5>End: {{ event.end }}</h5>
+                <h5>Start: {{ event.start|format_event_time }}</h5>
+                <h5>End: {{ event.end|format_event_time }}</h5>
                 <h5>Host: {{ event.host }}</h5>
                 <p>{{ event.description }}</p>
                 {% if request.user_obj.is_staff %}
                     <p><a href="/events/edit/{{ event.id }}"><i class="icofont-edit"></i> Edit Event</a></p>
+                    <p><a href="/events/delete/{{ event.id }}"><i class="icofont-ui-delete"></i> Delete Event</a></p>
                 {% endif %}
             </div>
 

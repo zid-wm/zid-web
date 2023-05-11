@@ -79,7 +79,7 @@ def require_role(role_list):
         @wraps(func)
         def inner(request, *args, **kwargs):
             if request.session.get('vatsim_data'):
-                if request.user_obj and request.user_obj.main_role in role_list:
+                if request.user_obj and request.user_obj.staff_role in role_list:
                     return func(request, *args, **kwargs)
                 else:
                     raise PermissionDenied(

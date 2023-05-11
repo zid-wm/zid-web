@@ -39,6 +39,7 @@ class User(models.Model):
 
     main_role = models.CharField(max_length=32)
     staff_role = models.CharField(max_length=32, null=True, blank=True)
+    assistant_staff_role = models.CharField(max_length=32, null=True, blank=True)
     training_role = models.CharField(max_length=32, null=True, blank=True)
     mentor_level = models.CharField(max_length=32, null=True, blank=True)
 
@@ -67,6 +68,12 @@ class User(models.Model):
     @property
     def is_staff(self):
         return self.staff_role is not None and self.staff_role != ''
+
+    # Boolean function to determine whether user is senior staff
+    # Webmaster is included in list to ensure the ability to reproduce errors and debug
+    @property
+    def is_senior_staff(self):
+        return self.staff_role in ['ATM', 'DATM', 'TA', 'WM']
 
     # Boolean function to determine whether user is a member of training staff
     @property

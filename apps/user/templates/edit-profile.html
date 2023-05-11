@@ -4,7 +4,7 @@
 
 {% block breadcrumbs %}
 <li><a href="/">Home</a></li>
-<li><a href="/profile/{{ request.user_obj.cid }}">Profile</a></li>
+<li><a href="/profile/{{ user.cid }}">{{ user.full_name }}</a></li>
 <li>Edit Profile</li>
 {% endblock %}
 
@@ -15,7 +15,7 @@
             <h3>Edit Profile</h3>
         </div>
         <div class="row m-3">
-            <form action="/profile/edit/{{ request.user_obj.cid }}" enctype="multipart/form-data" method="post" role="form" class="php-email-form">
+            <form action="/profile/edit/{{ user.cid }}" enctype="multipart/form-data" method="post" role="form" class="php-email-form">
                 {% csrf_token %}
                 {{ form }}
                 <div class="text-center pt-3">

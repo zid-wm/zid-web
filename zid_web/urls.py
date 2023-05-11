@@ -36,6 +36,8 @@ urlpatterns = [
     # Administration
     path('audit-log/', administration.view_audit_log, name='audit-log'),
     path('email/send/', administration.view_send_email, name='send-email'),
+    path('staff-comment/add/<int:subject_cid>', administration.view_add_staff_comment, name='add-staff-comment'),
+    path('staff-comment/delete/<int:comment_id>', administration.view_delete_staff_comment, name='delete-staff-comment'),
 
     # API
     path('api/health-check/', api.health_check, name='health-check'),
