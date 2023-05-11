@@ -127,44 +127,45 @@ def update_roster():
         ).json()['data']
 
         for user in mavp_roster:
-            if user['rating'] > 1 and not User.objects.filter(cid=user['cid']).exists():
-                new_user = User(
-                    first_name=user['fname'].capitalize(),
-                    last_name=user['lname'].capitalize(),
-                    cid=int(user['cid']),
-                    email=user['email'],
-                    oper_init=assign_operating_initials(
-                        user['fname'][0], user['lname'][0]
-                    ),
-                    rating=user['rating_short'],
-                    main_role='MC',
-                    home_facility=mavp_artcc.facility_short
-                )
-                new_user.save()
-                new_user.assign_initial_certs()
-                ActionLog(
-                    action=f'New MAVP controller {new_user.full_name} was created by system.'
-                ).save()
-
-            # Don't update full visiting controllers during the MAVP update
-            elif User.objects.get(cid=user['cid']).main_role == 'MC':
-                edit_user = User.objects.get(cid=user['cid'])
-                edit_user.rating = user['rating_short']
-                edit_user.home_facility = mavp_artcc.facility_short
-
-                if edit_user.status == 2:
-                    edit_user.status = 0
-                    edit_user.email = user['email']
-                    edit_user.oper_init = assign_operating_initials(
-                        user['fname'][0], user['lname'][0], edit_user)
-                    edit_user.main_role = 'MC'
-
-                    edit_user.save()
-                    edit_user.assign_initial_certs()
+            if user['rating'] > 1:
+                if not User.objects.filter(cid=user['cid']).exists():
+                    new_user = User(
+                        first_name=user['fname'].capitalize(),
+                        last_name=user['lname'].capitalize(),
+                        cid=int(user['cid']),
+                        email=user['email'],
+                        oper_init=assign_operating_initials(
+                            user['fname'][0], user['lname'][0]
+                        ),
+                        rating=user['rating_short'],
+                        main_role='MC',
+                        home_facility=mavp_artcc.facility_short
+                    )
+                    new_user.save()
+                    new_user.assign_initial_certs()
                     ActionLog(
-                        action=f'MAVP Controller {edit_user.full_name} was marked active by system.'
+                        action=f'New MAVP controller {new_user.full_name} was created by system.'
                     ).save()
-                edit_user.save()
+
+                # Don't update full visiting controllers during the MAVP update
+                elif User.objects.get(cid=user['cid']).main_role == 'MC':
+                    edit_user = User.objects.get(cid=user['cid'])
+                    edit_user.rating = user['rating_short']
+                    edit_user.home_facility = mavp_artcc.facility_short
+
+                    if edit_user.status == 2:
+                        edit_user.status = 0
+                        edit_user.email = user['email']
+                        edit_user.oper_init = assign_operating_initials(
+                            user['fname'][0], user['lname'][0], edit_user)
+                        edit_user.main_role = 'MC'
+
+                        edit_user.save()
+                        edit_user.assign_initial_certs()
+                        ActionLog(
+                            action=f'MAVP Controller {edit_user.full_name} was marked active by system.'
+                        ).save()
+                    edit_user.save()
 
         # Set MAVP controllers inactive
         mavp_roster_cids = [user['cid'] for user in mavp_roster]

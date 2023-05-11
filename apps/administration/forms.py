@@ -51,3 +51,24 @@ class SendEmailForm(forms.Form):
         self.fields['ratings'].choices = ((key, key) for key, value in RATING_INTS.items())
         self.fields['sender_name'].initial = request.user_obj.full_name
         self.fields['reply_email'].initial = request.user_obj.email
+
+
+class StaffCommentForm(forms.Form):
+    subject = forms.CharField(
+        label='Controller',
+        disabled=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    notes = forms.CharField(
+        label='Notes',
+        widget=forms.Textarea(attrs={
+            'class': 'form-control'
+        })
+    )
+
+    def __init__(self, subject, *args, **kwargs):
+        super(StaffCommentForm, self).__init__(*args, **kwargs)
+        self.fields['subject'].initial = subject

@@ -25,18 +25,7 @@
         {% for e in events %}
         <div class="row portfolio-container">
             <div class="col-12 portfolio-item filter-app">
-                <div class="portfolio-wrap">
-                    <img src="{{ e.banner }}" class="img-fluid" alt="" />
-                    <div class="portfolio-info">
-                        <h4><a style="color:white" href="/events/{{ e.id }}">{{ e.name }}</a></h4>
-                        <div class="portfolio-links">
-                            {% if request.user_obj.is_staff %}
-                            <a href="/events/edit/{{ e.id }}" title="Edit Event"><i class="icofont-edit"></i></a>
-                            <a href="/events/delete/{{ e.id }}" title="Delete Event"><i class="icofont-ui-delete"></i></a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+                <a href="/events/{{ e.id }}"><img src="{{ e.banner }}" alt="" width="100%" /></a>
             </div>
         </div>
         {% endfor %}

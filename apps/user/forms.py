@@ -47,8 +47,15 @@ class EditUserForm(forms.Form):
     oper_init = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
+            'class': 'form-control mb-3',
             'placeholder': 'New Operating Initials'
+        })
+    )
+    assistant_staff_role = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Assistant Staff Role (e.g. ATA, AWM, etc)'
         })
     )
 

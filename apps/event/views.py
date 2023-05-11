@@ -183,11 +183,13 @@ def delete_position(request, position_id, event_id):
 @require_staff
 def delete_event(request, event_id):
     try:
-        Event.objects.get(id=event_id).delete()
-    except ObjectDoesNotExist:
+        event = Event.objects.get(id=event_id)
+        event_name = event.name
+        event.delete()
+    except Exception:
         raise Http404()
     ActionLog(
-        action=f'Event {Event.objects.get(id=event_id).name} was deleted by {request.user_obj.full_name}.'
+        action=f'Event {event_name} was deleted by {request.user_obj.full_name}.'
     ).save()
     return redirect(f'/events')
 

@@ -1,8 +1,7 @@
 import os
-import re
 
 from django import template
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from apps.feedback.forms import SERVICE_LEVEL_CHOICES
 from apps.user.models import ENDORSEMENTS
@@ -26,6 +25,11 @@ def format_duration(td: timedelta):
         return '{:2}:{:02}'.format(int(hours), int(minutes))
     else:
         return '0:00'
+
+
+@register.filter
+def format_event_time(t: datetime):
+    return t.strftime('%b %d, %Y %H:%MZ')
 
 
 @register.filter

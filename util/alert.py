@@ -43,5 +43,17 @@ MESSAGES = {
     7: {
         'type': 'success',
         'text': 'News article successfully posted.'
+    },
+    8: {
+        'type': 'success',
+        'text': 'Controller notes successfully saved.'
+    },
+    9: {
+        'type': 'success',
+        'text': 'Controller notes successfully deleted.'
+    },
+    10: {
+        'type': 'danger',
+        'text': 'Error while deleting the requested note. Please try again later.'
     }
 }

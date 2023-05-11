@@ -16,3 +16,10 @@ class MAVP(models.Model):
 
     def __str__(self):
         return f'{self.facility_long} ({self.facility_short})'
+
+
+class StaffComment(models.Model):
+    writer = models.ForeignKey(User, models.CASCADE, related_name='writer')
+    subject = models.ForeignKey(User, models.CASCADE, related_name='subject')
+    timestamp = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField()

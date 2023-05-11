@@ -4,7 +4,7 @@
 
 {% block breadcrumbs %}
 <li><a href="/">Home</a></li>
-<li>Profile</li>
+<li>{{ user.full_name }}</li>
 {% endblock %}
 
 {% block body %}
@@ -77,7 +77,11 @@
                 </tr>
                 </thead>
             </table>
+            <p><strong>Edit Operating Initials</strong></p>
             {{ form.oper_init }}
+            <p><strong>Add/Edit Assistant Staff Role</strong></p>
+            <p><i>Other staff roles are automatically synced with VATUSA.</i></p>
+            {{ form.assistant_staff_role }}
             <div class="text-center pt-3">
                 <button type="submit" class="btn btn-success">Save Changes</button>
             </div>
@@ -114,6 +118,34 @@
             {% endif %}
         </div>
     </div>
+    {% if request.user_obj.is_senior_staff %}
+    <div class="row">
+        <h5>Senior Staff Comments</h5>
+    </div>
+    <div class="row">
+        <p><a href="/staff-comment/add/{{ user.cid }}">Add Comment</a></p>
+        <table class="table table-striped">
+            <tr>
+                <th scope="col" style="width:12%">Author</th>
+                <th scope="col" style="width:18%">Submitted</th>
+                <th scope="col">Notes</th>
+                <th scope="col" style="width:12%"></th>
+            </tr>
+            {% for item in staff_comments %}
+                <tr>
+                    <td>{{ item.writer.full_name }}</td>
+                    <td>{{ item.timestamp }}</td>
+                    <td>{{ item.notes }}</td>
+                    <td>{% if request.user_obj.cid == item.writer.cid %}<a href="/staff-comment/delete/{{ item.id }}">Delete</a>{% endif %}</td>
+                </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align:center">No staff comments posted!</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
     <div class="row">
         <h5>Feedback</h5>
         <table class="table table-striped">

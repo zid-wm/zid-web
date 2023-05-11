@@ -1,11 +1,12 @@
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from apps.administration.forms import SendEmailForm
-from apps.administration.models import ActionLog
+from apps.administration.forms import SendEmailForm, StaffCommentForm
+from apps.administration.models import ActionLog, StaffComment
 from apps.user.models import User
 from util.email import send_broadcast_email
-from zid_web.decorators import require_staff
+from zid_web.decorators import require_staff, require_role
 
 
 @require_staff
@@ -53,3 +54,39 @@ def view_send_email(request):
             'page_title': 'Send Email',
             'form': form
         })
+
+
+@require_role(['ATM', 'DATM', 'TA', 'WM'])
+def view_add_staff_comment(request, subject_cid):
+    if request.method == 'GET':
+        if not User.objects.filter(cid=subject_cid).exists():
+            return HttpResponse(f'User with CID {subject_cid} not found!', status=404)
+        user = User.objects.get(cid=subject_cid)
+        form = StaffCommentForm(user.full_name)
+        return render(request, 'add_staff_comment.html', {
+            'page_title': 'Add Staff Comment',
+            'form': form,
+            'subject_cid': subject_cid,
+            'user': user
+        })
+
+    elif request.method == 'POST':
+        StaffComment(
+            writer=User.objects.get(cid=request.user_obj.cid),
+            subject=User.objects.get(cid=subject_cid),
+            notes=request.POST['notes']
+        ).save()
+        return redirect('/?m=8')
+
+
+@require_role(['ATM', 'DATM', 'TA', 'WM'])
+def view_delete_staff_comment(request, comment_id):
+    if StaffComment.objects.filter(id=comment_id).exists():
+        comment = StaffComment.objects.get(id=comment_id)
+        if comment.writer.cid == request.user_obj.cid:
+            comment.delete()
+            return redirect('/?m=9')
+        else:
+            return HttpResponse('You are not permitted to delete another staff member\'s notes!', status=403)
+    else:
+        return redirect('/?m=10')

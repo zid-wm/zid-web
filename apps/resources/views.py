@@ -7,14 +7,13 @@ from apps.resources.forms import AddFileForm
 from zid_web.decorators import require_staff, require_member
 
 
-@require_member
 def view_files(request):
     s3_client = boto3.client('s3')
     s3_objects = s3_client.list_objects_v2(Bucket='zid-files')
 
     files = []
     for f in s3_objects['Contents']:
-        data = f['Key'].split('/')
+        data = f['Key'].split('/', maxsplit=1)
         files.append({
             'category': data[0],
             'name': data[1],
