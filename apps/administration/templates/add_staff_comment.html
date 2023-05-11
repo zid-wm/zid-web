@@ -15,7 +15,7 @@
         </div>
 
         <div class="row m-3" style="width:100%">
-            <form action="/add-staff-comment/{{ subject_cid }}" method="post" role="form" class="php-email-form">
+            <form action="/staff-comment/add/{{ subject_cid }}" method="post" role="form" class="php-email-form">
             {% csrf_token %}
             {{ form }}
             <div class="text-center pt-3">

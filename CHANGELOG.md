@@ -1,5 +1,8 @@
 # Changelog
 The vZID ARTCC website code uses a calendar versioning system, with YY.M(M).PATCH as the standard format.
+## v23.5.1
+### Bug Fixes
+- Fixed staff comment submission form redirecting to the wrong URL
 ## v23.5.0
 ### Features
 - Files page is now available to all website visitors (does not require login)
