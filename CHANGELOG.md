@@ -1,5 +1,8 @@
 # Changelog
 The vZID ARTCC website code uses a calendar versioning system, with YY.M(M).PATCH as the standard format.
+## v23.6.1
+### Bug Fixes
+- Fix login redirect URL constructor
 ## v23.6.0
 ### Features
 - Added "Become a Visitor" option to navbar when user is not logged in. Visitor request form prompts for VATSIM login prior to submission.
