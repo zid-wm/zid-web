@@ -53,8 +53,13 @@ VATSIM_DATA = {
                 "deptime": "1500",
                 "enroute_time": "1120",
                 "fuel_time": "1256",
-                "remarks": "PBN/A1B1C1D1L1O1S1 NAV/RNVD1E2A1 DOF/230510 REG/HL7783EET/CZVR0018 PAZA0121 RJJJ0619 RKRR1010 SEL/EPGH RVR/75 OPR/KOREAN AIR PER/D /V/",
-                "route": "+BANGR9 ARRIE J523 TOU J501 YAZ Q801 FINGS KATCH 55N140W 60N160W NEONN G349 MARCC R338 NATES R220 NRKEY/N0495F280 R220 NODAN/N0489F300 R217 GTC Y142 SAMON SAPRA Y685 CUN CUN2M",
+                "remarks":
+                    "PBN/A1B1C1D1L1O1S1 NAV/RNVD1E2A1 DOF/230510 REG/HL7783EET/CZVR0018 "
+                    "PAZA0121 RJJJ0619 RKRR1010 SEL/EPGH RVR/75 OPR/KOREAN AIR PER/D /V/",
+                "route":
+                    "+BANGR9 ARRIE J523 TOU J501 YAZ Q801 FINGS KATCH 55N140W 60N160W NEONN "
+                    "G349 MARCC R338 NATES R220 NRKEY/N0495F280 R220 NODAN/N0489F300 R217 "
+                    "GTC Y142 SAMON SAPRA Y685 CUN CUN2M",
                 "revision_id": 2,
                 "assigned_transponder": "7440"
             },
@@ -89,8 +94,15 @@ VATSIM_DATA = {
                 "deptime": "1720",
                 "enroute_time": "1213",
                 "fuel_time": "1421",
-                "remarks": "PBN/A1B1C1D1L1O1S1 NAV/RNVD1E2A1 DOF/230510 REG/PRAOY EET/SBBS0017 SBRE0109 SBAO0312 GOOO0412 GVSC0531 GCCC0636 LPPC0803 LECM0932 EGGX0951 EISN1041 EGTT1103 LFFF1143 SEL/ABCD OPR/AZUL PER/D RMK/FLYAZULV AZU4743 /V/",
-                "route": "KONVI UZ23 BHZ UZ61 QUARU/N0477F330 UN866 OBKUT/N0473F350 UN866 TENPA/N0472F360 UN866 GOMER UN981 BIMBO DCT OBESA DCT PETEK/N0470F380 DCT BERUX/M082F370 T213 TAMEL DCT EVBAK DCT LIFFY/N0470F370 UL975 MALUD L15 KEPAD L151 KIDLI UN859 LGL A34 BOBSA",
+                "remarks":
+                    "PBN/A1B1C1D1L1O1S1 NAV/RNVD1E2A1 DOF/230510 REG/PRAOY EET/SBBS0017 "
+                    "SBRE0109 SBAO0312 GOOO0412 GVSC0531 GCCC0636 LPPC0803 LECM0932 EGGX0951 "
+                    "EISN1041 EGTT1103 LFFF1143 SEL/ABCD OPR/AZUL PER/D RMK/FLYAZULV AZU4743 /V/",
+                "route":
+                    "KONVI UZ23 BHZ UZ61 QUARU/N0477F330 UN866 OBKUT/N0473F350 UN866 "
+                    "TENPA/N0472F360 UN866 GOMER UN981 BIMBO DCT OBESA DCT PETEK/N0470F380 "
+                    "DCT BERUX/M082F370 T213 TAMEL DCT EVBAK DCT LIFFY/N0470F370 UL975 MALUD "
+                    "L15 KEPAD L151 KIDLI UN859 LGL A34 BOBSA",
                 "revision_id": 1,
                 "assigned_transponder": "0000"
             },
@@ -101,7 +113,7 @@ VATSIM_DATA = {
     "controllers": [
         {
             "cid": 123456,
-            "name": "Firstname Lastname",
+            "name": "FirstName LastName",
             "callsign": "SDF_TWR",
             "frequency": "124.200",
             "facility": 4,
