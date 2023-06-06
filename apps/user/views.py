@@ -399,7 +399,7 @@ def manage_visit_requests(request):
             params={
                 'apikey': os.getenv('API_KEY')
             }
-        ).json()
+        ).json()['data']
 
         entries.append({
             'cid': req.cid,
