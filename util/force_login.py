@@ -4,8 +4,7 @@ from django.shortcuts import redirect
 
 def force_login(request: HttpRequest):
     try:
-        protocol = 'https://' if request.META['SERVER_PORT'] == 443 else 'http://'
-        redirect_url = protocol + request.META['HTTP_HOST'] + request.META['PATH_INFO']
+        redirect_url = request.path
     except KeyError:
         redirect_url = '/'
 
