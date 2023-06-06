@@ -49,6 +49,6 @@ def add_new_controllers(atc_clients):
                     callsign=controller['callsign'],
                     frequency=controller['frequency'],
                     online_since=pytz.utc.localize(
-                        datetime.strptime(controller['logon_time'][:-2], '%Y-%m-%dT%H:%M:%S.%f')),
+                        datetime.strptime(controller['logon_time'][:19], '%Y-%m-%dT%H:%M:%S')),
                     last_update=timezone.now()
                 ).save()

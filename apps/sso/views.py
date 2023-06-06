@@ -47,7 +47,6 @@ def login(request):
             })
 
             if user_response.ok:
-                LOGGER.info(json.loads(user_response.text))
                 user_data = json.loads(user_response.text)['data']
                 request.session['vatsim_data'] = user_data
                 request.session['cid'] = user_data['cid']
