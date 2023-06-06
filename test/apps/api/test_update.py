@@ -43,15 +43,38 @@ def test_pull_controllers(requests_mock):
 @pytest.mark.django_db
 def test_pull_controllers_remove(requests_mock):
     user = create_user()
-    ControllerSession(
+    Controller(
         user=user,
         callsign='SDF_TWR',
         frequency=124.200,
-        online_since=datetime.strptime()
-    )
+        online_since=datetime.strptime('2023-01-01T00:00:00Z', '%Y-%m-%dT%H:%M:%SZ'),
+        last_update=datetime.strptime('2023-01-01T01:00:00Z', '%Y-%m-%dT%H:%M:%SZ')
+    ).save()
+
     new_vatsim_data = VATSIM_DATA.copy()
     new_vatsim_data['controllers'] = []
+    requests_mock.get('https://status.vatsim.net/status.json', json=VATSIM_STATUS)
     requests_mock.get('https://data.vatsim.net/v3/vatsim-data.json', json=new_vatsim_data)
+
     update.pull_controllers()
     assert not Controller.objects.filter(callsign='SDF_TWR').exists()
     assert ControllerSession.objects.filter(callsign='SDF_TWR').exists()
+
+
+@pytest.mark.django_db
+def test_pull_controllers_update(requests_mock):
+    user = create_user()
+    Controller(
+        user=user,
+        callsign='SDF_TWR',
+        frequency=124.200,
+        online_since=datetime.strptime('2023-01-01T00:00:00Z', '%Y-%m-%dT%H:%M:%SZ'),
+        last_update=datetime.strptime('2023-01-01T01:00:00Z', '%Y-%m-%dT%H:%M:%SZ')
+    ).save()
+
+    requests_mock.get('https://status.vatsim.net/status.json', json=VATSIM_STATUS)
+    requests_mock.get('https://data.vatsim.net/v3/vatsim-data.json', json=VATSIM_DATA)
+
+    update.pull_controllers()
+    assert Controller.objects.get(callsign='SDF_TWR').last_update != \
+           datetime.strptime('2023-01-01T01:00:00Z', '%Y-%m-%dT%H:%M:%SZ')

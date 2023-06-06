@@ -65,7 +65,7 @@ class PositionPreset(models.Model):
             EventPosition(
                 event=event,
                 user=None,
-                name=position,
+                callsign=position,
             ).save()
 
     def __str__(self):
