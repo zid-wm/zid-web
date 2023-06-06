@@ -1,4 +1,5 @@
 import os
+import sys
 
 from dotenv import load_dotenv
 from pathlib import Path
@@ -143,6 +144,9 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT')
     }
 }
+
+if 'pytest' in '\t'.join(sys.argv):
+    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
 
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
