@@ -24,7 +24,7 @@ from .forms import (
 from apps.training.models import TrainingTicket
 from apps.user.models import User, VisitRequest
 from apps.user.update import add_visitor
-from util.email import send_visitor_approval_email
+from util.email import send_visitor_approval_email, send_visit_request_notification_email
 from zid_web.decorators import require_staff, require_member, require_session
 
 
@@ -374,6 +374,7 @@ def view_visit_request(request):
             description=request.POST['description']
         ).save()
 
+        send_visit_request_notification_email(request)
         return redirect('/?m=6')
     else:
         form = VisitingRequestForm(initial={

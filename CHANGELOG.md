@@ -1,6 +1,8 @@
 # Changelog
 The vZID ARTCC website code uses a calendar versioning system, with YY.M(M).PATCH as the standard format.
 ## v23.6.1
+### Features
+- Notification is sent to ATM/DATM/WM when a new visit request is submitted.
 ### Bug Fixes
 - Fix login redirect URL constructor
 - Fix display of visit requests for staff members

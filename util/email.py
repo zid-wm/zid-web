@@ -57,6 +57,27 @@ def send_visitor_denial_email(cid):
 
 
 @run_async
+def send_visit_request_notification_email(request):
+    html_msg = render_to_string(
+        'email/EMAIL_visit_request_notification.html',
+        {
+            'requester_name': request.POST('name'),
+            'description': request.POST('description')
+        }
+    )
+    mail_data = [mail.EmailMultiAlternatives(
+        'New Visit Request',
+        html_msg,
+        to=['atm@zidartcc.org', 'datm@zidartcc.org'],
+        cc=['wm@zidartcc.org']
+    )]
+
+    mail_data[0].attach_alternative(html_msg, 'text/html')
+    with mail.get_connection() as conn:
+        conn.send_messages(mail_data)
+
+
+@run_async
 def send_broadcast_email(request, subject, message, reply_email, email_list):
     html_msg = render_to_string(
         'email/EMAIL_std.html',
