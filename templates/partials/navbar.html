@@ -23,6 +23,9 @@
 
                 <li class="drop-down"><a href="#">Controllers</a>
                     <ul>
+                        {% if not request.session.vatsim_data %}
+                        <li><a href="/visit-request/">Become a Visitor</a></li>
+                        {% endif %}
                         <li {% if request.user_obj.is_staff %} class="drop-down" {% endif %}>
                             <a href="/roster">Roster</a>
                             {% if request.user_obj.is_staff %}
