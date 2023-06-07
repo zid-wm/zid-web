@@ -12,7 +12,7 @@ from zid_web.decorators import run_async
 
 
 def send_email(subject, message, html_message, to_email, *args, **kwargs):
-    client = boto3.client('ses')
+    client = boto3.client('ses', region_name='us-east-1')
 
     response = client.send_email(
         Source=kwargs.get('from_email', default='noreply@zidartcc.org'),
