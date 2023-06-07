@@ -1,0 +1,4 @@
+This email is to notify you that a new visit request has been submitted on the ZID ARTCC website.
+Name: {{ requester_name }}
+Comments: {{ description }}
+Click Here to Manage Visit Requests: https://zidartcc.org/visit-request/manage
