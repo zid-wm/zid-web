@@ -15,7 +15,7 @@ def send_email(subject, message, html_message, to_email, *args, **kwargs):
     client = boto3.client('ses', region_name='us-east-1')
 
     response = client.send_email(
-        Source=kwargs.get('from_email', default='noreply@zidartcc.org'),
+        Source=kwargs.get('from_email', 'noreply@zidartcc.org'),
         Destination={
             'ToAddresses': to_email
         },
