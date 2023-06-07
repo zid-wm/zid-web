@@ -17,7 +17,7 @@ def send_email(subject, message, html_message, to_email, *args, **kwargs):
     response = client.send_email(
         Source=kwargs.get('from_email', 'noreply@zidartcc.org'),
         Destination={
-            'ToAddresses': to_email
+            'ToAddresses': [to_email]
         },
         Message={
             'Subject': {
