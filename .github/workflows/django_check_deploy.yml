@@ -1,5 +1,4 @@
 name: Check Django Security Settings
-run-name: ${{ github.workflow }}
 
 on:
   push:
@@ -8,9 +7,16 @@ on:
 jobs:
   check_deploy:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         python-version: ["3.8"]
+
+    env:
+      ENVIRONMENT: prod
+      SECRET_KEY: abc123
+      WEBSITE_DOMAIN: zidartcc.org
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
