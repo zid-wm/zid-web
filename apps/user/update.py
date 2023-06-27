@@ -4,18 +4,13 @@ import os
 from apscheduler.schedulers.background import BackgroundScheduler
 from .models import User
 from apps.administration.models import ActionLog, MAVP
-from apps.api.models import ControllerSession
-from util.email import send_inactivity_warning_email
-from datetime import date
 from django.utils import timezone
-from django.db.models import Sum, Q
 
 
 def start():
     scheduler = BackgroundScheduler()
     scheduler.add_job(update_roster, 'interval', minutes=30)
     scheduler.add_job(update_loa, 'cron', hour=0)
-    scheduler.add_job(send_inactivity_warning, 'cron', day=24)
     scheduler.start()
 
 
@@ -232,37 +227,3 @@ def add_visitor(cid):
         main_role='MC'
     ).exists():
         User.objects.get(cid=cid).delete()
-
-
-def send_inactivity_warning():
-    now = date.today()
-    month = now.month
-    year = now.year
-
-    active_users = ControllerSession.objects.filter(
-        start__year=year,
-        start__month=month
-    )\
-        .values('user', 'duration')\
-        .order_by('user')\
-        .annotate(month_duration=Sum('duration'))\
-        .filter(
-        (Q(month_duration__gte=os.getenv('HOME_ACTIVITY_REQUIREMENT'))
-         & Q(user__main_role='HC')) |
-        (Q(month_duration__gte=os.getenv('VISITOR_ACTIVITY_REQUIREMENT'))
-         & Q(user__main_role='VC'))
-    )
-
-    all_users = User.objects.filter(
-        main_role__in=['HC', 'VC']
-    )
-
-    inactive_users = [u.cid for u in all_users]
-    for u in active_users:
-        inactive_users.remove(u['user'])
-
-    email_list = User.objects.filter(
-        cid__in=inactive_users
-    ).values('email')
-
-    send_inactivity_warning_email(email_list)
