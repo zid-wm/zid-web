@@ -1,0 +1,29 @@
+name: Check Django Security Settings
+run-name: ${{ github.workflow }}
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check_deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8"]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Requirements
+        run: |
+          pip install -r requirements.txt
+
+      - name: Check Django Security Settings
+        run: |
+          python manage.py check --deploy
