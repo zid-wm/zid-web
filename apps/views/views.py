@@ -64,7 +64,7 @@ def view_home(request):
 
     try:
         # The timeout is set to slightly longer than a standard TCP packet retransmission window.
-        pilots = requests.get('https://api.denartcc.org/live/ZID', timeout=3.05).json()
+        pilots = requests.get('https://api.zdvartcc.org/live/ZID', timeout=3.05).json()
     except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
         pilots = []
     except JSONDecodeError:
