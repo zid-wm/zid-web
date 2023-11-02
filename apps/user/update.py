@@ -49,6 +49,7 @@ def update_roster():
                     else:
                         new_user.staff_role = role['role']
             new_user.save()
+            new_user.assign_initial_certs()
 
             ActionLog(
                 action=f'New home/visiting controller {new_user.full_name} was created by system.'
@@ -97,6 +98,7 @@ def update_roster():
                     action=f'Home/visiting controller {edit_user.full_name} was marked active by system.'
                 ).save()
             edit_user.save()
+            edit_user.assign_initial_certs()
 
     #############################################
     # Set controllers to inactive if they are no longer on VATUSA roster
@@ -171,6 +173,48 @@ def update_roster():
                 ActionLog(
                     action=f'MAVP Controller {user.full_name} was set as inactive by system.'
                 ).save()
+
+
+def gcap_certification_update_check(user: User):
+    """Temporary function to transfer all user certifications to the new GCAP-compliant
+    system. Should be removed with the next website update."""
+    if user.del_cert < 100:
+        if user.del_cert == 2:
+            user.del_cert = 102
+        else:
+            user.del_cert = 100
+
+    if user.gnd_cert < 100:
+        if user.gnd_cert == 2:
+            user.gnd_cert = 102
+        elif user.gnd_cert == 1:
+            user.gnd_cert = 101
+        else:
+            user.gnd_cert = 100
+
+    if user.twr_cert < 100:
+        if user.twr_cert == 2:
+            user.twr_cert = 102
+        elif user.twr_cert == 1 or user.twr_cert == 3:
+            user.twr_cert = 101
+        else:
+            user.twr_cert = 100
+
+    if user.app_cert < 100:
+        if user.app_cert == 2:
+            user.app_cert = 102
+        elif user.app_cert == 1 or user.app_cert == 3:
+            user.app_cert = 101
+        else:
+            user.app_cert = 100
+
+    if user.ctr_cert < 100:
+        if user.ctr_cert == 2:
+            user.ctr_cert = 102
+        else:
+            user.ctr_cert = 100
+
+    user.save()
 
 
 def update_loa():

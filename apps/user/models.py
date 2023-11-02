@@ -15,10 +15,13 @@ RATING_INTS = {
 }
 
 ENDORSEMENTS = (
-    (0, 'No Endorsement'),
-    (1, 'Minor Endorsement'),
-    (2, 'Major Endorsement'),
-    (3, 'Solo Endorsement')
+    (0, 'OLD - No Endorsement'),
+    (1, 'OLD - Minor Endorsement'),
+    (2, 'OLD - Major Endorsement'),
+    (3, 'OLD - Solo Endorsement'),
+    (100, 'Not Certified'),
+    (101, 'Simple/Solo'),
+    (102, 'Advanced/Certified')
 )
 
 
@@ -43,11 +46,11 @@ class User(models.Model):
     training_role = models.CharField(max_length=32, null=True, blank=True)
     mentor_level = models.CharField(max_length=32, null=True, blank=True)
 
-    del_cert = models.IntegerField(default=0, choices=ENDORSEMENTS)
-    gnd_cert = models.IntegerField(default=0, choices=ENDORSEMENTS)
-    twr_cert = models.IntegerField(default=0, choices=ENDORSEMENTS)
-    app_cert = models.IntegerField(default=0, choices=ENDORSEMENTS)
-    ctr_cert = models.IntegerField(default=0, choices=ENDORSEMENTS)
+    del_cert = models.IntegerField(default=100, choices=ENDORSEMENTS)
+    gnd_cert = models.IntegerField(default=100, choices=ENDORSEMENTS)
+    twr_cert = models.IntegerField(default=100, choices=ENDORSEMENTS)
+    app_cert = models.IntegerField(default=100, choices=ENDORSEMENTS)
+    ctr_cert = models.IntegerField(default=100, choices=ENDORSEMENTS)
     solo_cert = models.CharField(max_length=32, null=True, blank=True)
 
     profile_picture = models.URLField(null=True, blank=True)
@@ -92,12 +95,12 @@ class User(models.Model):
     # Assign minor certifications to MAVP controllers
     def assign_initial_certs(self):
         if RATING_INTS[self.rating] > 0:
-            self.del_cert = 1
-            self.gnd_cert = 1
+            self.del_cert = 102
+            self.gnd_cert = 102
             if RATING_INTS[self.rating] > 1:
-                self.twr_cert = 1
+                self.twr_cert = 102
                 if RATING_INTS[self.rating] > 2:
-                    self.app_cert = 1
+                    self.app_cert = 102
         self.save()
 
 
