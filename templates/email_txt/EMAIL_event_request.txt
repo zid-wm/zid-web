@@ -1,0 +1,5 @@
+New Event Request:
+Requester: {{ requester_name }}
+Contact Email: {{ requester_email }}
+Organization: {{ requester_org }}
+Event Description: {{ description }}
