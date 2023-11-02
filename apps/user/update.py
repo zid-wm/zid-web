@@ -99,6 +99,7 @@ def update_roster():
                 ).save()
             edit_user.save()
             edit_user.assign_initial_certs()
+            gcap_certification_update_check(edit_user)
 
     #############################################
     # Set controllers to inactive if they are no longer on VATUSA roster
@@ -163,6 +164,8 @@ def update_roster():
                             action=f'MAVP Controller {edit_user.full_name} was marked active by system.'
                         ).save()
                     edit_user.save()
+                    edit_user.assign_initial_certs()
+                    gcap_certification_update_check(edit_user)
 
         # Set MAVP controllers inactive
         mavp_roster_cids = [user['cid'] for user in mavp_roster]
