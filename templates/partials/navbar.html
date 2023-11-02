@@ -36,12 +36,7 @@
                             {% endif %}
                         </li>
                         <li><a href="/staff">Staff</a></li>
-                        <li {% if request.user_obj.is_staff %} class="drop-down" {% endif %}><a href="/files">Files</a>
-                            {% if request.user_obj.is_staff %}
-                            <ul>
-                                <li><a href="/files/add">Add File</a></li>
-                            </ul>
-                            {% endif %}
+                        <li><a href="https://docs.zidartcc.org/">Files</a>
                         </li>
                         <li><a href="/statistics">Controller Statistics</a></li>
                         <li {% if request.user_obj.is_staff %} class="drop-down" {% endif %}>

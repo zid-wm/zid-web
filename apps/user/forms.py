@@ -23,26 +23,46 @@ class EditProfileForm(forms.Form):
     ), required=False)
 
 
+DEL_CTR_CHOICES = (
+    (100, 'Not Certified'),
+    (102, 'Certified')
+)
+
+
+GND_TWR_CHOICES = (
+    (100, 'Not Certified'),
+    (101, 'Simple'),
+    (102, 'Advanced')
+)
+
+
+APP_CHOICES = (
+    (100, 'Not Certified'),
+    (101, 'Solo'),
+    (102, 'Certified')
+)
+
+
 class EditUserForm(forms.Form):
     delivery = forms.ChoiceField(
         widget=forms.Select,
-        choices=ENDORSEMENTS
+        choices=DEL_CTR_CHOICES
     )
     ground = forms.ChoiceField(
         widget=forms.Select,
-        choices=ENDORSEMENTS
+        choices=GND_TWR_CHOICES
     )
     tower = forms.ChoiceField(
         widget=forms.Select,
-        choices=ENDORSEMENTS
+        choices=GND_TWR_CHOICES
     )
     approach = forms.ChoiceField(
         widget=forms.Select,
-        choices=ENDORSEMENTS
+        choices=APP_CHOICES
     )
     center = forms.ChoiceField(
         widget=forms.Select,
-        choices=ENDORSEMENTS
+        choices=DEL_CTR_CHOICES
     )
     oper_init = forms.CharField(
         required=False,
