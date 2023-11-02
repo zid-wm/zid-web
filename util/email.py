@@ -138,16 +138,18 @@ def send_event_request_email(request):
             'description': request.POST['description']
         }
     )
-    mail_data = [mail.EmailMultiAlternatives(
-        'New Event Request',
-        html_msg,
-        to=['ec@zidartcc.org'],
-        cc=['atm@zidartcc.org', 'datm@zidartcc.org']
-    )]
+    txt_msg = render_to_string(
+        'email_txt/EMAIL_event_request.txt',
+        {
+            'requester_name': request.POST['name'],
+            'requester_email': request.POST['email'],
+            'requester_org': request.POST['organization'],
+            'description': request.POST['description']
+        }
+    )
 
-    mail_data[0].attach_alternative(html_msg, 'text/html')
-    with mail.get_connection() as conn:
-        conn.send_messages(mail_data)
+    for email in ['ec@zidartcc.org', 'atm@zidartcc.org', 'datm@zidartcc.org']:
+        send_email('New Event Request', txt_msg, html_msg, email)
 
 
 @run_async
