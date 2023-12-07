@@ -127,7 +127,6 @@ def send_broadcast_email(request, subject, message, reply_email, email_list):
         conn.send_messages(mail_data)
 
 
-@run_async
 def send_event_request_email(request):
     html_msg = render_to_string(
         'email_html/EMAIL_event_request.html',
@@ -148,7 +147,7 @@ def send_event_request_email(request):
         }
     )
 
-    for email in ['ec@zidartcc.org', 'atm@zidartcc.org', 'datm@zidartcc.org']:
+    for email in ['ec@zidartcc.org', 'atm@zidartcc.org', 'datm@zidartcc.org', 'wm@zidartcc.org']:
         send_email('New Event Request', txt_msg, html_msg, email)
 
 
