@@ -1,34 +1,155 @@
-{% extends 'mainTemplate.html' %}
-{% load static %}
-
-{% block breadcrumbs %}
-<li><a href="/">Home</a></li>
-<li>{{ heading }}</li>
-{% endblock %}
+{% extends 'hostit/mainTemplate.html' %}
 
 {% block body %}
-<section id="portfolio" class="portfolio">
+{% if request.user_obj.is_staff %}
+<div class="modal" tabindex="-1" id="newEventForm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/events/new/" enctype="multipart/form-data" method="post" role="form">
+            <div class="modal-header">
+                <h1 class="modal-title">New Event</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% csrf_token %}
+                <div class="row mx-3">
+                    Event Name
+                </div>
+                <div class="row mx-3">
+                    {{ new_event_form.name }}
+                </div>
+                <div class="row mt-3 mx-3">
+                    Banner
+                </div>
+                <div class="row mx-3">
+                    {{ new_event_form.banner }}
+                </div>
+                <div class="row mt-3 mx-3">
+                    Start Time (UTC)
+                </div>
+                <div class="row mx-3">
+                    <div class="input-group" id="startDateTimePicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                        {{ new_event_form.start }}
+                        <span class="input-group-text" data-td-target="#startDateTimePicker" data-td-toggle="datetimepicker"><i class="fas fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="row mt-3 mx-3">
+                    End Time (UTC)
+                </div>
+                <div class="row mx-3">
+                    <div class="input-group" id="endDateTimePicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                        {{ new_event_form.end }}
+                        <span class="input-group-text" data-td-target="#endDateTimePicker" data-td-toggle="datetimepicker"><i class="fas fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="row mt-3 mx-3">
+                    Host
+                </div>
+                <div class="row mx-3">
+                    {{ new_event_form.host }}
+                </div>
+                <div class="row mt-3 mx-3">
+                    Event Signup Type
+                </div>
+                <div class="row mx-3">
+                    <div class="btn-group" role="group" aria-label="Event Signup Type">
+                        {% for radio in new_event_form.event_signup_type %}
+                        {{ radio.tag }}
+                        <label class="btn btn-outline-primary" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row mt-3 mx-3">
+                    Description
+                </div>
+                <div class="row mx-3">
+                    {{ new_event_form.description }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" value="Save Changes">Create Event</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<section class="layout_padding">
     <div class="container">
         <div class="row">
             <div class="col">
-                <h3>{{ heading }}</h3>
+                <h1>{{ heading }} Events</h1>
             </div>
             {% if request.user_obj.is_staff %}
-            <div class="col">
-                <h3 style="text-align:right">
-                    <a href="/events/new"><i class="icofont-plus"></i> Add Event</a>
-                </h3>
+            <div class="col col-2">
+                {% if heading == 'Archived' %}
+                <a href="/events/" class="btn btn-secondary" role="button"><i class="icofont-ui-calendar"></i> Upcoming Events</a>
+                {% else %}
+                <a href="/events/archived" class="btn btn-secondary" role="button"><i class="icofont-archive"></i> Archived Events</a>
+                {% endif %}
+            </div>
+            <div class="col col-2">
+                <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#newEventForm"><i class="icofont-plus"></i> Create Event</button>
             </div>
             {% endif %}
         </div>
-
         {% for e in events %}
-        <div class="row portfolio-container">
-            <div class="col-12 portfolio-item filter-app">
-                <a href="/events/{{ e.id }}"><img src="{{ e.banner }}" alt="" width="100%" /></a>
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-7">
+                        {% if e.banner %}
+                        <img src="{{ e.banner }}" alt="" class="img-fluid rounded-start g-0">
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ e.name }}</h5>
+                            <p class="card-text">{{ e.description|truncatechars:250 }}</p>
+                        {% else %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ e.name }}</h5>
+                            <p class="card-text">{{ e.description|truncatechars:250 }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card-body">
+                        {% endif %}
+                            <a href="/events/{{ e.id }}" class="btn btn-primary">Details/Sign Up</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
         {% endfor %}
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(function() {
+        $('#startDateTimePicker').tempusDominus({
+            display: {
+                buttons: {
+                    close: true
+                }
+            },
+            localization: {
+                format: 'MM/dd/yy HH:mm',
+                hourCycle: 'h23'
+            }
+        });
+        $('#endDateTimePicker').tempusDominus({
+            display: {
+                buttons: {
+                    close: true
+                }
+            },
+            localization: {
+                format: 'MM/dd/yy HH:mm',
+                hourCycle: 'h23'
+            }
+        });
+    });
+</script>
 {% endblock %}

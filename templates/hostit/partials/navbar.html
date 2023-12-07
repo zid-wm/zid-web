@@ -1,0 +1,74 @@
+{% load static %}
+
+<div class="hero_area">
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar fixed-top navbar-expand-lg custom_nav-container">
+                <a class="navbar-brand" href="/">
+                    <img src="{% static "/hostit/img/fulllogo_navbar.svg" %}" alt="Indy Center Logo" height="42">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class=""></span>
+                </button>
+
+                <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pilots</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="https://www.aviationweather.gov/">Aviation Weather</a></li>
+                                <li><a class="dropdown-item" href="/routes">Preferred Routes</a></li>
+                                <li><a class="dropdown-item" href="/request-event-staffing">Request Event Staffing</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Controllers</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/roster">Roster</a></li>
+                                <li><a class="dropdown-item" href="/staff">Staff</a></li>
+                                <li><a class="dropdown-item" href="https://docs.zidartcc.org/">Files & Documents</a></li>
+                                <li><a class="dropdown-item" href="/statistics">Statistics</a></li>
+                                <li><a class="dropdown-item" href="/events">Events</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/feedback">Submit Feedback</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/news">News</a>
+                        </li>
+                        {% if request.session.vatsim_data %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="icofont-user"></i> {{ request.session.vatsim_data.personal.name_full }}</a>
+                            <ul class="dropdown-menu">
+                                {% if request.user_obj %}
+                                <li><a class="dropdown-item" href="/profile/{{ request.user_obj.cid }}">Profile</a></li>
+                                <li><a class="dropdown-item" href="https://academy.vatusa.net/my/">Training</a></li>
+                                {% endif %}
+                                {% if request.user_obj.main_role == 'MC' or not request.user_obj %}
+                                <li><a class="dropdown-item" href="/visit-request">Become a Visitor</a></li>
+                                {% endif %}
+                                {% if request.user_obj.is_staff %}
+                                <li><a class="dropdown-item" style="pointer-events: none"><strong>Staff Tools</strong></a></li>
+                                <li><a class="dropdown-item" href="/training">Training Hub</a></li>
+                                <li><a class="dropdown-item" href="/audit-log?p=1">Website Audit Log</a></li>
+                                <li><a class="dropdown-item" href="/email/send">Send an Email</a></li>
+                                {% endif %}
+                                <li><a class="dropdown-item" href="/logout"><strong>Log Out</strong></a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/visit-request">Become a Visitor</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login-start"><i class="icofont-user"></i> Log In</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+</div>

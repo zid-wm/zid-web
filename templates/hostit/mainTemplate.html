@@ -1,0 +1,16 @@
+{% load static %}
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    {% include 'hostit/partials/head.html' %}
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="sub_page">
+{% include 'hostit/partials/navbar.html' %}
+{% block body %}{% endblock %}
+{% include 'hostit/partials/info.html' %}
+{% include 'hostit/partials/footer.html' %}
+{% block scripts %}{% endblock %}
+</body>
+</html>
