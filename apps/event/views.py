@@ -1,26 +1,40 @@
 import boto3
+from datetime import datetime
 
 from django.db.models import Q, ObjectDoesNotExist
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 from apps.administration.models import ActionLog
 from apps.event.models import Event, EventPosition, EventSignup
-from .forms import NewEventForm, AddPositionForm, EditEventForm
+from .forms import EventForm, AddPositionForm
 from apps.user.models import User
 from zid_web.decorators import require_staff, require_member
 
 
 def view_events(request):
-    events = Event.objects.filter(
-        end__gte=timezone.now()
-    ).order_by('start')
+    new_event_form = EventForm()
+
+    if 'archive' in request.path:
+        heading = 'Archived'
+
+        events = Event.objects.filter(
+            end__lte=timezone.now()
+        ).order_by('start')
+    else:
+        heading = 'Upcoming'
+
+        events = Event.objects.filter(
+            end__gte=timezone.now()
+        ).order_by('start')
 
     return render(request, 'events.html', {
         'page_title': 'Events',
-        'heading': 'Events',
-        'events': events
+        'heading': heading,
+        'events': events,
+        'new_event_form': new_event_form
     })
 
 
@@ -31,12 +45,27 @@ def view_event_details(request, event_id):
         raise Http404()
 
     user = request.user_obj
+
     user_has_position = EventPosition.objects.filter(
         user=user,
         event=event
     ).exists()
 
+    requested_positions = [
+        signup.position.callsign for signup in EventSignup.objects.filter(
+            user=user
+        )
+    ]
+
     add_position_form = AddPositionForm()
+
+    edit_event_form = EventForm(initial={
+        'name': event.name,
+        'start': datetime.strftime(event.start, '%m/%d/%y %H:%M'),
+        'end': datetime.strftime(event.end, '%m/%d/%y %H:%M'),
+        'host': event.host,
+        'description': event.description
+    })
 
     if request.method == 'POST' and request.user_obj.is_staff:
         pos = EventPosition(
@@ -63,8 +92,10 @@ def view_event_details(request, event_id):
             'user': user,
             'allowed_to_signup': user and user.status == 'ACTIVE' and event.end >= timezone.now(),
             'add_position_form': add_position_form,
+            'edit_event_form': edit_event_form,
             'position_signups': position_signups,
-            'user_has_position': user_has_position
+            'user_has_position': user_has_position,
+            'requested_positions': requested_positions
         })
 
     else:
@@ -72,25 +103,9 @@ def view_event_details(request, event_id):
 
 
 @require_staff
-def view_archived_events(request):
-    events = Event.objects.filter(
-        end__lte=timezone.now()
-    ).order_by('start')
-
-    return render(request, 'events.html', {
-        'page_title': 'Archived Events',
-        'heading': 'Archived Events',
-        'events': events
-    })
-
-
-@require_staff
+@require_POST
 def view_new_event(request):
-    form = NewEventForm()
-
-    if request.method == 'POST':
-        # TODO: Add a check that the title doesn't match an existing event
-
+    if 'banner' in request.FILES:
         s3 = boto3.client('s3')
         s3.upload_fileobj(
             request.FILES['banner'],
@@ -101,28 +116,28 @@ def view_new_event(request):
             }
         )
 
-        new_event = Event(
-            name=request.POST['name'],
-            banner=f'https://zid-files.s3.us-east-1.amazonaws.com/img/{request.POST["name"]}',
-            start=request.POST['start'],
-            end=request.POST['end'],
-            host=request.POST['host'],
-            description=request.POST['description']
-        )
-        new_event.save()
-        ActionLog(
-            action=f'Event {request.POST["name"]} was created by {request.user_obj.full_name}.'
-        ).save()
-        return redirect('/events')
+    start_time = datetime.strptime(request.POST['start'], '%m/%d/%y %H:%M')
+    end_time = datetime.strptime(request.POST['end'], '%m/%d/%y %H:%M')
 
-    else:
-        return render(request, 'new-event.html', {
-            'page_title': 'New Event',
-            'form': form
-        })
+    new_event = Event(
+        name=request.POST['name'],
+        banner=f'https://zid-files.s3.us-east-1.amazonaws.com/img/{request.POST["name"]}'
+        if 'banner' in request.FILES else None,
+        start=start_time,
+        end=end_time,
+        host=request.POST['host'],
+        event_signup_type=request.POST['event_signup_type'],
+        description=request.POST['description']
+    )
+    new_event.save()
+    ActionLog(
+        action=f'Event {request.POST["name"]} was created by {request.user_obj.full_name}.'
+    ).save()
+    return redirect(f'/events/{new_event.id}')
 
 
 @require_staff
+@require_POST
 def edit_event(request, event_id):
     try:
         event = Event.objects.get(
@@ -131,44 +146,30 @@ def edit_event(request, event_id):
     except ObjectDoesNotExist:
         raise Http404()
 
-    if request.method == 'POST':
-        event.name = request.POST['name']
-        event.start = request.POST['start']
-        event.end = request.POST['end']
-        event.host = request.POST['host']
-        event.description = request.POST['description']
+    event.name = request.POST['name']
+    event.start = datetime.strptime(request.POST['start'], '%m/%d/%y %H:%M')
+    event.end = datetime.strptime(request.POST['end'], '%m/%d/%y %H:%M')
+    event.host = request.POST['host']
+    event.event_signup_type = request.POST['event_signup_type']
+    event.description = request.POST['description']
 
-        if request.FILES:
-            s3 = boto3.client('s3')
-            s3.upload_fileobj(
-                request.FILES['banner'],
-                'zid-files',
-                f'img/{request.POST["name"]}',
-                ExtraArgs={
-                    'ACL': 'public-read'
-                }
-            )
-            event.banner = f'https://zid-files.s3.us-east-1.amazonaws.com/img/{request.POST["name"]}'
+    if request.FILES:
+        s3 = boto3.client('s3')
+        s3.upload_fileobj(
+            request.FILES['banner'],
+            'zid-files',
+            f'img/{request.POST["name"]}',
+            ExtraArgs={
+                'ACL': 'public-read'
+            }
+        )
+        event.banner = f'https://zid-files.s3.us-east-1.amazonaws.com/img/{request.POST["name"]}'
 
-        event.save()
-        ActionLog(
-            action=f'Event {request.POST["name"]} was edited by {request.user_obj.full_name}.'
-        ).save()
-        return redirect('/events')
-    else:
-        form = EditEventForm(initial={
-            'name': event.name,
-            'start': event.start,
-            'end': event.end,
-            'host': event.host,
-            'description': event.description
-        })
-
-        return render(request, 'edit-event.html', {
-            'page_title': 'Edit Event',
-            'event': event,
-            'form': form
-        })
+    event.save()
+    ActionLog(
+        action=f'Event {request.POST["name"]} was edited by {request.user_obj.full_name}.'
+    ).save()
+    return redirect(f'/events/{event_id}')
 
 
 @require_staff
@@ -197,6 +198,10 @@ def delete_event(request, event_id):
 @require_member
 def request_position(request, event_id, pos_id):
     try:
+        event = Event.objects.get(
+            id=event_id
+        )
+
         signup = EventSignup(
             position=EventPosition.objects.get(
                 id=pos_id
@@ -205,7 +210,14 @@ def request_position(request, event_id, pos_id):
                 cid=request.user_obj.cid
             )
         )
+        if event.event_signup_type == 'Open':
+            signup.assign()
+            ActionLog(
+                action=f'{signup.user.full_name} signed up for '
+                       f'{signup.position.callsign} for {signup.position.event.name}.'
+            ).save()
         signup.save()
+
     except ObjectDoesNotExist:
         return HttpResponse(404)
 

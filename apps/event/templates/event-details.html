@@ -1,185 +1,331 @@
-{% extends 'mainTemplate.html' %}
+{% extends 'hostit/mainTemplate.html' %}
 {% load static %}
 {% load extras %}
 
-{% block breadcrumbs %}
-<li><a href="/">Home</a></li>
-<li><a href="/events">Events</a></li>
-<li>{{ page_title }}</li>
-{% endblock %}
-
 {% block body %}
-<section id="contact" class="contact">
-    <div class="container">
-        <div class="row">
-            <img src="{{ event.banner }}" style="width:100%" />
+
+{% if request.user_obj.is_staff %}
+<div class="modal" tabindex="-1" id="confirmDelete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title">Confirm Deletion</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you would like to delete the event {{ event.name }}? Deleted events cannot be recovered!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger" href="/events/delete/{{ event.id }}" role="button">Confirm Deletion</a>
+            </div>
         </div>
+    </div>
+</div>
+{% endif %}
+
+{% if request.user_obj.is_staff %}
+<div class="modal" tabindex="-1" id="editEventForm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/events/edit/{{ event.id }}" enctype="multipart/form-data" method="post" role="form">
+            <div class="modal-header">
+                <h1 class="modal-title">Edit {{ event.name }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="row mx-3">
+                    Event Name
+                </div>
+                <div class="row mx-3">
+                    {{ edit_event_form.name }}
+                </div>
+                <div class="row mt-3 mx-3">
+                    Banner
+                </div>
+                <div class="row mx-3">
+                    {{ edit_event_form.banner }}
+                </div>
+                <div class="row mt-3 mx-3">
+                    Start Time (UTC)
+                </div>
+                <div class="row mx-3">
+                    <div class="input-group" id="startDateTimePicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                        {{ edit_event_form.start }}
+                        <span class="input-group-text" data-td-target="#startDateTimePicker" data-td-toggle="datetimepicker"><i class="fas fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="row mt-3 mx-3">
+                    End Time (UTC)
+                </div>
+                <div class="row mx-3">
+                    <div class="input-group" id="endDateTimePicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                        {{ edit_event_form.end }}
+                        <span class="input-group-text" data-td-target="#endDateTimePicker" data-td-toggle="datetimepicker"><i class="fas fa-calendar"></i></span>
+                    </div>
+                </div>
+                <div class="row mt-3 mx-3">
+                    Host
+                </div>
+                <div class="row mx-3">
+                    {{ edit_event_form.host }}
+                </div>
+                <div class="row mt-3 mx-3">
+                    Event Signup Type
+                </div>
+                <div class="row mx-3">
+                    <p><i>Event signup type cannot be modified after event creation.</i></p>
+                </div>
+                <div class="row mt-3 mx-3">
+                    Description
+                </div>
+                <div class="row mx-3">
+                    {{ edit_event_form.description }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" value="Save Changes">Save Changes</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<section class="layout_padding">
+    <div class="container">
+        <img class="rounded" src="{{ event.banner }}" width="100%">
         <div class="row pt-3">
-            <h3>{{ event.name }}</h3>
+            <h2>{{ event.name }}</h2>
         </div>
         <div class="row pt-3">
             <div class="col col-4">
-                <h5>Start: {{ event.start|format_event_time }}</h5>
-                <h5>End: {{ event.end|format_event_time }}</h5>
-                <h5>Host: {{ event.host }}</h5>
+                <h5><strong>Start:</strong> {{ event.start|format_event_time }}</h5>
+                <h5><strong>End:</strong> {{ event.end|format_event_time }}</h5>
+                <h5><strong>Host:</strong> {{ event.host }}</h5>
+                <h5><strong>Signup Type:</strong> {{ event.event_signup_type }}</h5>
                 <p>{{ event.description }}</p>
                 {% if request.user_obj.is_staff %}
-                    <p><a href="/events/edit/{{ event.id }}"><i class="icofont-edit"></i> Edit Event</a></p>
-                    <p><a href="/events/delete/{{ event.id }}"><i class="icofont-ui-delete"></i> Delete Event</a></p>
+                <div class="row">
+                    <div class="col col-6">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editEventForm"><i class="icofont-edit"></i> Edit Event</button>
+                    </div>
+                    <div class="col col-6">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelete"><i class="icofont-ui-delete"></i> Delete Event</button>
+                    </div>
+                </div>
                 {% endif %}
             </div>
-
             <div class="col">
+                {% if event.event_signup_type != 'None' %}
                 {% if request.user_obj.is_staff %}
-                <div class="row">
-                    <form action="/events/{{ event.id }}" method="post" role="form" class="php-email-form">
+                    <form action="/events/{{ event.id }}" method="post" role="form">
+                        <div class="row">
                         {% csrf_token %}
-                        <div class="form-row">
-                            <div class="col-8">
-                                {{ add_position_form.callsign }}
-                            </div>
-                            <div class="col">
-                                <div class="text-center">
-                                    <button type="submit" value="Add Position">Add Position</button>
-                                </div>
+                        <div class="col-8">
+                            {{ add_position_form.callsign }}
+                        </div>
+                        <div class="col">
+                            <div class="text-center">
+                                <button class="btn btn-primary" type="submit" value="Add Position">Add Position</button>
                             </div>
                         </div>
+                        </div>
                     </form>
-                </div>
                 {% endif %}
                 <div class="row pt-3">
-                    <h5>Center</h5>
-                    <table class="table table-sm table-stripped">
+                    <h3>Center</h3>
+                    <table class="table table-sm table-striped">
                         <thead>
-                            <tr>
-                                <th scope="col" style="width:40%">Position</th>
-                                <th scope="col">Assignment</th>
-                                {% if request.user_obj.is_staff %}
-                                <th scope="col" style="width:10%"></th>
-                                {% endif %}
-                            </tr>
-                            {% for p in positions.center %}
-                            <tr>
-                                <td style="vertical-align:middle">{{ p.callsign }}</td>
-                                {% if p.user %}
-                                <td style="vertical-align:middle">{{ p.user.full_name }}</td>
-                                {% else %}
-                                <td style="vertical-align:middle">No Assignment{% if not user_has_position %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
-                                {% endif %}
-
-                                {% if request.user_obj.is_staff %}
-                                <td>
-                                    <button type="button" class="btn btn-danger">
-                                        <a href="/events/{{ event.id }}/delete-position/{{ p.id }}" style="color:white">
-                                            <i class="icofont-ui-delete"></i>
-                                        </a>
-                                    </button>
-                                <td>
-                                {% endif %}
-                            </tr>
+                        <tr>
+                            <th scope="col" style="width:40%">Position</th>
+                            <th scope="col">Assignment</th>
                             {% if request.user_obj.is_staff %}
-                                {% for signup in position_signups|lookup:p.callsign %}
-                                    <tr>
-                                    <td></td>
-                                    <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
-                                    <td><strong><a href="/events/assign/{{ signup.id }}">Assign</a></strong></td>
-                                    </tr>
-                                {% endfor %}
+                            <th scope="col" style="width:10%"></th>
+                            <th scope="col" style="width:10%"></th>
                             {% endif %}
-                            {% endfor %}
+                        </tr>
                         </thead>
+                        {% for p in positions.center %}
+                        <tr>
+                            <td style="vertical-align:middle">{{ p.callsign }}</td>
+                            {% if p.user %}
+                            <td style="vertical-align:middle">{{ p.user.full_name }}</td>
+                            {% else %}
+                                {% if user_has_position %}
+                                <td style="vertical-align:middle">No Assignment</td>
+                                {% elif p.callsign in requested_positions %}
+                                <td style="vertical-align:middle">No Assignment <span style="color:green"><i class="icofont-ui-check"></i> Requested</span></td>
+                                {% else %}
+                                <td style="vertical-align:middle">No Assignment - <a href="/events/{{ event.id }}/signup/{{ p.id }}">
+                                    {% if event.event_signup_type == 'Assigned' %}
+                                    Request
+                                    {% elif event.event_signup_type == 'Open' %}
+                                    Sign Up
+                                    {% endif %}
+                                </a></td>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if request.user_obj.is_staff %}
+                            <td></td>
+                            <td>
+                                <button type="button" class="btn btn-danger">
+                                    <a href="/events/{{ event.id }}/delete-position/{{ p.id }}" style="color:white">
+                                        <i class="icofont-ui-delete"></i>
+                                    </a>
+                                </button>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% if request.user_obj.is_staff %}
+                            {% for signup in position_signups|lookup:p.callsign %}
+                            <tr>
+                                <td></td>
+                                <td style="vertical-align: middle"><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
+                                <td colspan="2">
+                                    <button type="button" class="btn btn-primary">
+                                        <a href="/events/assign/{{ signup.id }}"><i class="icofont-ui-check"></i> Assign</a>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                        {% endfor %}
                     </table>
                 </div>
 
                 <div class="row pt-3">
-                    <h5>TRACON</h5>
-                    <table class="table table-sm table-stripped">
+                    <h3>TRACON</h3>
+                    <table class="table table-sm table-striped">
                         <thead>
-                            <tr>
-                                <th scope="col" style="width:40%">Position</th>
-                                <th scope="col">Assignment</th>
-                                {% if request.user_obj.is_staff %}
-                                <th scope="col" style="width:10%"></th>
-                                {% endif %}
-                            </tr>
-                            {% for p in positions.tracon %}
-                            <tr>
-                                <td style="vertical-align:middle">{{ p.callsign }}</td>
-                                {% if p.user %}
-                                <td style="vertical-align:middle">{{ p.user.full_name }}</td>
-                                {% else %}
-                                <td style="vertical-align:middle">No Assignment{% if not user_has_position %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
-                                {% endif %}
-                                
-                                {% if request.user_obj.is_staff %}
-                                <td>
-                                    <button type="button" class="btn btn-danger">
-                                        <a href="/events/{{ event.id }}/delete-position/{{ p.id }}" style="color:white">
-                                            <i class="icofont-ui-delete"></i>
-                                        </a>
-                                    </button>
-                                <td>
-                                {% endif %}
-                            </tr>
+                        <tr>
+                            <th scope="col" style="width:40%">Position</th>
+                            <th scope="col">Assignment</th>
                             {% if request.user_obj.is_staff %}
-                                {% for signup in position_signups|lookup:p.callsign %}
-                                    <tr>
-                                    <td></td>
-                                    <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
-                                    <td><strong><a href="/events/assign/{{ signup.id }}">Assign</a></strong></td>
-                                    </tr>
-                                {% endfor %}
+                            <th scope="col" style="width:10%"></th>
                             {% endif %}
-                            {% endfor %}
+                        </tr>
                         </thead>
+                        {% for p in positions.tracon %}
+                        <tr>
+                            <td style="vertical-align:middle">{{ p.callsign }}</td>
+                            {% if p.user %}
+                            <td style="vertical-align:middle">{{ p.user.full_name }}</td>
+                            {% else %}
+                            {% if user_has_position %}
+                                <td style="vertical-align:middle">No Assignment</td>
+                                {% elif p.callsign in requested_positions %}
+                                <td style="vertical-align:middle">No Assignment <span style="color:green"><i class="icofont-ui-check"></i> Requested</span></td>
+                                {% else %}
+                                <td style="vertical-align:middle">No Assignment - <a href="/events/{{ event.id }}/signup/{{ p.id }}">
+                                    {% if event.event_signup_type == 'Assigned' %}
+                                    Request
+                                    {% elif event.event_signup_type == 'Open' %}
+                                    Sign Up
+                                    {% endif %}
+                                </a></td>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if request.user_obj.is_staff %}
+                            <td>
+                                <button type="button" class="btn btn-danger">
+                                    <a href="/events/{{ event.id }}/delete-position/{{ p.id }}" style="color:white">
+                                        <i class="icofont-ui-delete"></i>
+                                    </a>
+                                </button>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
                     </table>
                 </div>
 
                 <div class="row pt-3">
-                    <h5>Tower Cab</h5>
-                    <table class="table table-sm table-stripped">
+                    <h3>Tower Cab</h3>
+                    <table class="table table-sm table-striped">
                         <thead>
-                            <tr>
-                                <th scope="col" style="width:40%">Position</th>
-                                <th scope="col">Assignment</th>
-                                {% if request.user_obj.is_staff %}
-                                <th scope="col" style="width:10%"></th>
-                                {% endif %}
-                            </tr>
-                            {% for p in positions.cab %}
-                            <tr>
-                                <td style="vertical-align:middle">{{ p.callsign }}</td>
-                                {% if p.user %}
-                                <td style="vertical-align:middle">{{ p.user.full_name }}</td>
-                                {% else %}
-                                <td style="vertical-align:middle">No Assignment{% if not user_has_position %} - <a href="/events/{{ event.id }}/signup/{{ p.id }}">Request</a>{% endif %}</td>
-                                {% endif %}
-                                
-                                {% if request.user_obj.is_staff %}
-                                <td>
-                                    <button type="button" class="btn btn-danger">
-                                        <a href="/events/{{ event.id }}/delete-position/{{ p.id }}" style="color:white">
-                                            <i class="icofont-ui-delete"></i>
-                                        </a>
-                                    </button>
-                                <td>
-                                {% endif %}
-                            </tr>
+                        <tr>
+                            <th scope="col" style="width:40%">Position</th>
+                            <th scope="col">Assignment</th>
                             {% if request.user_obj.is_staff %}
-                                {% for signup in position_signups|lookup:p.callsign %}
-                                    <tr>
-                                    <td></td>
-                                    <td><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
-                                    <td><strong><a href="/events/assign/{{ signup.id }}">Assign</a></strong></td>
-                                    </tr>
-                                {% endfor %}
+                            <th scope="col" style="width:10%"></th>
                             {% endif %}
-                            {% endfor %}
+                        </tr>
                         </thead>
+                        {% for p in positions.cab %}
+                        <tr>
+                            <td style="vertical-align:middle">{{ p.callsign }}</td>
+                            {% if p.user %}
+                            <td style="vertical-align:middle">{{ p.user.full_name }}</td>
+                            {% else %}
+                            {% if user_has_position %}
+                                <td style="vertical-align:middle">No Assignment</td>
+                                {% elif p.callsign in requested_positions %}
+                                <td style="vertical-align:middle">No Assignment <span style="color:green"><i class="icofont-ui-check"></i> Requested</span></td>
+                                {% else %}
+                                <td style="vertical-align:middle">No Assignment - <a href="/events/{{ event.id }}/signup/{{ p.id }}">
+                                    {% if event.event_signup_type == 'Assigned' %}
+                                    Request
+                                    {% elif event.event_signup_type == 'Open' %}
+                                    Sign Up
+                                    {% endif %}
+                                </a></td>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if request.user_obj.is_staff %}
+                            <td>
+                                <button type="button" class="btn btn-danger">
+                                    <a href="/events/{{ event.id }}/delete-position/{{ p.id }}" style="color:white">
+                                        <i class="icofont-ui-delete"></i>
+                                    </a>
+                                </button>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
                     </table>
                 </div>
+                {% else %}
+                <div class="row pt-3">
+                    <p>There are no sign-ups enabled for this event. We encourage you to attend and staff your preferred position!</p>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(function() {
+        $('#startDateTimePicker').tempusDominus({
+            display: {
+                buttons: {
+                    close: true
+                }
+            },
+            localization: {
+                format: 'MM/dd/yy HH:mm',
+                hourCycle: 'h23'
+            }
+        });
+        $('#endDateTimePicker').tempusDominus({
+            display: {
+                buttons: {
+                    close: true
+                }
+            },
+            localization: {
+                format: 'MM/dd/yy HH:mm',
+                hourCycle: 'h23'
+            }
+        });
+    });
+</script>
 {% endblock %}

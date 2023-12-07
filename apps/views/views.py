@@ -121,7 +121,7 @@ def view_home(request):
 
 
 def view_privacy_policy(request):
-    return render(request, 'privacy_policy.html', {
+    return render(request, 'privacy-policy.html', {
         'page_title': 'Privacy Policy'
     })
 

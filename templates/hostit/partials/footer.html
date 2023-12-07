@@ -1,0 +1,16 @@
+<footer class="footer_section">
+    <div class="container">
+        <p>&copy; <span id="displayYear"></span> vZID ARTCC. All rights reserved.</p>
+    </div>
+</footer>
+
+<script type="text/javascript">
+    $(function() {
+        $('#displayYear').html(new Date().getFullYear());
+    });
+</script>
+
+<script type="text/javascript">
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+</script>

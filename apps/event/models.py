@@ -6,11 +6,23 @@ from apps.user.models import User
 
 
 class Event(models.Model):
+    EVENT_SIGNUP_TYPE_CHOICES = [
+        ('Assigned', 'Assigned'),
+        ('Open', 'Open'),
+        ('None', 'None')
+    ]
+
     name = models.CharField(max_length=128)
     banner = models.URLField(null=True)
     start = models.DateTimeField()
     end = models.DateTimeField()
     host = models.CharField(max_length=16)
+    event_signup_type = models.CharField(
+        max_length=8,
+        choices=EVENT_SIGNUP_TYPE_CHOICES,
+        default='None',
+        db_default='Assigned'  # Necessary for backwards compatibility with old events
+    )
     description = models.TextField(null=True, blank=True)
     hidden = models.BooleanField(default=False)
 
