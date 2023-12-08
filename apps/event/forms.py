@@ -31,9 +31,7 @@ class EventForm(forms.Form):
     event_signup_type = forms.ChoiceField(
         widget=forms.RadioSelect(
             attrs={
-                'class': 'btn-check',
-                'data-bs-toggle': 'tooltip',
-                'data-bs-title': 'Test'
+                'class': 'btn-check'
             }
         ),
         choices=Event.EVENT_SIGNUP_TYPE_CHOICES,
