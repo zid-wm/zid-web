@@ -240,6 +240,19 @@
                             </td>
                             {% endif %}
                         </tr>
+                        {% if request.user_obj.is_staff %}
+                            {% for signup in position_signups|lookup:p.callsign %}
+                            <tr>
+                                <td></td>
+                                <td style="vertical-align: middle"><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
+                                <td colspan="2">
+                                    <button type="button" class="btn btn-primary">
+                                        <a href="/events/assign/{{ signup.id }}"><i class="icofont-ui-check"></i> Assign</a>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
                         {% endfor %}
                     </table>
                 </div>
@@ -287,6 +300,19 @@
                             </td>
                             {% endif %}
                         </tr>
+                        {% if request.user_obj.is_staff %}
+                            {% for signup in position_signups|lookup:p.callsign %}
+                            <tr>
+                                <td></td>
+                                <td style="vertical-align: middle"><strong>{{ signup.user.full_name }} - {{ signup.user.rating }}</strong></td>
+                                <td colspan="2">
+                                    <button type="button" class="btn btn-primary">
+                                        <a href="/events/assign/{{ signup.id }}"><i class="icofont-ui-check"></i> Assign</a>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
                         {% endfor %}
                     </table>
                 </div>
