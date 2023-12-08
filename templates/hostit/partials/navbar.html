@@ -4,16 +4,18 @@
     <header class="header_section">
         <div class="container-fluid">
             <nav class="navbar fixed-top navbar-expand-lg custom_nav-container">
+                <div class="container-fluid">
                 <a class="navbar-brand" href="/">
                     <img src="{% static "/hostit/img/fulllogo_navbar.svg" %}" alt="Indy Center Logo" height="42">
                 </a>
 
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class=""></span>
                 </button>
 
-                <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
-                    <ul class="navbar-nav">
+                <!-- <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent"> -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ms-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pilots</a>
                             <ul class="dropdown-menu">
@@ -67,6 +69,7 @@
                         </li>
                         {% endif %}
                     </ul>
+                </div>
                 </div>
             </nav>
         </div>
