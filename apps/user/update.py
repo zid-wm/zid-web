@@ -98,7 +98,8 @@ def update_roster():
                     action=f'Home/visiting controller {edit_user.full_name} was marked active by system.'
                 ).save()
             edit_user.save()
-            edit_user.assign_initial_certs()
+            if edit_user.main_role == 'VC':
+                edit_user.assign_initial_certs()
             gcap_certification_update_check(edit_user)
 
     #############################################
