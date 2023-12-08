@@ -51,11 +51,16 @@ def login(request):
                 request.session['vatsim_data'] = user_data
                 request.session['cid'] = user_data['cid']
             else:
+                LOGGER.error('User response not ok!')
+                LOGGER.error('Response: %s', user_response)
                 return HttpResponse(error_string, status=500)
         else:
+            LOGGER.error('VATSIM token response not ok!')
+            LOGGER.error('Response: %s', response)
             return HttpResponse(error_string, status=500)
         return redirect(request.session.pop('redirect_after_login', '/?m=5'))
     else:
+        LOGGER.error('Parameter \'code\' not present in login request.')
         return HttpResponse(error_string, status=500)
 
 
