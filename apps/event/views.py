@@ -57,11 +57,10 @@ def view_event_details(request, event_id):
 
     requested_positions = [
         signup.position.callsign for signup in EventSignup.objects.filter(
-            user=user
+            user=user,
+            position__event__id=event_id
         )
     ]
-
-    LOGGER.info('Requested positions for user %s: %s', user.cid, requested_positions)
 
     add_position_form = AddPositionForm()
 
