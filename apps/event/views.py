@@ -1,4 +1,5 @@
 import boto3
+import logging
 from datetime import datetime
 
 from django.db.models import Q, ObjectDoesNotExist
@@ -12,6 +13,9 @@ from apps.event.models import Event, EventPosition, EventSignup
 from .forms import EventForm, AddPositionForm
 from apps.user.models import User
 from zid_web.decorators import require_staff, require_member
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def view_events(request):
@@ -56,6 +60,8 @@ def view_event_details(request, event_id):
             user=user
         )
     ]
+
+    LOGGER.info('Requested positions for user %s: %s', user.cid, requested_positions)
 
     add_position_form = AddPositionForm()
 
