@@ -52,11 +52,11 @@ def login(request):
                 request.session['cid'] = user_data['cid']
             else:
                 LOGGER.error('User response not ok!')
-                LOGGER.error('Response: %s', user_response)
+                LOGGER.error('Response Text: %s, Response Content: %s', user_response.text, user_response.content)
                 return HttpResponse(error_string, status=500)
         else:
             LOGGER.error('VATSIM token response not ok!')
-            LOGGER.error('Response: %s', response)
+            LOGGER.error('Response Text: %s, Response JSON: %s', response.text, response.json())
             return HttpResponse(error_string, status=500)
         return redirect(request.session.pop('redirect_after_login', '/?m=5'))
     else:
