@@ -1,8 +1,10 @@
 import boto3
 import calendar
+import logging
 import os
 import requests
 
+from botocore.exceptions import ClientError
 from datetime import date
 from django.core import mail
 from django.template.loader import render_to_string
@@ -11,31 +13,42 @@ from apps.user.models import User
 from zid_web.decorators import run_async
 
 
+LOGGER = logging.getLogger(__name__)
+
+
 def send_email(subject, message, html_message, to_email, *args, **kwargs):
     client = boto3.client('ses', region_name='us-east-1')
 
-    response = client.send_email(
-        Source=kwargs.get('from_email', 'noreply@zidartcc.org'),
-        Destination={
-            'ToAddresses': [to_email]
-        },
-        Message={
-            'Subject': {
-                'Data': subject,
-                'Charset': 'UTF-8'
+    try:
+        response = client.send_email(
+            Source=kwargs.get('from_email', 'noreply@zidartcc.org'),
+            Destination={
+                'ToAddresses': [to_email]
             },
-            'Body': {
-                'Text': {
-                    'Data': message,
+            Message={
+                'Subject': {
+                    'Data': subject,
                     'Charset': 'UTF-8'
                 },
-                'Html': {
-                    'Data': html_message,
-                    'Charset': 'UTF-8'
+                'Body': {
+                    'Text': {
+                        'Data': message,
+                        'Charset': 'UTF-8'
+                    },
+                    'Html': {
+                        'Data': html_message,
+                        'Charset': 'UTF-8'
+                    }
                 }
             }
-        }
-    )
+        )
+    except ClientError as e:
+        LOGGER.debug(
+            'Email details: subject \'%s\', message \'%s\', html_message \'%s\', to_email \'%s\'',
+            subject, message, html_message, to_email
+        )
+        LOGGER.error('Error when sending email: %s', e)
+
 
 
 @run_async
