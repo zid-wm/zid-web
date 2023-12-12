@@ -99,7 +99,7 @@ LOGGING = {
     },
     'handlers': {
         'applog': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'log/app.log'),
             'formatter': 'verbose'
@@ -116,12 +116,12 @@ LOGGING = {
         },
         'apps': {
             'handlers': ['applog', 'console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': True
         },
         '': {
             'handlers': ['applog', 'console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': True
         }
     }
